@@ -57,13 +57,10 @@ body::before{
 }
 .btn-login-top:hover{border-color:var(--mustard);color:var(--mustard);}
 .logged-badge{display:none;align-items:center;gap:8px;}
-.role-pill{font-size:.62rem;padding:3px 9px;border-radius:2px;font-weight:700;letter-spacing:1px;font-family:'Special Elite',cursive;}
-.ra{background:rgba(122,34,51,.45);color:#e8a0a8;border:1px solid rgba(122,34,51,.7);}
-.ru{background:rgba(46,125,110,.25);color:#a8d8d0;border:1px solid rgba(46,125,110,.5);}
 .btn-out{background:none;border:none;color:rgba(240,230,200,.3);font-size:.67rem;cursor:pointer;font-family:'Special Elite',cursive;}
 .btn-out:hover{color:var(--rust);}
 
-/* ── HERO ── */
+/* ── HERO & INFO SECTION ── */
 .hero{
   text-align:center;padding:2.4rem 1rem 1.2rem;
   background:radial-gradient(ellipse at 50% 0%,rgba(192,82,42,.09) 0%,transparent 60%);
@@ -78,9 +75,36 @@ body::before{
 .hero-rule{width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--mustard),transparent);margin:1rem auto .6rem;}
 .hero-sub{color:rgba(240,230,200,.35);font-size:.72rem;letter-spacing:3px;font-family:'Special Elite',cursive;}
 
+/* Tarjetas de Información en Inicio */
+.info-section {
+  display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center;
+  max-width: 900px; margin: 1.5rem auto 2rem; padding: 0 1.6rem;
+}
+.info-card {
+  background: rgba(59,42,26,.3); border: 1px solid rgba(212,168,68,.2);
+  border-radius: 4px; padding: 1.5rem; flex: 1; min-width: 300px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,.2);
+}
+.info-card h3 {
+  font-family: 'Playfair Display', serif; color: var(--mustard);
+  font-size: 1.1rem; margin-bottom: 0.8rem; border-bottom: 1px dashed rgba(212,168,68,.3);
+  padding-bottom: 0.5rem;
+}
+.info-card p {
+  font-size: 0.85rem; line-height: 1.5; color: rgba(240,230,200,.75);
+}
+.profile-wrap { display: flex; align-items: center; gap: 1rem; }
+.profile-pic {
+  width: 70px; height: 70px; border-radius: 4px; overflow: hidden; flex-shrink: 0;
+  border: 2px solid var(--mustard); background: var(--brown);
+}
+.profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+.profile-desc h4 { font-family: 'Playfair Display', serif; color: var(--cream); font-size: 1.2rem; }
+.profile-desc span { font-family: 'Special Elite', cursive; color: var(--rust); font-size: 0.7rem; letter-spacing: 1px; }
+
 /* ── CAROUSEL ── */
 .carousel-section{
-  width:100%;padding:2.6rem 0 3.4rem;display:flex;flex-direction:column;align-items:center;
+  width:100%;padding:1rem 0 3.4rem;display:flex;flex-direction:column;align-items:center;
   position:relative;overflow:hidden;
 }
 .carousel-section::before,.carousel-section::after{
@@ -115,8 +139,8 @@ body::before{
 .vpulse{animation:vpulse 1.6s ease-in-out infinite;}
 @keyframes vpulse{0%,100%{opacity:1;}50%{opacity:.35;}}
 
-/* ── SHELVES SECTION ── */
-.shelves-section{width:100%;padding:0 1.6rem 3rem;max-width:860px;margin:0 auto;}
+/* ── SHELVES SECTION (MODIFICADO: FUNDAS CUADRADAS) ── */
+.shelves-section{width:100%;padding:0 1.6rem 3rem;max-width:900px;margin:0 auto;}
 .shelves-divider{display:flex;align-items:center;gap:1rem;margin-bottom:2.2rem;}
 .shelves-divider::before,.shelves-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,68,.25),transparent);}
 .shelves-divider-text{font-family:'Special Elite',cursive;color:rgba(212,168,68,.45);font-size:.63rem;letter-spacing:3px;white-space:nowrap;text-transform:uppercase;}
@@ -128,7 +152,7 @@ body::before{
 .shelf-board{
   background:linear-gradient(180deg,rgba(59,42,26,.55) 0%,rgba(42,28,14,.82) 100%);
   border:1px solid rgba(107,76,42,.38);border-radius:4px;
-  padding:1rem 1.2rem;position:relative;
+  padding:1.5rem 1.2rem;position:relative;
   box-shadow:inset 0 2px 8px rgba(0,0,0,.4),0 5px 14px rgba(0,0,0,.35);
 }
 .shelf-board::after{
@@ -136,34 +160,56 @@ body::before{
   background:linear-gradient(180deg,rgba(42,28,14,.88),rgba(28,18,8,.55));
   border-radius:0 0 3px 3px;box-shadow:0 3px 6px rgba(0,0,0,.4);
 }
-.shelf-vinyls{display:flex;align-items:flex-end;gap:4px;min-height:88px;}
+.shelf-vinyls{display:flex;align-items:flex-end;gap:12px;min-height:90px;flex-wrap:wrap;}
+
+/* Funda Cuadrangular (Reemplaza al lomo antiguo) */
 .shelf-vinyl-item{
   display:flex;flex-direction:column;align-items:center;
   cursor:pointer;transition:transform .22s;position:relative;flex-shrink:0;
 }
-.shelf-vinyl-item:hover{transform:translateY(-14px);}
-.shelf-vinyl-item.locked{cursor:default;opacity:.28;pointer-events:none;}
-.sv-spine{
-  width:15px;height:76px;border-radius:2px;
-  background:linear-gradient(160deg,var(--sv-c1),var(--sv-c2),var(--sv-c3));
+.shelf-vinyl-item:hover{transform:translateY(-8px);}
+.shelf-vinyl-item.locked{cursor:default;opacity:.3;pointer-events:none;}
+
+.sv-cover{
+  width:85px;height:85px;border-radius:3px;
+  background:linear-gradient(135deg,var(--sv-c1),var(--sv-c2));
   position:relative;overflow:hidden;transition:box-shadow .2s;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: -3px 3px 6px rgba(0,0,0,0.4);
 }
-.sv-spine::after{
+.sv-cover::before {
+  /* Textura simulada */
   content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(255,255,255,.18) 0%,transparent 45%,rgba(0,0,0,.18) 100%);
+  background:repeating-radial-gradient(circle at 50% 50%,transparent 0px,transparent 4px,rgba(0,0,0,.1) 4px,rgba(0,0,0,.1) 5px);
+  z-index:1;
 }
-.shelf-vinyl-item:hover .sv-spine{box-shadow:0 0 14px rgba(var(--sv-rgb),.55);}
+.sv-cover::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.2) 0%,transparent 50%,rgba(0,0,0,.3) 100%);
+  z-index:2;
+}
+.shelf-vinyl-item:hover .sv-cover{box-shadow: -2px 2px 14px rgba(var(--sv-rgb),.6);}
+
 .sv-num{
-  writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);
-  font-family:'Playfair Display',serif;font-weight:900;font-size:.5rem;
-  color:rgba(255,255,255,.9);letter-spacing:1px;z-index:1;white-space:nowrap;
+  font-family:'Playfair Display',serif;font-weight:900;font-size:1.1rem;
+  color:rgba(255,255,255,.9);letter-spacing:1px;z-index:3;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
-.sv-dot{width:5px;height:5px;border-radius:50%;z-index:1;flex-shrink:0;}
+.sv-title {
+  font-family:'Courier Prime',monospace; font-size: 0.5rem; 
+  color: rgba(255,255,255,0.7); z-index:3; margin-top:4px;
+}
+.sv-dot{
+  position:absolute; top: 6px; right: 6px;
+  width:6px;height:6px;border-radius:50%;z-index:3;
+}
+
+/* Tooltip */
 .sv-tooltip{
-  position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);
+  position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);
   background:var(--brown);border:1px solid var(--mustard);border-radius:2px;
-  padding:3px 8px;font-family:'Special Elite',cursive;font-size:.58rem;
+  padding:4px 10px;font-family:'Special Elite',cursive;font-size:.65rem;
   color:var(--mustard);white-space:nowrap;pointer-events:none;
   opacity:0;transition:opacity .15s;z-index:50;letter-spacing:1px;
 }
@@ -225,14 +271,13 @@ body::before{
 @keyframes mspin{to{transform:rotate(360deg);}}
 .mbox h3{font-family:'Playfair Display',serif;color:var(--mustard);font-size:1.1rem;font-weight:700;letter-spacing:2px;margin-bottom:.3rem;}
 .mbox p{color:rgba(240,230,200,.38);font-size:.72rem;margin-bottom:1.4rem;font-family:'Special Elite',cursive;letter-spacing:1px;}
-.mbox select,.mbox input{
+.mbox input{
   width:100%;padding:.6rem .9rem;background:rgba(28,20,16,.8);
   border:1px solid rgba(107,76,42,.55);border-radius:2px;
   color:var(--cream);font-size:.8rem;margin-bottom:.7rem;outline:none;
   font-family:'Courier Prime',monospace;transition:border-color .2s;
 }
-.mbox select:focus,.mbox input:focus{border-color:var(--mustard);}
-.mbox select option{background:var(--brown);}
+.mbox input:focus{border-color:var(--mustard);}
 .btn-dologin{
   width:100%;padding:.65rem;
   background:linear-gradient(90deg,var(--rust),var(--mocha));
@@ -257,6 +302,7 @@ body::before{
 }
 .bbk:hover{color:var(--mustard);border-color:var(--mustard);}
 .dtitle{font-family:'Playfair Display',serif;color:var(--cream);font-size:.95rem;font-weight:700;}
+.dsubtitle {font-family:'Courier Prime',monospace; color:rgba(212,168,68,.7); font-size: 0.8rem; margin-left:10px; border-left: 1px solid rgba(212,168,68,.4); padding-left: 10px;}
 .btn-subir{
   margin-left:auto;background:linear-gradient(90deg,var(--rust),var(--mocha));
   border:1px solid rgba(212,168,68,.25);border-radius:2px;
@@ -266,6 +312,14 @@ body::before{
 }
 .btn-subir:hover{opacity:.85;}
 .dbody{flex:1;padding:1.4rem;}
+
+.links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 2rem; }
+.link-card { background:rgba(46,125,110,.2); border: 1px dashed rgba(46,125,110,.5); padding: 0.8rem; border-radius: 4px; text-decoration: none; color: var(--cream); transition: background 0.2s;}
+.link-card:hover { background:rgba(46,125,110,.4); }
+.link-icon { font-size: 1.2rem; display:block; margin-bottom: 5px; }
+
+.section-label { font-family:'Special Elite',cursive; color:var(--mustard); font-size:0.8rem; border-bottom:1px solid rgba(212,168,68,.3); padding-bottom:0.4rem; margin-bottom: 1rem; }
+
 .fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
 .fc{background:rgba(59,42,26,.55);border:1px solid rgba(107,76,42,.38);border-radius:4px;padding:.9rem .75rem;text-align:center;transition:border-color .2s;cursor:pointer;}
 .fc:hover{border-color:var(--mustard);}
@@ -326,7 +380,6 @@ body::before{
   <div class="topbar-right">
     <div class="logged-badge" id="loggedBadge">
       <span id="loggedName" style="color:rgba(240,230,200,.45);font-size:.7rem;font-family:'Special Elite',cursive;"></span>
-      <span id="loggedPill" class="role-pill"></span>
       <button class="btn-out" onclick="doLogout()">Salir</button>
     </div>
     <button class="btn-login-top" id="btnLogin" onclick="openLogin()">Iniciar sesión</button>
@@ -339,12 +392,35 @@ body::before{
     <div class="hero-eyebrow">◈ Semestre 2025</div>
     <div class="hero-title">BASE DE DATOS II</div>
     <div class="hero-rule"></div>
-    <div class="hero-sub">16 semanas · 4 categorías · Contenido progresivo</div>
+    <div class="hero-sub">Colección académica curada por Eitr</div>
   </div>
+
   <div class="carousel-section">
     <div class="c-label">◈ Semanas del semestre</div>
     <div class="c-scene" id="scene"></div>
   </div>
+
+  <!-- SECCIÓN DE INFORMACIÓN Y PERFIL -->
+  <div class="info-section">
+    <div class="info-card db-info">
+      <h3>◈ Sobre la Materia</h3>
+      <p>Una <strong>Base de Datos</strong> es un sistema organizado para la recopilación, almacenamiento y gestión de grandes volúmenes de información. En este curso avanzado (BD II), exploraremos el modelado complejo, optimización de consultas SQL, arquitecturas robustas y la administración de datos eficientes en entornos de producción.</p>
+    </div>
+    <div class="info-card about-me">
+      <div class="profile-wrap">
+        <div class="profile-pic">
+          <!-- Placeholder de imagen. Puedes reemplazar la URL de src con tu foto real -->
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Eitr&backgroundColor=3b2a1a" alt="Eitr">
+        </div>
+        <div class="profile-desc">
+          <h4>Hola, soy Eitr</h4>
+          <span>ESTUDIANTE / DESARROLLADOR</span>
+          <p style="margin-top: 0.5rem;">Estudiante de Ingeniería de Sistemas. Apasionado por la tecnología, el desarrollo web y el diseño de arquitecturas de software y bases de datos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="shelves-section" id="shelvesSection"></div>
 </div>
 
@@ -359,9 +435,19 @@ body::before{
   <div class="dtop">
     <button class="bbk" onclick="closeDetail()">← Volver</button>
     <span class="dtitle" id="dtitle"></span>
-    <button class="btn-subir" id="fabBtn" style="display:none;" onclick="openUpload()">+ Subir</button>
+    <span class="dsubtitle" id="dsubtitle"></span>
+    <button class="btn-subir" id="fabBtn" style="display:none;" onclick="openUpload()">+ Subir Archivo</button>
   </div>
-  <div class="dbody"><div class="fgrid" id="fgrid"></div></div>
+  <div class="dbody">
+    <!-- Contenedor para los Enlaces Fijos de la Semana -->
+    <div id="enlaces-semana-container" style="display:none;">
+      <div class="section-label">◈ Material y Enlaces Fijos</div>
+      <div class="links-grid" id="links-grid"></div>
+    </div>
+    
+    <div class="section-label" style="margin-top: 1rem;">◈ Archivos Subidos</div>
+    <div class="fgrid" id="fgrid"></div>
+  </div>
 </div>
 
 <!-- LOGIN MODAL -->
@@ -370,10 +456,9 @@ body::before{
     <div class="mbox-vinyl"></div>
     <h3>Acceso al Sistema</h3>
     <p>Ingresa tus credenciales</p>
-    <select id="roleSelect"><option value="admin">Administrador</option><option value="user">Usuario General</option></select>
     <input type="text"     id="userIn" placeholder="Usuario" autocomplete="off"/>
     <input type="password" id="passIn" placeholder="Contraseña"/>
-    <div class="login-err" id="loginErr">✗ Usuario o contraseña incorrectos</div>
+    <div class="login-err" id="loginErr">✗ Credenciales incorrectas</div>
     <button class="btn-dologin" onclick="doLogin()">Entrar</button>
     <span class="skip" onclick="closeLogin()">Continuar sin iniciar sesión</span>
   </div>
@@ -403,8 +488,34 @@ body::before{
 </div>
 
 <script>
-/* ─── CREDENCIALES ─── */
-const CREDS = { user:'Eitr', pass:'The1975' };
+/* =========================================================================
+   ▶ CONFIGURACIÓN INDEPENDIENTE DE CONTENIDO DE SEMANAS
+   Aquí puedes editar fácilmente el título y agregar enlaces para cada semana
+   sin tocar el código que dibuja la página.
+========================================================================= */
+const CONFIG_SEMANAS = {
+  1: {
+    titulo: "Introducción y Arquitectura",
+    enlaces: [
+      { nombre: "Diapositivas - Tema 1", url: "#", icono: "📑" },
+      { nombre: "Lectura: Historia de BD", url: "https://es.wikipedia.org/wiki/Base_de_datos", icono: "📖" }
+    ]
+  },
+  2: {
+    titulo: "Modelado Relacional Básico",
+    enlaces: [
+      { nombre: "Diagrama Entidad-Relación", url: "#", icono: "📊" }
+    ]
+  },
+  3: {
+    titulo: "Normalización de Datos",
+    enlaces: [] // Si dejas la lista vacía, no aparecerá el apartado de enlaces
+  },
+  4: { titulo: "Evaluación Práctica 1", enlaces: [] }
+  // Puedes agregar las semanas del 5 al 16 si lo necesitas aquí abajo:
+  // 5: { titulo: "Tema nuevo", enlaces: [...] }
+};
+/* ========================================================================= */
 
 /* ─── DATOS CATEGORÍAS ─── */
 const CATS = [
@@ -417,8 +528,8 @@ const CATS = [
   { id:'opt',  name:'Optimización',  range:'Sem. 13–16', color:'#5a7a5a', rgb:'90,122,90',
     weeks:[13,14,15,16],g:['#7a9e6a','#3d5c3d','#6b8c5a'], sc1:'#7a9e6a', sc2:'#3d5c3d' },
 ];
-const ACTIVE = 6, TOTAL = 16, SPEED = 0.055; // velocidad reducida
-let userRole = null, currentWeek = null, filesDB = {}, angle = 0;
+const ACTIVE = 6, TOTAL = 16, SPEED = 0.055; 
+let isLoggedIn = false, currentWeek = null, filesDB = {}, angle = 0;
 
 function getCat(w){ return CATS.find(c => c.weeks.includes(w)); }
 function getStatus(w){ return w < ACTIVE ? 'done' : w === ACTIVE ? 'active' : 'pending'; }
@@ -483,7 +594,7 @@ function renderCarousel(){
 
 function frame(){ angle=(angle+SPEED)%360; renderCarousel(); requestAnimationFrame(frame); }
 
-/* ─── ESTANTERÍAS DEBAJO DEL CARRUSEL ─── */
+/* ─── ESTANTERÍAS (AHORA PORTADAS CUADRADAS) ─── */
 function buildShelves(){
   const sec = document.getElementById('shelvesSection');
   sec.innerHTML = `<div class="shelves-divider"><div class="shelves-divider-text">◈ Colección por estantería</div></div>`;
@@ -491,16 +602,21 @@ function buildShelves(){
     const vinyls = cat.weeks.map(w => {
       const st=getStatus(w);
       const dotC=st==='done'?'#7a9e6a':st==='active'?'#c9903a':'#2a1a0a';
-      const dotG=st==='done'?'0 0 4px #7a9e6a':st==='active'?'0 0 5px #c9903a':'none';
+      // Obtenemos el titulo de la conf si existe
+      const conf = CONFIG_SEMANAS[w];
+      const title = conf && conf.titulo ? conf.titulo : cat.name;
+
       return `<div class="shelf-vinyl-item ${st==='pending'?'locked':''}" onclick="openWeek(${w})"
-        style="--sv-c1:${cat.g[0]};--sv-c2:${cat.g[1]};--sv-c3:${cat.g[2]};--sv-rgb:${cat.rgb};">
-        <div class="sv-spine">
+        style="--sv-c1:${cat.g[0]};--sv-c2:${cat.g[1]};--sv-rgb:${cat.rgb};">
+        <div class="sv-cover">
           <span class="sv-num">S${w}</span>
-          <div class="sv-dot" style="background:${dotC};box-shadow:${dotG};"></div>
+          <span class="sv-title">${title.substring(0, 10)}${title.length>10?'...':''}</span>
+          <div class="sv-dot" style="background:${dotC};"></div>
         </div>
-        <div class="sv-tooltip">Semana ${w} · ${cat.name}</div>
+        <div class="sv-tooltip">Semana ${w} · ${title}</div>
       </div>`;
     }).join('');
+    
     const unit = document.createElement('div');
     unit.className = 'shelf-unit';
     unit.innerHTML = `
@@ -535,7 +651,7 @@ function buildLibPage(cat){
 }
 function buildAllLibs(){ CATS.forEach(buildLibPage); }
 
-/* ─── AUTENTICACIÓN ─── */
+/* ─── AUTENTICACIÓN SIMPLIFICADA ─── */
 function openLogin(){
   document.getElementById('loginErr').style.display='none';
   document.getElementById('loginModal').classList.add('open');
@@ -545,26 +661,23 @@ function closeLogin(){ document.getElementById('loginModal').classList.remove('o
 function doLogin(){
   const u=document.getElementById('userIn').value.trim();
   const p=document.getElementById('passIn').value;
-  const r=document.getElementById('roleSelect').value;
-  const err=document.getElementById('loginErr');
-  // Validación: admin requiere credenciales exactas
-  if(r==='admin' && (u!==CREDS.user || p!==CREDS.pass)){
-    err.style.display='block';
-    document.getElementById('passIn').value='';
-    return;
+  
+  if(!u || !p) {
+      document.getElementById('loginErr').style.display='block';
+      return;
   }
-  err.style.display='none';
-  userRole=r; closeLogin();
+  
+  // Login funcional para pruebas
+  document.getElementById('loginErr').style.display='none';
+  isLoggedIn = true;
+  closeLogin();
   document.getElementById('btnLogin').style.display='none';
   document.getElementById('loggedBadge').style.display='flex';
-  document.getElementById('loggedName').textContent=u||'Usuario';
-  const pill=document.getElementById('loggedPill');
-  pill.textContent=r==='admin'?'ADMIN':'USUARIO';
-  pill.className='role-pill '+(r==='admin'?'ra':'ru');
+  document.getElementById('loggedName').textContent = u;
 }
 
 function doLogout(){
-  userRole=null;
+  isLoggedIn = false;
   document.getElementById('btnLogin').style.display='';
   document.getElementById('loggedBadge').style.display='none';
   document.getElementById('userIn').value='';
@@ -576,15 +689,39 @@ function openWeek(w){
   if(getStatus(w)==='pending') return;
   currentWeek=w;
   const cat=getCat(w);
-  document.getElementById('dtitle').textContent=`Semana ${w} — ${cat.name}`;
-  document.getElementById('fabBtn').style.display=userRole==='admin'?'':'none';
+  
+  // Leer configuración personalizada si existe
+  const conf = CONFIG_SEMANAS[w];
+  const customTitle = conf && conf.titulo ? conf.titulo : cat.name;
+
+  document.getElementById('dtitle').textContent=`Semana ${w}`;
+  document.getElementById('dsubtitle').textContent= customTitle;
+  
+  // Solo muestra botón de subir si está logueado
+  document.getElementById('fabBtn').style.display = isLoggedIn ? '' : 'none';
+  
+  // Mostrar enlaces si existen
+  const linksContainer = document.getElementById('enlaces-semana-container');
+  const linksGrid = document.getElementById('links-grid');
+  if(conf && conf.enlaces && conf.enlaces.length > 0) {
+      linksContainer.style.display = 'block';
+      linksGrid.innerHTML = conf.enlaces.map(link => `
+          <a href="${link.url}" target="_blank" class="link-card">
+              <span class="link-icon">${link.icono || '🔗'}</span>
+              <span style="font-size:0.8rem; font-weight:bold;">${link.nombre}</span>
+          </a>
+      `).join('');
+  } else {
+      linksContainer.style.display = 'none';
+  }
+
   document.getElementById('dscreen').classList.add('open');
   renderFiles();
 }
 function closeDetail(){ document.getElementById('dscreen').classList.remove('open'); currentWeek=null; }
 function renderFiles(){
   const g=document.getElementById('fgrid'), files=filesDB[currentWeek]||[];
-  if(!files.length){ g.innerHTML='<div class="emptyw">◈ Sin archivos en esta semana aún</div>'; return; }
+  if(!files.length){ g.innerHTML='<div class="emptyw">◈ Sin archivos subidos en esta semana</div>'; return; }
   const ic={pdf:'📄',jpg:'🖼',jpeg:'🖼',png:'🖼',docx:'📝',doc:'📝'};
   g.innerHTML=files.map(f=>{ const e=f.name.split('.').pop().toLowerCase();
     return `<div class="fc"><span class="fi">${ic[e]||'📁'}</span><span class="fn">${f.title||f.name}</span><span class="fe">.${e}</span></div>`;
