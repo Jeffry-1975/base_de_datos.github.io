@@ -410,10 +410,10 @@ body::before{
       <div class="profile-wrap">
         <div class="profile-pic">
           <!-- Placeholder de imagen. Puedes reemplazar la URL de src con tu foto real -->
-          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Eitr&backgroundColor=3b2a1a" alt="Eitr">
+          <img src="/img/Foto.webp" alt="Jeffer">
         </div>
         <div class="profile-desc">
-          <h4>Hola, soy Eitr</h4>
+          <h4>Hola, soy Jefferson</h4>
           <span>ESTUDIANTE / DESARROLLADOR</span>
           <p style="margin-top: 0.5rem;">Estudiante de Ingeniería de Sistemas. Apasionado por la tecnología, el desarrollo web y el diseño de arquitecturas de software y bases de datos.</p>
         </div>
@@ -496,9 +496,11 @@ body::before{
 const CONFIG_SEMANAS = {
   1: {
     titulo: "Introducción y Arquitectura",
+    urlExterna: "https://www.google.com", // <-- PON AQUÍ LA PÁGINA WEB A LA QUE QUIERES IR
     enlaces: [
       { nombre: "Diapositivas - Tema 1", url: "#", icono: "📑" },
-      { nombre: "Lectura: Historia de BD", url: "https://es.wikipedia.org/wiki/Base_de_datos", icono: "📖" }
+      { nombre: "Lectura: Historia de BD", url: "https://es.wikipedia.org/wiki/Base_de_datos", icono: "📖" },
+      { nombre: "Enlace Temporal A", url: "https://ejemplo.com", icono: "🔗" }
     ]
   },
   2: {
@@ -687,11 +689,19 @@ function doLogout(){
 /* ─── DETALLE SEMANA ─── */
 function openWeek(w){
   if(getStatus(w)==='pending') return;
-  currentWeek=w;
-  const cat=getCat(w);
   
-  // Leer configuración personalizada si existe
+  const cat=getCat(w);
   const conf = CONFIG_SEMANAS[w];
+
+  // --- REDIRECCIÓN A PÁGINA WEB ---
+  // Si la semana tiene una URL externa, abre esa web y no muestra el panel
+  if(conf && conf.urlExterna) {
+    window.open(conf.urlExterna, '_blank'); // Cambia '_blank' por '_self' si no quieres que abra en otra pestaña
+    return; // Detenemos la ejecución aquí
+  }
+  // ------------------------------------------
+
+  currentWeek=w;
   const customTitle = conf && conf.titulo ? conf.titulo : cat.name;
 
   document.getElementById('dtitle').textContent=`Semana ${w}`;
