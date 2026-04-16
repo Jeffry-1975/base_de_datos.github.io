@@ -102,7 +102,7 @@ body::before{
 .profile-desc h4 { font-family: 'Playfair Display', serif; color: var(--cream); font-size: 1.2rem; }
 .profile-desc span { font-family: 'Special Elite', cursive; color: var(--rust); font-size: 0.7rem; letter-spacing: 1px; }
 
-/* ── CAROUSEL ── */
+/* ── CAROUSEL MEJORADO (FUNDAS Y ANIMACIÓN) ── */
 .carousel-section{
   width:100%;padding:1rem 0 3.4rem;display:flex;flex-direction:column;align-items:center;
   position:relative;overflow:hidden;
@@ -115,15 +115,22 @@ body::before{
 .c-label{font-family:'Special Elite',cursive;color:rgba(212,168,68,.3);font-size:.62rem;letter-spacing:3px;margin-bottom:2rem;text-transform:uppercase;}
 .c-scene{position:relative;width:min(96%,700px);height:300px;}
 
-.vitem{position:absolute;left:0;top:0;cursor:pointer;will-change:transform,opacity;}
-.vitem.locked{cursor:default;pointer-events:none;}
+.vitem{
+  position:absolute;left:0;top:0;cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+.vitem.locked{cursor:default;}
+
 .vface{
-  border-radius:4px;position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  border-radius:6px; position:absolute; inset:0; overflow:hidden;
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  z-index:5;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  box-shadow: -2px 5px 15px rgba(0,0,0,0.4);
 }
 .vface::before{
   content:'';position:absolute;inset:0;
-  background:repeating-radial-gradient(circle at 50% 50%,transparent 0px,transparent 4px,rgba(0,0,0,.28) 4px,rgba(0,0,0,.28) 5px);
+  background:repeating-radial-gradient(circle at 50% 50%,transparent 0px,transparent 4px,rgba(0,0,0,.15) 4px,rgba(0,0,0,.15) 5px);
   z-index:1;
 }
 .vface::after{
@@ -131,15 +138,43 @@ body::before{
   background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 50%,rgba(0,0,0,.22) 100%);
   z-index:2;pointer-events:none;
 }
-.vface-inner{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;}
-.vhole{border-radius:50%;background:var(--ink);border:2px solid rgba(255,255,255,.1);position:relative;z-index:4;flex-shrink:0;}
+.vface-inner{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px; padding: 10px;}
 .vface-label{font-family:'Playfair Display',serif;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.9);text-align:center;}
-.vface-week{font-family:'Special Elite',cursive;color:rgba(255,255,255,.4);letter-spacing:1px;}
-.vstatus-ring{position:absolute;bottom:5px;right:5px;z-index:5;border-radius:50%;border:1.5px solid rgba(0,0,0,.4);}
+.vface-week{
+  font-family:'Special Elite',cursive;color:rgba(255,255,255,.6);letter-spacing:1px;
+  text-align:center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.vstatus-ring{position:absolute;bottom:6px;right:6px;z-index:6;border-radius:50%;border:1px solid rgba(0,0,0,.6);}
 .vpulse{animation:vpulse 1.6s ease-in-out infinite;}
 @keyframes vpulse{0%,100%{opacity:1;}50%{opacity:.35;}}
 
-/* ── SHELVES SECTION (MODIFICADO: FUNDAS CUADRADAS) ── */
+.v-disc {
+  position: absolute;
+  width: 96%; height: 96%; border-radius: 50%;
+  background: #111;
+  background-image: repeating-radial-gradient(circle at 50% 50%, #151515 0, #151515 2px, #0a0a0a 3px, #151515 4px);
+  z-index: 1;
+  top: 2%; left: 2%;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+  display: flex; align-items: center; justify-content: center;
+}
+.v-disc-label { width: 33%; height: 33%; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.v-disc-hole { width: 15%; height: 15%; background: var(--ink); border-radius: 50%; }
+
+.vitem:hover .v-disc { transform: translateY(-25%) rotate(45deg); }
+.vitem:hover .vface { transform: translateY(4%); }
+.vitem.extracting .v-disc {
+  transform: translateY(-90%) scale(2.2) rotate(360deg);
+  opacity: 0;
+  transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s 0.6s;
+  z-index: 20;
+}
+.vitem.extracting .vface {
+  transform: translateY(30px); opacity: 0; transition: all 0.5s;
+}
+
+/* ── SHELVES SECTION ── */
 .shelves-section{width:100%;padding:0 1.6rem 3rem;max-width:900px;margin:0 auto;}
 .shelves-divider{display:flex;align-items:center;gap:1rem;margin-bottom:2.2rem;}
 .shelves-divider::before,.shelves-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,68,.25),transparent);}
@@ -162,24 +197,33 @@ body::before{
 }
 .shelf-vinyls{display:flex;align-items:flex-end;gap:12px;min-height:90px;flex-wrap:wrap;}
 
-/* Funda Cuadrangular (Reemplaza al lomo antiguo) */
+/* ── VINILOS DE LAS ESTANTERÍAS ── */
 .shelf-vinyl-item{
   display:flex;flex-direction:column;align-items:center;
   cursor:pointer;transition:transform .22s;position:relative;flex-shrink:0;
 }
-.shelf-vinyl-item:hover{transform:translateY(-8px);}
-.shelf-vinyl-item.locked{cursor:default;opacity:.3;pointer-events:none;}
+.shelf-vinyl-item:hover{transform:translateY(-8px); z-index: 50;}
+.shelf-vinyl-item.locked{cursor:default;opacity:.6;}
+
+.sv-disc {
+  position: absolute; width: 80px; height: 80px; border-radius: 50%;
+  background: #111;
+  background-image: repeating-radial-gradient(circle at 50% 50%, #151515 0, #151515 2px, #0a0a0a 3px, #151515 4px);
+  z-index: 1; top: 2.5px; left: 2.5px;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center;
+}
+.sv-disc-label { width: 35%; height: 35%; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.sv-disc-hole { width: 15%; height: 15%; background: var(--ink); border-radius: 50%; }
 
 .sv-cover{
   width:85px;height:85px;border-radius:3px;
   background:linear-gradient(135deg,var(--sv-c1),var(--sv-c2));
-  position:relative;overflow:hidden;transition:box-shadow .2s;
+  position:relative;overflow:hidden;transition:box-shadow .2s, transform 0.4s ease;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: -3px 3px 6px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1); box-shadow: -3px 3px 6px rgba(0,0,0,0.4); z-index: 2;
 }
 .sv-cover::before {
-  /* Textura simulada */
   content:'';position:absolute;inset:0;
   background:repeating-radial-gradient(circle at 50% 50%,transparent 0px,transparent 4px,rgba(0,0,0,.1) 4px,rgba(0,0,0,.1) 5px);
   z-index:1;
@@ -190,22 +234,16 @@ body::before{
   z-index:2;
 }
 .shelf-vinyl-item:hover .sv-cover{box-shadow: -2px 2px 14px rgba(var(--sv-rgb),.6);}
-
-.sv-num{
-  font-family:'Playfair Display',serif;font-weight:900;font-size:1.1rem;
-  color:rgba(255,255,255,.9);letter-spacing:1px;z-index:3;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+.shelf-vinyl-item:hover .sv-disc { transform: translateX(35%) rotate(45deg); }
+.shelf-vinyl-item.extracting { z-index: 999 !important; }
+.shelf-vinyl-item.extracting .sv-disc {
+  transform: translateX(130%) rotate(360deg); opacity: 0;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s 0.4s; z-index: 20;
 }
-.sv-title {
-  font-family:'Courier Prime',monospace; font-size: 0.5rem; 
-  color: rgba(255,255,255,0.7); z-index:3; margin-top:4px;
-}
-.sv-dot{
-  position:absolute; top: 6px; right: 6px;
-  width:6px;height:6px;border-radius:50%;z-index:3;
-}
-
-/* Tooltip */
+.shelf-vinyl-item.extracting .sv-cover { transform: translateX(-10px); }
+.sv-num{ font-family:'Playfair Display',serif;font-weight:900;font-size:1.1rem; color:rgba(255,255,255,.9);letter-spacing:1px;z-index:3; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+.sv-title { font-family:'Courier Prime',monospace; font-size: 0.5rem; color: rgba(255,255,255,0.7); z-index:3; margin-top:4px; text-align: center; padding: 0 4px; }
+.sv-dot{ position:absolute; top: 6px; right: 6px; width:6px;height:6px;border-radius:50%;z-index:3; }
 .sv-tooltip{
   position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);
   background:var(--brown);border:1px solid var(--mustard);border-radius:2px;
@@ -215,26 +253,21 @@ body::before{
 }
 .shelf-vinyl-item:hover .sv-tooltip{opacity:1;}
 
-/* ── PAGES ── */
+/* ── PAGES & OTHERS ── */
 .page{display:none;}
 .page.active{display:block;}
 .lib-page{padding:1.8rem 1.6rem 3rem;max-width:860px;margin:0 auto;}
 .lib-page-title{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--cream);margin-bottom:1.4rem;border-bottom:1px solid rgba(212,168,68,.18);padding-bottom:.8rem;}
 .lib-full-shelf{
-  background:linear-gradient(180deg,rgba(59,42,26,.55),rgba(42,28,14,.82));
-  border:1px solid rgba(107,76,42,.38);border-radius:4px;
-  padding:1rem 1.2rem;
-  box-shadow:inset 0 2px 8px rgba(0,0,0,.4),0 5px 14px rgba(0,0,0,.35);
-  position:relative;
+  background:linear-gradient(180deg,rgba(59,42,26,.55),rgba(42,28,14,.82)); border:1px solid rgba(107,76,42,.38);border-radius:4px;
+  padding:1rem 1.2rem; box-shadow:inset 0 2px 8px rgba(0,0,0,.4),0 5px 14px rgba(0,0,0,.35); position:relative;
 }
 .lib-full-shelf::after{
   content:'';position:absolute;bottom:-6px;left:4px;right:4px;height:6px;
-  background:linear-gradient(180deg,rgba(42,28,14,.88),rgba(28,18,8,.55));
-  border-radius:0 0 3px 3px;box-shadow:0 3px 6px rgba(0,0,0,.4);
+  background:linear-gradient(180deg,rgba(42,28,14,.88),rgba(28,18,8,.55)); border-radius:0 0 3px 3px;box-shadow:0 3px 6px rgba(0,0,0,.4);
 }
 .lib-shelf-row{
-  display:flex;align-items:center;gap:12px;
-  padding:.55rem .6rem;border-radius:3px;cursor:pointer;transition:background .14s;
+  display:flex;align-items:center;gap:12px; padding:.55rem .6rem;border-radius:3px;cursor:pointer;transition:background .14s;
   border-bottom:1px solid rgba(255,255,255,.04);
 }
 .lib-shelf-row:last-child{border-bottom:none;}
@@ -257,34 +290,27 @@ body::before{
 .mbox{
   background:var(--brown);border:2px solid var(--mustard);border-radius:4px;
   padding:2.2rem 2rem;width:min(360px,92vw);text-align:center;
-  box-shadow:0 0 60px rgba(192,82,42,.18),inset 0 1px 0 rgba(212,168,68,.18);
-  position:relative;overflow:hidden;
+  box-shadow:0 0 60px rgba(192,82,42,.18),inset 0 1px 0 rgba(212,168,68,.18); position:relative;overflow:hidden;
 }
 .mbox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rust),var(--mustard),var(--rust));}
 .mbox-vinyl{
   width:62px;height:62px;border-radius:50%;margin:0 auto 1.2rem;
   background:conic-gradient(#2a1a0a,var(--rust),var(--mustard),var(--mocha),#2a1a0a,var(--rust),#2a1a0a);
-  display:flex;align-items:center;justify-content:center;
-  animation:mspin 4s linear infinite;box-shadow:0 0 20px rgba(192,82,42,.28);
+  display:flex;align-items:center;justify-content:center; animation:mspin 4s linear infinite;box-shadow:0 0 20px rgba(192,82,42,.28);
 }
 .mbox-vinyl::after{content:'';width:17px;height:17px;border-radius:50%;background:var(--brown);border:2px solid rgba(212,168,68,.38);}
 @keyframes mspin{to{transform:rotate(360deg);}}
 .mbox h3{font-family:'Playfair Display',serif;color:var(--mustard);font-size:1.1rem;font-weight:700;letter-spacing:2px;margin-bottom:.3rem;}
 .mbox p{color:rgba(240,230,200,.38);font-size:.72rem;margin-bottom:1.4rem;font-family:'Special Elite',cursive;letter-spacing:1px;}
 .mbox input{
-  width:100%;padding:.6rem .9rem;background:rgba(28,20,16,.8);
-  border:1px solid rgba(107,76,42,.55);border-radius:2px;
-  color:var(--cream);font-size:.8rem;margin-bottom:.7rem;outline:none;
-  font-family:'Courier Prime',monospace;transition:border-color .2s;
+  width:100%;padding:.6rem .9rem;background:rgba(28,20,16,.8); border:1px solid rgba(107,76,42,.55);border-radius:2px;
+  color:var(--cream);font-size:.8rem;margin-bottom:.7rem;outline:none; font-family:'Courier Prime',monospace;transition:border-color .2s;
 }
 .mbox input:focus{border-color:var(--mustard);}
 .btn-dologin{
-  width:100%;padding:.65rem;
-  background:linear-gradient(90deg,var(--rust),var(--mocha));
-  border:1px solid rgba(212,168,68,.28);border-radius:2px;
-  color:var(--cream);font-weight:700;font-size:.82rem;cursor:pointer;
-  letter-spacing:2px;font-family:'Special Elite',cursive;
-  text-transform:uppercase;transition:opacity .2s;
+  width:100%;padding:.65rem; background:linear-gradient(90deg,var(--rust),var(--mocha));
+  border:1px solid rgba(212,168,68,.28);border-radius:2px; color:var(--cream);font-weight:700;font-size:.82rem;cursor:pointer;
+  letter-spacing:2px;font-family:'Special Elite',cursive; text-transform:uppercase;transition:opacity .2s;
 }
 .btn-dologin:hover{opacity:.85;}
 .skip{display:block;margin-top:.8rem;color:rgba(240,230,200,.28);font-size:.68rem;cursor:pointer;font-family:'Special Elite',cursive;letter-spacing:1px;}
@@ -296,30 +322,23 @@ body::before{
 .dscreen.open{display:flex;}
 .dtop{background:var(--brown);border-bottom:2px solid var(--mustard);padding:.75rem 1.4rem;display:flex;align-items:center;gap:12px;}
 .bbk{
-  background:none;border:1px solid rgba(107,76,42,.45);border-radius:2px;
-  color:rgba(240,230,200,.45);font-size:.73rem;cursor:pointer;padding:5px 10px;
+  background:none;border:1px solid rgba(107,76,42,.45);border-radius:2px; color:rgba(240,230,200,.45);font-size:.73rem;cursor:pointer;padding:5px 10px;
   font-family:'Special Elite',cursive;letter-spacing:1px;transition:all .2s;text-transform:uppercase;
 }
 .bbk:hover{color:var(--mustard);border-color:var(--mustard);}
 .dtitle{font-family:'Playfair Display',serif;color:var(--cream);font-size:.95rem;font-weight:700;}
 .dsubtitle {font-family:'Courier Prime',monospace; color:rgba(212,168,68,.7); font-size: 0.8rem; margin-left:10px; border-left: 1px solid rgba(212,168,68,.4); padding-left: 10px;}
 .btn-subir{
-  margin-left:auto;background:linear-gradient(90deg,var(--rust),var(--mocha));
-  border:1px solid rgba(212,168,68,.25);border-radius:2px;
-  color:var(--cream);font-size:.7rem;padding:6px 14px;cursor:pointer;
-  font-family:'Special Elite',cursive;letter-spacing:1.5px;text-transform:uppercase;
-  transition:opacity .2s;
+  margin-left:auto;background:linear-gradient(90deg,var(--rust),var(--mocha)); border:1px solid rgba(212,168,68,.25);border-radius:2px;
+  color:var(--cream);font-size:.7rem;padding:6px 14px;cursor:pointer; font-family:'Special Elite',cursive;letter-spacing:1.5px;text-transform:uppercase; transition:opacity .2s;
 }
 .btn-subir:hover{opacity:.85;}
 .dbody{flex:1;padding:1.4rem;}
-
 .links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 2rem; }
 .link-card { background:rgba(46,125,110,.2); border: 1px dashed rgba(46,125,110,.5); padding: 0.8rem; border-radius: 4px; text-decoration: none; color: var(--cream); transition: background 0.2s;}
 .link-card:hover { background:rgba(46,125,110,.4); }
 .link-icon { font-size: 1.2rem; display:block; margin-bottom: 5px; }
-
 .section-label { font-family:'Special Elite',cursive; color:var(--mustard); font-size:0.8rem; border-bottom:1px solid rgba(212,168,68,.3); padding-bottom:0.4rem; margin-bottom: 1rem; }
-
 .fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
 .fc{background:rgba(59,42,26,.55);border:1px solid rgba(107,76,42,.38);border-radius:4px;padding:.9rem .75rem;text-align:center;transition:border-color .2s;cursor:pointer;}
 .fc:hover{border-color:var(--mustard);}
@@ -332,22 +351,19 @@ body::before{
 .ubackdrop{display:none;position:fixed;inset:0;background:rgba(10,8,6,.9);align-items:center;justify-content:center;z-index:300;}
 .ubackdrop.open{display:flex;}
 .ubox{
-  background:var(--brown);border:2px solid var(--mustard);border-radius:4px;
-  padding:1.8rem 1.6rem;width:min(400px,92vw);
+  background:var(--brown);border:2px solid var(--mustard);border-radius:4px; padding:1.8rem 1.6rem;width:min(400px,92vw);
   box-shadow:0 0 60px rgba(192,82,42,.18);position:relative;overflow:hidden;
 }
 .ubox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rust),var(--mustard),var(--rust));}
 .ubox h3{font-family:'Playfair Display',serif;color:var(--mustard);font-size:.95rem;margin-bottom:1.1rem;letter-spacing:2px;}
 .ubox label{color:rgba(240,230,200,.45);font-size:.7rem;display:block;margin-bottom:.3rem;font-family:'Special Elite',cursive;letter-spacing:1px;}
 .ubox input[type=text]{
-  width:100%;padding:.55rem .8rem;background:rgba(28,20,16,.8);
-  border:1px solid rgba(107,76,42,.55);border-radius:2px;color:var(--cream);
+  width:100%;padding:.55rem .8rem;background:rgba(28,20,16,.8); border:1px solid rgba(107,76,42,.55);border-radius:2px;color:var(--cream);
   font-size:.8rem;outline:none;margin-bottom:.8rem;font-family:'Courier Prime',monospace;transition:border-color .2s;
 }
 .ubox input[type=text]:focus{border-color:var(--mustard);}
 .dropz{
-  border:2px dashed rgba(107,76,42,.45);border-radius:3px;padding:1.4rem;
-  text-align:center;color:rgba(240,230,200,.3);font-size:.76rem;cursor:pointer;
+  border:2px dashed rgba(107,76,42,.45);border-radius:3px;padding:1.4rem; text-align:center;color:rgba(240,230,200,.3);font-size:.76rem;cursor:pointer;
   transition:all .2s;margin-bottom:.8rem;font-family:'Special Elite',cursive;letter-spacing:1px;
 }
 .dropz:hover{border-color:var(--mustard);color:var(--mustard);}
@@ -371,18 +387,18 @@ body::before{
 <div class="topbar">
   <span class="topbar-logo">◈ BD·II</span>
   <nav class="topbar-nav">
-    <button class="nav-btn active" id="nav-inicio" onclick="goPage('inicio')">Inicio</button>
-    <button class="nav-btn" id="nav-fund" onclick="goPage('fund')"><span class="nav-dot" style="background:#b87333;"></span>Fundamentos</button>
-    <button class="nav-btn" id="nav-mod"  onclick="goPage('mod')"><span class="nav-dot" style="background:#2e7d6e;"></span>Modelado</button>
-    <button class="nav-btn" id="nav-sql"  onclick="goPage('sql')"><span class="nav-dot" style="background:#7a2233;"></span>Consultas SQL</button>
-    <button class="nav-btn" id="nav-opt"  onclick="goPage('opt')"><span class="nav-dot" style="background:#5a7a5a;"></span>Optimización</button>
+    <button class="nav-btn active" id="nav-inicio" onclick="window.goPage('inicio')">Inicio</button>
+    <button class="nav-btn" id="nav-fund" onclick="window.goPage('fund')"><span class="nav-dot" style="background:#b87333;"></span>Fundamentos</button>
+    <button class="nav-btn" id="nav-mod"  onclick="window.goPage('mod')"><span class="nav-dot" style="background:#2e7d6e;"></span>Modelado</button>
+    <button class="nav-btn" id="nav-sql"  onclick="window.goPage('sql')"><span class="nav-dot" style="background:#7a2233;"></span>Consultas SQL</button>
+    <button class="nav-btn" id="nav-opt"  onclick="window.goPage('opt')"><span class="nav-dot" style="background:#5a7a5a;"></span>Optimización</button>
   </nav>
   <div class="topbar-right">
     <div class="logged-badge" id="loggedBadge">
       <span id="loggedName" style="color:rgba(240,230,200,.45);font-size:.7rem;font-family:'Special Elite',cursive;"></span>
-      <button class="btn-out" onclick="doLogout()">Salir</button>
+      <button class="btn-out" onclick="window.doLogout()">Salir</button>
     </div>
-    <button class="btn-login-top" id="btnLogin" onclick="openLogin()">Iniciar sesión</button>
+    <button class="btn-login-top" id="btnLogin" onclick="window.openLogin()">Iniciar sesión</button>
   </div>
 </div>
 
@@ -400,7 +416,6 @@ body::before{
     <div class="c-scene" id="scene"></div>
   </div>
 
-  <!-- SECCIÓN DE INFORMACIÓN Y PERFIL -->
   <div class="info-section">
     <div class="info-card db-info">
       <h3>◈ Sobre la Materia</h3>
@@ -409,8 +424,7 @@ body::before{
     <div class="info-card about-me">
       <div class="profile-wrap">
         <div class="profile-pic">
-          <!-- Placeholder de imagen. Puedes reemplazar la URL de src con tu foto real -->
-          <img src="/base_de_datos.github.io/img/Foto.webp" alt="Jeffer">
+          <img src="/base_de_datos.github.io/img/Foto.webp" alt="Eitr">
         </div>
         <div class="profile-desc">
           <h4>Hola, soy Jefferson</h4>
@@ -433,18 +447,16 @@ body::before{
 <!-- DETALLE SEMANA -->
 <div class="dscreen" id="dscreen">
   <div class="dtop">
-    <button class="bbk" onclick="closeDetail()">← Volver</button>
+    <button class="bbk" onclick="window.closeDetail()">← Volver</button>
     <span class="dtitle" id="dtitle"></span>
     <span class="dsubtitle" id="dsubtitle"></span>
-    <button class="btn-subir" id="fabBtn" style="display:none;" onclick="openUpload()">+ Subir Archivo</button>
+    <button class="btn-subir" id="fabBtn" style="display:none;" onclick="window.openUpload()">+ Subir Archivo</button>
   </div>
   <div class="dbody">
-    <!-- Contenedor para los Enlaces Fijos de la Semana -->
     <div id="enlaces-semana-container" style="display:none;">
       <div class="section-label">◈ Material y Enlaces Fijos</div>
       <div class="links-grid" id="links-grid"></div>
     </div>
-    
     <div class="section-label" style="margin-top: 1rem;">◈ Archivos Subidos</div>
     <div class="fgrid" id="fgrid"></div>
   </div>
@@ -456,11 +468,11 @@ body::before{
     <div class="mbox-vinyl"></div>
     <h3>Acceso al Sistema</h3>
     <p>Ingresa tus credenciales</p>
-    <input type="text"     id="userIn" placeholder="Usuario" autocomplete="off"/>
+    <input type="text"     id="userIn" placeholder="Correo electrónico" autocomplete="off"/>
     <input type="password" id="passIn" placeholder="Contraseña"/>
     <div class="login-err" id="loginErr">✗ Credenciales incorrectas</div>
-    <button class="btn-dologin" onclick="doLogin()">Entrar</button>
-    <span class="skip" onclick="closeLogin()">Continuar sin iniciar sesión</span>
+    <button class="btn-dologin" onclick="window.doLogin()">Entrar</button>
+    <span class="skip" onclick="window.closeLogin()">Continuar sin iniciar sesión</span>
   </div>
 </div>
 
@@ -477,26 +489,40 @@ body::before{
         <span class="fp fp-i">JPG · PNG</span>
         <span class="fp fp-d">DOCX</span>
       </div>
-      <input type="file" id="fileIn" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc" onchange="filePicked(this)"/>
+      <input type="file" id="fileIn" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc" onchange="window.filePicked(this)"/>
     </div>
     <div class="selfile" id="selFile"></div>
     <div class="uact">
-      <button class="bcnl" onclick="closeUpload()">Cancelar</button>
-      <button class="bgo"  onclick="confirmUpload()">Subir</button>
+      <button class="bcnl" onclick="window.closeUpload()">Cancelar</button>
+      <button class="bgo"  onclick="window.confirmUpload()">Subir</button>
     </div>
   </div>
 </div>
 
-<script>
+<!-- ========================================== -->
+<!-- SCRIPT TIPO MÓDULO CON SUPABASE INTEGRADO  -->
+<!-- ========================================== -->
+<script type="module">
+/* ▶ 1. IMPORTACIONES DE SUPABASE (CDN) */
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
 /* =========================================================================
-   ▶ CONFIGURACIÓN INDEPENDIENTE DE CONTENIDO DE SEMANAS
-   Aquí puedes editar fácilmente el título y agregar enlaces para cada semana
-   sin tocar el código que dibuja la página.
+   👇👇👇 PEGA AQUÍ TU CONFIGURACIÓN DE SUPABASE 👇👇👇
+   
+   En tu panel de Supabase ve a: Project Settings -> API
+========================================================================= */
+const supabaseUrl = 'https://crtyrcabkowrfrwcyidx.supabase.co';
+const supabaseKey = 'sb_publishable_wpMYnrhXcLjegU5y72Ls9g_MpoKjoIK';
+const supabase = createClient(supabaseUrl, supabaseKey);
+/* 👆👆👆 HASTA AQUÍ 👆👆👆 ============================================== */
+
+/* =========================================================================
+   ▶ CONFIGURACIÓN INDEPENDIENTE DE NOMBRES Y ENLACES
 ========================================================================= */
 const CONFIG_SEMANAS = {
   1: {
     titulo: "Introducción y Arquitectura",
-    urlExterna: "https://github.com/Jeffry-1975/base_de_datos.github.io/blob/main/Semana_1/Informe_Tecnico_Comparativo.pdf", // <-- PON AQUÍ LA PÁGINA WEB A LA QUE QUIERES IR
+    urlExterna: "https://github.com/Jeffry-1975/base_de_datos.github.io/blob/main/Semana_1/Informe_Tecnico_Comparativo.pdf",
     enlaces: [
       { nombre: "Diapositivas - Tema 1", url: "#", icono: "📑" },
       { nombre: "Lectura: Historia de BD", url: "https://es.wikipedia.org/wiki/Base_de_datos", icono: "📖" },
@@ -505,64 +531,77 @@ const CONFIG_SEMANAS = {
   },
   2: {
     titulo: "Modelado Relacional Básico",
-    enlaces: [
-      { nombre: "Diagrama Entidad-Relación", url: "#", icono: "📊" }
-    ]
+    enlaces: [ { nombre: "Diagrama Entidad-Relación", url: "#", icono: "📊" } ]
   },
-  3: {
-    titulo: "Normalización de Datos",
-    enlaces: [] // Si dejas la lista vacía, no aparecerá el apartado de enlaces
-  },
-  4: { titulo: "Evaluación Práctica 1", enlaces: [] }
-  // Puedes agregar las semanas del 5 al 16 si lo necesitas aquí abajo:
-  // 5: { titulo: "Tema nuevo", enlaces: [...] }
+  3: { titulo: "Normalización de Datos", enlaces: [] },
+  4: { titulo: "Evaluación Práctica 1", enlaces: [] },
+  5: { titulo: "Diseño Conceptual" },
+  6: { titulo: "Pasando al Físico" },
 };
-/* ========================================================================= */
 
-/* ─── DATOS CATEGORÍAS ─── */
+/* ─── DATOS CATEGORÍAS Y GLOBALES ─── */
 const CATS = [
-  { id:'fund', name:'Fundamentos',   range:'Sem. 1–4',   color:'#b87333', rgb:'184,115,51',
-    weeks:[1,2,3,4],   g:['#d4924a','#8b5a2b','#c0522a'], sc1:'#d4924a', sc2:'#8b5a2b' },
-  { id:'mod',  name:'Modelado',      range:'Sem. 5–8',   color:'#2e7d6e', rgb:'46,125,110',
-    weeks:[5,6,7,8],   g:['#3da090','#1d5c52','#4a8c6e'], sc1:'#3da090', sc2:'#1d5c52' },
-  { id:'sql',  name:'Consultas SQL', range:'Sem. 9–12',  color:'#7a2233', rgb:'122,34,51',
-    weeks:[9,10,11,12],g:['#a33044','#5a1825','#8b3040'], sc1:'#a33044', sc2:'#5a1825' },
-  { id:'opt',  name:'Optimización',  range:'Sem. 13–16', color:'#5a7a5a', rgb:'90,122,90',
-    weeks:[13,14,15,16],g:['#7a9e6a','#3d5c3d','#6b8c5a'], sc1:'#7a9e6a', sc2:'#3d5c3d' },
+  { id:'fund', name:'Fundamentos',   range:'Sem. 1–4',   color:'#b87333', rgb:'184,115,51', weeks:[1,2,3,4],   g:['#d4924a','#8b5a2b','#c0522a'], sc1:'#d4924a', sc2:'#8b5a2b' },
+  { id:'mod',  name:'Modelado',      range:'Sem. 5–8',   color:'#2e7d6e', rgb:'46,125,110', weeks:[5,6,7,8],   g:['#3da090','#1d5c52','#4a8c6e'], sc1:'#3da090', sc2:'#1d5c52' },
+  { id:'sql',  name:'Consultas SQL', range:'Sem. 9–12',  color:'#7a2233', rgb:'122,34,51', weeks:[9,10,11,12],g:['#a33044','#5a1825','#8b3040'], sc1:'#a33044', sc2:'#5a1825' },
+  { id:'opt',  name:'Optimización',  range:'Sem. 13–16', color:'#5a7a5a', rgb:'90,122,90', weeks:[13,14,15,16],g:['#7a9e6a','#3d5c3d','#6b8c5a'], sc1:'#7a9e6a', sc2:'#3d5c3d' },
 ];
 const ACTIVE = 6, TOTAL = 16, SPEED = 0.055; 
-let isLoggedIn = false, currentWeek = null, filesDB = {}, angle = 0;
+let currentWeek = null, filesDB = {}, angle = 0, isCarouselHovered = false;
 
 function getCat(w){ return CATS.find(c => c.weeks.includes(w)); }
 function getStatus(w){ return w < ACTIVE ? 'done' : w === ACTIVE ? 'active' : 'pending'; }
 
-/* ─── NAVEGACIÓN ─── */
-function goPage(id){
+/* ─── NAVEGACIÓN (Expuesta a window) ─── */
+window.goPage = function(id){
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   document.getElementById('nav-'+id).classList.add('active');
-}
+};
 
 /* ─── CARRUSEL ─── */
 function buildScene(){
   const sc = document.getElementById('scene'); sc.innerHTML = '';
   for(let i = 0; i < TOTAL; i++){
     const w = i+1, st = getStatus(w), cat = getCat(w);
+    const conf = CONFIG_SEMANAS[w];
+    const title = conf && conf.titulo ? conf.titulo : cat.name;
     const dotC = st==='done'?'#7a9e6a':st==='active'?'#c9903a':'#2a1a0a';
     const dotG = st==='done'?'0 0 6px #7a9e6a':st==='active'?'0 0 6px #c9903a':'none';
+    
     const el = document.createElement('div');
     el.className = 'vitem'+(st==='pending'?' locked':'');
     el.dataset.i = i;
-    el.innerHTML = `<div class="vface" id="vf${i}" style="background:linear-gradient(145deg,${cat.g[0]},${cat.g[1]},${cat.g[2]});">
-      <div class="vface-inner">
-        <div class="vhole" id="vh${i}"></div>
-        <span class="vface-label" id="lbl${i}">S${w}</span>
-        <span class="vface-week"  id="wk${i}">${cat.name}</span>
+
+    el.addEventListener('mouseenter', () => isCarouselHovered = true);
+    el.addEventListener('mouseleave', () => isCarouselHovered = false);
+
+    el.innerHTML = `
+      <div class="v-disc" id="vdisc${i}">
+        <div class="v-disc-label" style="background:linear-gradient(135deg, ${cat.g[0]}, ${cat.g[1]})">
+          <div class="v-disc-hole"></div>
+        </div>
       </div>
-      <div class="vstatus-ring ${st==='active'?'vpulse':''}" id="vd${i}" style="background:${dotC};box-shadow:${dotG};"></div>
-    </div>`;
-    if(st !== 'pending') el.addEventListener('click', () => openWeek(w));
+      <div class="vface" id="vf${i}" style="background:linear-gradient(145deg,${cat.g[0]},${cat.g[1]},${cat.g[2]});">
+        <div class="vface-inner">
+          <span class="vface-label" id="lbl${i}">S${w}</span>
+          <span class="vface-week"  id="wk${i}">${title}</span>
+        </div>
+        <div class="vstatus-ring ${st==='active'?'vpulse':''}" id="vd${i}" style="background:${dotC};box-shadow:${dotG};"></div>
+      </div>
+    `;
+
+    el.addEventListener('click', () => {
+      if(el.classList.contains('extracting')) return; 
+      isCarouselHovered = true; 
+      el.classList.add('extracting');
+      setTimeout(() => {
+        window.openWeek(w);
+        el.classList.remove('extracting');
+        isCarouselHovered = false;
+      }, 1100); 
+    });
     sc.appendChild(el);
   }
 }
@@ -571,45 +610,64 @@ function renderCarousel(){
   const sc = document.getElementById('scene'); if(!sc) return;
   const W=sc.offsetWidth||700, H=sc.offsetHeight||300;
   const cx=W/2, cy=H*0.62, RX=W*0.43, RY=H*0.36;
+  
   document.querySelectorAll('.vitem').forEach((el,i) => {
     const rad = (((i/TOTAL)*360+angle)%360)*Math.PI/180;
     const ex=cx+RX*Math.sin(rad), ey=cy-RY*Math.cos(rad);
     const front=(1+Math.cos(rad))/2;
-    const sz=22+(145-22)*front;
+    const sz=45+(145-45)*front; 
     const cat=getCat(i+1);
+
     const vf=document.getElementById('vf'+i);
     const lbl=document.getElementById('lbl'+i);
     const wk=document.getElementById('wk'+i);
-    const vh=document.getElementById('vh'+i);
     const vd=document.getElementById('vd'+i);
-    if(vf){ vf.style.width=sz+'px'; vf.style.height=sz+'px'; vf.style.borderRadius=Math.round(sz*.06)+'px';
-      vf.style.boxShadow=front>.5?`0 ${Math.round(front*8)}px ${Math.round(front*22)}px rgba(0,0,0,.5),0 0 ${Math.round(front*18)}px rgba(${cat.rgb},.38)`:'none'; }
-    if(vh){ const hs=Math.max(4,Math.round(sz*.12)); vh.style.width=hs+'px'; vh.style.height=hs+'px'; }
-    if(lbl){ lbl.style.fontSize=Math.max(.28,front*.78)+'rem'; lbl.style.opacity=front>.3?Math.min(1,(front-.3)/.25):'0'; }
-    if(wk){  wk.style.fontSize=Math.max(.22,front*.5)+'rem';  wk.style.opacity=front>.55?Math.min(1,(front-.55)/.2):'0'; }
+
+    el.style.width=sz+'px'; el.style.height=sz+'px';
+
+    if(vf){ vf.style.boxShadow=front>.5?`0 ${Math.round(front*8)}px ${Math.round(front*22)}px rgba(0,0,0,.5),0 0 ${Math.round(front*18)}px rgba(${cat.rgb},.38)`:'none'; }
+    if(lbl){ lbl.style.fontSize=Math.max(.35,front*1)+'rem'; lbl.style.opacity=front>.3?Math.min(1,(front-.3)/.25):'0'; }
+    if(wk){  wk.style.fontSize=Math.max(.22,front*.45)+'rem';  wk.style.opacity=front>.55?Math.min(1,(front-.55)/.2):'0'; }
     if(vd){ const ds=Math.max(4,Math.round(front*10)); vd.style.width=ds+'px'; vd.style.height=ds+'px'; vd.style.opacity=front>.35?'1':'0'; }
-    el.style.transform=`translate(${ex-sz/2}px,${ey-sz/2}px)`;
-    el.style.opacity=0.1+0.9*front;
-    el.style.zIndex=Math.round(front*100);
+    
+    if(!el.classList.contains('extracting')) {
+      el.style.transform=`translate(${ex-sz/2}px,${ey-sz/2}px)`;
+      el.style.opacity=0.1+0.9*front;
+      el.style.zIndex=Math.round(front*100);
+    } else {
+      el.style.zIndex=999;
+    }
   });
 }
 
-function frame(){ angle=(angle+SPEED)%360; renderCarousel(); requestAnimationFrame(frame); }
+function frame(){ 
+  if(!isCarouselHovered) angle=(angle+SPEED)%360; 
+  renderCarousel(); 
+  requestAnimationFrame(frame); 
+}
 
-/* ─── ESTANTERÍAS (AHORA PORTADAS CUADRADAS) ─── */
+/* ─── ESTANTERÍAS ─── */
+window.extractShelf = function(el, w) {
+  if(el.classList.contains('extracting')) return;
+  el.classList.add('extracting');
+  setTimeout(() => {
+    window.openWeek(w);
+    el.classList.remove('extracting');
+  }, 800);
+};
+
 function buildShelves(){
   const sec = document.getElementById('shelvesSection');
   sec.innerHTML = `<div class="shelves-divider"><div class="shelves-divider-text">◈ Colección por estantería</div></div>`;
   CATS.forEach(cat => {
     const vinyls = cat.weeks.map(w => {
-      const st=getStatus(w);
-      const dotC=st==='done'?'#7a9e6a':st==='active'?'#c9903a':'#2a1a0a';
-      // Obtenemos el titulo de la conf si existe
+      const st=getStatus(w), dotC=st==='done'?'#7a9e6a':st==='active'?'#c9903a':'#2a1a0a';
       const conf = CONFIG_SEMANAS[w];
       const title = conf && conf.titulo ? conf.titulo : cat.name;
 
-      return `<div class="shelf-vinyl-item ${st==='pending'?'locked':''}" onclick="openWeek(${w})"
+      return `<div class="shelf-vinyl-item ${st==='pending'?'locked':''}" onclick="window.extractShelf(this, ${w})"
         style="--sv-c1:${cat.g[0]};--sv-c2:${cat.g[1]};--sv-rgb:${cat.rgb};">
+        <div class="sv-disc"><div class="sv-disc-label" style="background:linear-gradient(135deg, ${cat.g[0]}, ${cat.g[1]})"><div class="sv-disc-hole"></div></div></div>
         <div class="sv-cover">
           <span class="sv-num">S${w}</span>
           <span class="sv-title">${title.substring(0, 10)}${title.length>10?'...':''}</span>
@@ -621,147 +679,150 @@ function buildShelves(){
     
     const unit = document.createElement('div');
     unit.className = 'shelf-unit';
-    unit.innerHTML = `
-      <div class="shelf-header">
-        <div class="shelf-color-bar" style="background:linear-gradient(180deg,${cat.sc1},${cat.sc2});box-shadow:0 0 8px rgba(${cat.rgb},.38);"></div>
-        <span class="shelf-cat-name">${cat.name}</span>
-        <span class="shelf-cat-range">${cat.range}</span>
-      </div>
-      <div class="shelf-board"><div class="shelf-vinyls">${vinyls}</div></div>`;
+    unit.innerHTML = `<div class="shelf-header"><div class="shelf-color-bar" style="background:linear-gradient(180deg,${cat.sc1},${cat.sc2});box-shadow:0 0 8px rgba(${cat.rgb},.38);"></div><span class="shelf-cat-name">${cat.name}</span><span class="shelf-cat-range">${cat.range}</span></div><div class="shelf-board"><div class="shelf-vinyls">${vinyls}</div></div>`;
     sec.appendChild(unit);
   });
 }
 
-/* ─── LIBRARY PAGES ─── */
 function buildLibPage(cat){
   const el = document.getElementById('lib-'+cat.id); if(!el) return;
   el.innerHTML = cat.weeks.map(w => {
-    const st=getStatus(w), bar=st==='done'?100:st==='active'?50:0;
-    const stCls=st==='done'?'st-done':st==='active'?'st-active':'st-pending';
-    const stTxt=st==='done'?'Listo':st==='active'?'Activo':'Pendiente';
-    const fc=(filesDB[w]||[]).length;
-    return `<div class="lib-shelf-row ${st==='pending'?'locked':''}" onclick="openWeek(${w})">
+    const st=getStatus(w), bar=st==='done'?100:st==='active'?50:0, fc=(filesDB[w]||[]).length;
+    const stCls=st==='done'?'st-done':st==='active'?'st-active':'st-pending', stTxt=st==='done'?'Listo':st==='active'?'Activo':'Pendiente';
+    return `<div class="lib-shelf-row ${st==='pending'?'locked':''}" onclick="window.openWeek(${w})">
       <div class="lsr-spine" style="background:linear-gradient(180deg,${cat.g[0]},${cat.g[1]});box-shadow:0 0 5px rgba(${cat.rgb},.38);border-radius:2px;"></div>
-      <div class="lsr-info">
-        <div class="lsr-name">Semana ${w}</div>
-        <div class="lsr-bar-w"><div class="lsr-bar-f" style="width:${bar}%;background:${cat.color};"></div></div>
-      </div>
-      <span class="lsr-status ${stCls}">${stTxt}</span>
-      ${fc>0?`<span class="lsr-files">${fc} arch.</span>`:''}
+      <div class="lsr-info"><div class="lsr-name">Semana ${w}</div><div class="lsr-bar-w"><div class="lsr-bar-f" style="width:${bar}%;background:${cat.color};"></div></div></div>
+      <span class="lsr-status ${stCls}">${stTxt}</span>${fc>0?`<span class="lsr-files">${fc} arch.</span>`:''}
     </div>`;
   }).join('');
 }
 function buildAllLibs(){ CATS.forEach(buildLibPage); }
 
-/* ─── AUTENTICACIÓN SIMPLIFICADA ─── */
-function openLogin(){
-  document.getElementById('loginErr').style.display='none';
-  document.getElementById('loginModal').classList.add('open');
-}
-function closeLogin(){ document.getElementById('loginModal').classList.remove('open'); }
-
-function doLogin(){
-  const u=document.getElementById('userIn').value.trim();
-  const p=document.getElementById('passIn').value;
-  
-  if(!u || !p) {
-      document.getElementById('loginErr').style.display='block';
-      return;
-  }
-  
-  // Login funcional para pruebas
-  document.getElementById('loginErr').style.display='none';
-  isLoggedIn = true;
-  closeLogin();
-  document.getElementById('btnLogin').style.display='none';
-  document.getElementById('loggedBadge').style.display='flex';
-  document.getElementById('loggedName').textContent = u;
-}
-
-function doLogout(){
-  isLoggedIn = false;
-  document.getElementById('btnLogin').style.display='';
-  document.getElementById('loggedBadge').style.display='none';
-  document.getElementById('userIn').value='';
-  document.getElementById('passIn').value='';
-}
-
-/* ─── DETALLE SEMANA ─── */
-function openWeek(w){
+/* ─── LÓGICA DE DETALLE SEMANA ─── */
+window.openWeek = function(w){
   if(getStatus(w)==='pending') return;
-  
-  const cat=getCat(w);
-  const conf = CONFIG_SEMANAS[w];
+  const cat=getCat(w), conf = CONFIG_SEMANAS[w];
 
-  // --- REDIRECCIÓN A PÁGINA WEB ---
-  // Si la semana tiene una URL externa, abre esa web y no muestra el panel
-  if(conf && conf.urlExterna) {
-    window.open(conf.urlExterna, '_blank'); // Cambia '_blank' por '_self' si no quieres que abra en otra pestaña
-    return; // Detenemos la ejecución aquí
-  }
-  // ------------------------------------------
+  if(conf && conf.urlExterna) { window.location.href = conf.urlExterna; return; }
 
   currentWeek=w;
-  const customTitle = conf && conf.titulo ? conf.titulo : cat.name;
-
   document.getElementById('dtitle').textContent=`Semana ${w}`;
-  document.getElementById('dsubtitle').textContent= customTitle;
+  document.getElementById('dsubtitle').textContent = conf && conf.titulo ? conf.titulo : cat.name;
   
-  // Solo muestra botón de subir si está logueado
-  document.getElementById('fabBtn').style.display = isLoggedIn ? '' : 'none';
+  // El botón subir archivo se muestra/oculta dependiendo de si auth.currentUser existe
+  document.getElementById('fabBtn').style.display = auth.currentUser ? '' : 'none';
   
-  // Mostrar enlaces si existen
-  const linksContainer = document.getElementById('enlaces-semana-container');
-  const linksGrid = document.getElementById('links-grid');
+  const linksContainer = document.getElementById('enlaces-semana-container'), linksGrid = document.getElementById('links-grid');
   if(conf && conf.enlaces && conf.enlaces.length > 0) {
       linksContainer.style.display = 'block';
-      linksGrid.innerHTML = conf.enlaces.map(link => `
-          <a href="${link.url}" target="_blank" class="link-card">
-              <span class="link-icon">${link.icono || '🔗'}</span>
-              <span style="font-size:0.8rem; font-weight:bold;">${link.nombre}</span>
-          </a>
-      `).join('');
-  } else {
-      linksContainer.style.display = 'none';
-  }
+      linksGrid.innerHTML = conf.enlaces.map(link => `<a href="${link.url}" target="_blank" class="link-card"><span class="link-icon">${link.icono || '🔗'}</span><span style="font-size:0.8rem; font-weight:bold;">${link.nombre}</span></a>`).join('');
+  } else { linksContainer.style.display = 'none'; }
 
   document.getElementById('dscreen').classList.add('open');
   renderFiles();
-}
-function closeDetail(){ document.getElementById('dscreen').classList.remove('open'); currentWeek=null; }
+};
+
+window.closeDetail = function(){ document.getElementById('dscreen').classList.remove('open'); currentWeek=null; };
+
 function renderFiles(){
   const g=document.getElementById('fgrid'), files=filesDB[currentWeek]||[];
   if(!files.length){ g.innerHTML='<div class="emptyw">◈ Sin archivos subidos en esta semana</div>'; return; }
   const ic={pdf:'📄',jpg:'🖼',jpeg:'🖼',png:'🖼',docx:'📝',doc:'📝'};
-  g.innerHTML=files.map(f=>{ const e=f.name.split('.').pop().toLowerCase();
-    return `<div class="fc"><span class="fi">${ic[e]||'📁'}</span><span class="fn">${f.title||f.name}</span><span class="fe">.${e}</span></div>`;
-  }).join('');
+  g.innerHTML=files.map(f=>{ const e=f.name.split('.').pop().toLowerCase(); return `<div class="fc"><span class="fi">${ic[e]||'📁'}</span><span class="fn">${f.title||f.name}</span><span class="fe">.${e}</span></div>`; }).join('');
 }
 
-/* ─── UPLOAD ─── */
-function openUpload(){ document.getElementById('uploadModal').classList.add('open'); }
-function closeUpload(){
+/* ─── UPLOAD MODAL ─── */
+window.openUpload = function(){ document.getElementById('uploadModal').classList.add('open'); };
+window.closeUpload = function(){
   document.getElementById('uploadModal').classList.remove('open');
-  document.getElementById('fileTitle').value='';
-  document.getElementById('selFile').style.display='none';
-  document.getElementById('fileIn').value='';
-}
-function filePicked(inp){ const el=document.getElementById('selFile'); if(inp.files[0]){ el.textContent='✦ '+inp.files[0].name; el.style.display='block'; } }
-function confirmUpload(){
-  const t=document.getElementById('fileTitle').value.trim();
-  const fi=document.getElementById('fileIn');
-  if(!fi.files[0]){ alert('Selecciona un archivo'); return; }
+  document.getElementById('fileTitle').value=''; document.getElementById('selFile').style.display='none'; document.getElementById('fileIn').value='';
+};
+window.filePicked = function(inp){ const el=document.getElementById('selFile'); if(inp.files[0]){ el.textContent='✦ '+inp.files[0].name; el.style.display='block'; } };
+window.confirmUpload = function(){
+  const t=document.getElementById('fileTitle').value.trim(), fi=document.getElementById('fileIn');
+  if(!fi.files[0]){ console.warn('No hay archivo'); return; }
   if(!filesDB[currentWeek]) filesDB[currentWeek]=[];
   filesDB[currentWeek].push({name:fi.files[0].name,title:t||fi.files[0].name});
-  closeUpload(); renderFiles(); buildAllLibs(); buildShelves();
-}
+  window.closeUpload(); renderFiles(); buildAllLibs(); buildShelves();
+};
 
-/* ─── INICIO ─── */
+/* ▶ 3. AUTENTICACIÓN (Preparado para Supabase) */
+window.openLogin = function(){ document.getElementById('loginErr').style.display='none'; document.getElementById('loginModal').classList.add('open'); };
+window.closeLogin = function(){ document.getElementById('loginModal').classList.remove('open'); };
+
+window.doLogin = async function(){
+  const u = document.getElementById('userIn').value.trim();
+  const p = document.getElementById('passIn').value;
+  const btn = document.querySelector('.btn-dologin');
+  const err = document.getElementById('loginErr');
+  
+  if(!u || !p) { err.textContent = "✗ Ingresa correo y contraseña"; err.style.display = 'block'; return; }
+
+  btn.textContent = "Verificando..."; btn.style.opacity = "0.5";
+
+  // -------------------------------------------------------------------
+  // LÓGICA TEMPORAL (Para que sigas diseñando sin base de datos por ahora)
+  // -------------------------------------------------------------------
+  setTimeout(() => {
+    err.style.display = 'none';
+    window.closeLogin();
+    btn.textContent = "Entrar"; btn.style.opacity = "1";
+    
+    // Simulamos que el usuario "entró"
+    document.getElementById('btnLogin').style.display = 'none';
+    document.getElementById('loggedBadge').style.display = 'flex';
+    document.getElementById('loggedName').textContent = u.split('@')[0] || u;
+    if(document.getElementById('dscreen').classList.contains('open')){ document.getElementById('fabBtn').style.display = ''; }
+  }, 800);
+
+   const { data, error } = await supabase.auth.signInWithPassword({ email: u, password: p });
+  if (error) {
+    btn.textContent = "Entrar"; btn.style.opacity = "1";
+    err.textContent = "✗ Credenciales incorrectas"; err.style.display = 'block';
+    console.error("Supabase Auth Error:", error.message);
+  } else {
+    err.style.display = 'none';
+    window.closeLogin();
+    btn.textContent = "Entrar"; btn.style.opacity = "1";
+  }
+  
+};
+
+window.doLogout = async function(){
+  // Lógica temporal para limpiar la UI:
+  document.getElementById('userIn').value = ''; document.getElementById('passIn').value = '';
+  document.getElementById('btnLogin').style.display = '';
+  document.getElementById('loggedBadge').style.display = 'none';
+  document.getElementById('fabBtn').style.display = 'none';
+  
+  /*
+  // Lógica Supabase real:
+  await supabase.auth.signOut();
+  */
+};
+
+/* ▶ 4. OBSERVADOR DE ESTADO EN TIEMPO REAL (Supabase Guardián) */
+/* // Descomenta esto para que Supabase recuerde si cerraste la página sin salir
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    document.getElementById('btnLogin').style.display = 'none';
+    document.getElementById('loggedBadge').style.display = 'flex';
+    document.getElementById('loggedName').textContent = session.user.email.split('@')[0]; 
+    if(document.getElementById('dscreen').classList.contains('open')){ document.getElementById('fabBtn').style.display = ''; }
+  } else {
+    document.getElementById('btnLogin').style.display = '';
+    document.getElementById('loggedBadge').style.display = 'none';
+    document.getElementById('fabBtn').style.display = 'none';
+  }
+});
+*/
+
+/* ─── INICIALIZACIÓN ─── */
 buildScene(); buildShelves(); buildAllLibs();
 setTimeout(()=>{ renderCarousel(); frame(); }, 80);
 window.addEventListener('resize',()=>{ clearTimeout(window._rt); window._rt=setTimeout(renderCarousel,100); });
-document.getElementById('passIn').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
-document.getElementById('userIn').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('passIn').addEventListener('keydown',e=>{ if(e.key==='Enter') window.doLogin(); });
+document.getElementById('userIn').addEventListener('keydown',e=>{ if(e.key==='Enter') window.doLogin(); });
 </script>
 </body>
 </html>
