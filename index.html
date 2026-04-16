@@ -538,7 +538,8 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
    En tu panel de Supabase ve a: Project Settings -> API
 ========================================================================= */
 const supabaseUrl = 'https://crtyrcabkowrfrwcyidx.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNydHlyY2Fia293cmZyd2N5aWR4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjM1NjY5OSwiZXhwIjoyMDkxOTMyNjk5fQ.0GI29M5W4flb5DWbvur18nGRkViir5Ax1X6gKrTFnsE';
+// ¡IMPORTANTE! Reemplaza la siguiente llave por tu llave ANON PÚBLICA (que empieza con eyJ...)
+const supabaseKey = 'sb_publishable_wpMYnrhXcLjegU5y72Ls9g_MpoKjoIK'; 
 const supabase = createClient(supabaseUrl, supabaseKey);
 /* 👆👆👆 HASTA AQUÍ 👆👆👆 ============================================== */
 
@@ -841,45 +842,54 @@ window.doLogin = async function(){
 
   btn.textContent = "Procesando..."; btn.style.opacity = "0.5";
 
-  if (isSignUpMode) {
-    // ---- MODO REGISTRO ----
-    const { data, error } = await supabase.auth.signUp({ email: u, password: p });
-    
-    if (error) {
-      btn.textContent = "Registrarse"; btn.style.opacity = "1";
-      err.textContent = "✗ Error: " + error.message; err.style.display = 'block';
-    } else {
-      // Verificamos si Supabase requiere confirmación de email por defecto
-      if (data.session == null) {
-        alert("¡Usuario creado exitosamente! Por favor, revisa tu correo para verificar tu cuenta antes de iniciar sesión.");
-        window.toggleAuthMode(); // Cambiamos de vuelta al modo login
+  // AGREGADO: Bloque try/catch para atrapar fallos silenciosos por llaves inválidas
+  try {
+    if (isSignUpMode) {
+      // ---- MODO REGISTRO ----
+      const { data, error } = await supabase.auth.signUp({ email: u, password: p });
+      
+      if (error) {
+        btn.textContent = "Registrarse"; btn.style.opacity = "1";
+        err.textContent = "✗ Error: " + error.message; err.style.display = 'block';
       } else {
+        if (data.session == null) {
+          alert("¡Usuario creado exitosamente! Por favor, revisa tu correo para verificar tu cuenta antes de iniciar sesión.");
+          window.toggleAuthMode();
+        } else {
+          err.style.display = 'none';
+          window.closeLogin();
+        }
+        btn.textContent = "Registrarse"; btn.style.opacity = "1";
+      }
+
+    } else {
+      // ---- MODO INICIO DE SESIÓN ----
+      const { data, error } = await supabase.auth.signInWithPassword({ email: u, password: p });
+      
+      if (error) {
+        btn.textContent = "Entrar"; btn.style.opacity = "1";
+        err.textContent = "✗ Credenciales incorrectas"; err.style.display = 'block';
+        console.error("Supabase Auth Error:", error.message);
+      } else {
+        const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', data.user.id).single();
+        userRole = profile ? profile.rol : 'usuario';
+
         err.style.display = 'none';
         window.closeLogin();
+        btn.textContent = "Entrar"; btn.style.opacity = "1";
+        
+        document.getElementById('btnLogin').style.display = 'none';
+        document.getElementById('loggedBadge').style.display = 'flex';
+        document.getElementById('loggedName').textContent = u.split('@')[0];
       }
-      btn.textContent = "Registrarse"; btn.style.opacity = "1";
     }
-
-  } else {
-    // ---- MODO INICIO DE SESIÓN ----
-    const { data, error } = await supabase.auth.signInWithPassword({ email: u, password: p });
-    
-    if (error) {
-      btn.textContent = "Entrar"; btn.style.opacity = "1";
-      err.textContent = "✗ Credenciales incorrectas"; err.style.display = 'block';
-      console.error("Supabase Auth Error:", error.message);
-    } else {
-      const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', data.user.id).single();
-      userRole = profile ? profile.rol : 'usuario';
-
-      err.style.display = 'none';
-      window.closeLogin();
-      btn.textContent = "Entrar"; btn.style.opacity = "1";
-      
-      document.getElementById('btnLogin').style.display = 'none';
-      document.getElementById('loggedBadge').style.display = 'flex';
-      document.getElementById('loggedName').textContent = u.split('@')[0];
-    }
+  } catch (excepcion) {
+    // Si la llave de Supabase es inválida, el error caerá aquí directamente
+    btn.textContent = isSignUpMode ? "Registrarse" : "Entrar"; 
+    btn.style.opacity = "1";
+    err.textContent = "✗ Falla de conexión. Revisa tu API Key de Supabase."; 
+    err.style.display = 'block';
+    console.error("Error crítico capturado:", excepcion);
   }
 };
 
@@ -894,7 +904,7 @@ window.doLogout = async function(){
 
 /* ▶ 4. VERIFICAR SESIÓN INICIAL Y OBSERVADOR DE ESTADO EN TIEMPO REAL */
 
-// NUEVO: Buscamos la sesión guardada inmediatamente al cargar la página
+// Buscamos la sesión guardada inmediatamente al cargar la página
 async function checkInitialSession() {
   const { data: { session } } = await supabase.auth.getSession();
   if (session) {
