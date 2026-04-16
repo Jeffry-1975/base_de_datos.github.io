@@ -317,7 +317,9 @@ body::before{
 .skip:hover{color:rgba(240,230,200,.55);}
 .login-err{color:#e8a0a0;font-size:.7rem;margin-top:.4rem;margin-bottom:.3rem;font-family:'Special Elite',cursive;letter-spacing:1px;display:none;}
 
-/* ── WEEK DETAIL ── */
+/* ── WEEK DETAIL ── 
+   (Oculto por defecto ya que ahora se abrirá en semana.html)
+*/
 .dscreen{display:none;flex-direction:column;min-height:100vh;background:var(--ink);}
 .dscreen.open{display:flex;}
 .dtop{background:var(--brown);border-bottom:2px solid var(--mustard);padding:.75rem 1.4rem;display:flex;align-items:center;gap:12px;}
@@ -380,7 +382,7 @@ body::before{
 .bgo{background:linear-gradient(90deg,var(--rust),var(--mocha));border:1px solid rgba(212,168,68,.25);border-radius:2px;color:var(--cream);padding:.45rem 1.1rem;cursor:pointer;font-size:.73rem;font-weight:700;font-family:'Special Elite',cursive;letter-spacing:1px;text-transform:uppercase;transition:opacity .2s;}
 .bgo:hover{opacity:.85;}
 
-/* ── VIEWER MODAL (NUEVO VISOR DE PDF) ── */
+/* ── VIEWER MODAL (PARA VER PDFs) ── */
 .vbackdrop{display:none;position:fixed;inset:0;background:rgba(10,8,6,.95);z-index:400;flex-direction:column;}
 .vbackdrop.open{display:flex;}
 .vtop{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.6rem;background:var(--brown);border-bottom:1px solid var(--mustard);}
@@ -434,7 +436,7 @@ body::before{
     <div class="info-card about-me">
       <div class="profile-wrap">
         <div class="profile-pic">
-          <img src="/img/Foto.webp" alt="Eitr">
+          <img src="/base_de_datos.github.io/img/Foto.webp" alt="Eitr">
         </div>
         <div class="profile-desc">
           <h4>Hola, soy Jefferson</h4>
@@ -454,7 +456,7 @@ body::before{
 <div class="page" id="page-sql"><div class="lib-page"><div class="lib-page-title">◈ Consultas SQL — Semanas 9 al 12</div><div class="lib-full-shelf" id="lib-sql"></div></div></div>
 <div class="page" id="page-opt"><div class="lib-page"><div class="lib-page-title">◈ Optimización — Semanas 13 al 16</div><div class="lib-full-shelf" id="lib-opt"></div></div></div>
 
-<!-- DETALLE SEMANA -->
+<!-- DETALLE SEMANA (Ya no se usa como pop-up, pero se deja para no romper la app) -->
 <div class="dscreen" id="dscreen">
   <div class="dtop">
     <button class="bbk" onclick="window.closeDetail()">← Volver</button>
@@ -472,17 +474,21 @@ body::before{
   </div>
 </div>
 
-<!-- LOGIN MODAL -->
+<!-- LOGIN MODAL (AHORA CON OPCIÓN DE REGISTRO) -->
 <div class="mbackdrop" id="loginModal">
   <div class="mbox">
     <div class="mbox-vinyl"></div>
-    <h3>Acceso al Sistema</h3>
-    <p>Ingresa tus credenciales</p>
+    <h3 id="authTitle">Acceso al Sistema</h3>
+    <p id="authSub">Ingresa tus credenciales</p>
     <input type="text"     id="userIn" placeholder="Correo electrónico" autocomplete="off"/>
     <input type="password" id="passIn" placeholder="Contraseña"/>
     <div class="login-err" id="loginErr">✗ Credenciales incorrectas</div>
-    <button class="btn-dologin" onclick="window.doLogin()">Entrar</button>
-    <span class="skip" onclick="window.closeLogin()">Continuar sin iniciar sesión</span>
+    <button class="btn-dologin" id="btnAuth" onclick="window.doLogin()">Entrar</button>
+    
+    <!-- Botón para alternar entre Login y Registro -->
+    <span class="skip" id="authToggle" onclick="window.toggleAuthMode()">¿No tienes cuenta? Regístrate aquí</span>
+    
+    <span class="skip" onclick="window.closeLogin()" style="margin-top: 5px; color: rgba(240,230,200,0.15);">Continuar sin iniciar sesión</span>
   </div>
 </div>
 
@@ -531,8 +537,8 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
    👇👇👇 PEGA AQUÍ TU CONFIGURACIÓN DE SUPABASE 👇👇👇
    En tu panel de Supabase ve a: Project Settings -> API
 ========================================================================= */
-const supabaseUrl = 'https://crtyrcabkowrfrwcyidx.supabase.co';
-const supabaseKey = 'sb_publishable_wpMYnrhXcLjegU5y72Ls9g_MpoKjoIK';
+const supabaseUrl = 'https://TU_PROYECTO.supabase.co';
+const supabaseKey = 'TU_ANON_KEY';
 const supabase = createClient(supabaseUrl, supabaseKey);
 /* 👆👆👆 HASTA AQUÍ 👆👆👆 ============================================== */
 
@@ -542,7 +548,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const CONFIG_SEMANAS = {
   1: {
     titulo: "Introducción y Arquitectura",
-    urlExterna: "https://github.com/Jeffry-1975/base_de_datos.github.io/blob/main/Semana_1/Informe_Tecnico_Comparativo.pdf",
+    // Se eliminó la urlExterna para que pase directo al nuevo visualizador en nueva ventana
     enlaces: [
       { nombre: "Diapositivas - Tema 1", url: "#", icono: "📑" },
       { nombre: "Lectura: Historia de BD", url: "https://es.wikipedia.org/wiki/Base_de_datos", icono: "📖" },
@@ -568,6 +574,7 @@ const CATS = [
 ];
 const ACTIVE = 6, TOTAL = 16, SPEED = 0.055; 
 let currentWeek = null, filesDB = {}, angle = 0, isCarouselHovered = false, userRole = null;
+let isSignUpMode = false; // Variable para controlar el estado del Login/Registro
 
 function getCat(w){ return CATS.find(c => c.weeks.includes(w)); }
 function getStatus(w){ return w < ACTIVE ? 'done' : w === ACTIVE ? 'active' : 'pending'; }
@@ -721,25 +728,13 @@ function buildAllLibs(){ CATS.forEach(buildLibPage); }
 /* ─── LÓGICA DE DETALLE SEMANA ─── */
 window.openWeek = function(w){
   if(getStatus(w)==='pending') return;
-  const cat=getCat(w), conf = CONFIG_SEMANAS[w];
-
-  if(conf && conf.urlExterna) { window.location.href = conf.urlExterna; return; }
-
-  currentWeek=w;
-  document.getElementById('dtitle').textContent=`Semana ${w}`;
-  document.getElementById('dsubtitle').textContent = conf && conf.titulo ? conf.titulo : cat.name;
   
-  // Validamos si es Admin para mostrar el botón
-  document.getElementById('fabBtn').style.display = (userRole === 'admin') ? '' : 'none';
+  // REDIRECCIÓN PRINCIPAL:
+  // Abre una nueva pestaña (o ventana) pasando el id de la semana en la URL
+  // Luego puedes crear tu archivo "semana.html" para capturar ese ID y mostrar el contenido
+  window.open(`semana.html?id=${w}`, '_blank');
   
-  const linksContainer = document.getElementById('enlaces-semana-container'), linksGrid = document.getElementById('links-grid');
-  if(conf && conf.enlaces && conf.enlaces.length > 0) {
-      linksContainer.style.display = 'block';
-      linksGrid.innerHTML = conf.enlaces.map(link => `<a href="${link.url}" target="_blank" class="link-card"><span class="link-icon">${link.icono || '🔗'}</span><span style="font-size:0.8rem; font-weight:bold;">${link.nombre}</span></a>`).join('');
-  } else { linksContainer.style.display = 'none'; }
-
-  document.getElementById('dscreen').classList.add('open');
-  renderFiles();
+  // Ya no mostramos el dscreen antiguo aquí.
 };
 
 window.closeDetail = function(){ document.getElementById('dscreen').classList.remove('open'); currentWeek=null; };
@@ -805,41 +800,85 @@ window.confirmUpload = function(){
 };
 
 /* ▶ 3. AUTENTICACIÓN SUPABASE (REAL) */
-window.openLogin = function(){ document.getElementById('loginErr').style.display='none'; document.getElementById('loginModal').classList.add('open'); };
+window.openLogin = function(){ 
+  document.getElementById('loginErr').style.display='none'; 
+  document.getElementById('loginModal').classList.add('open'); 
+};
 window.closeLogin = function(){ document.getElementById('loginModal').classList.remove('open'); };
+
+// Función para alternar el modo Registro/Inicio de Sesión
+window.toggleAuthMode = function() {
+  isSignUpMode = !isSignUpMode;
+  
+  const title = document.getElementById('authTitle');
+  const sub = document.getElementById('authSub');
+  const btn = document.getElementById('btnAuth');
+  const toggle = document.getElementById('authToggle');
+  const err = document.getElementById('loginErr');
+  
+  err.style.display = 'none';
+  
+  if (isSignUpMode) {
+    title.textContent = "Crear Usuario";
+    sub.textContent = "Registra tus credenciales";
+    btn.textContent = "Registrarse";
+    toggle.textContent = "¿Ya tienes cuenta? Inicia sesión";
+  } else {
+    title.textContent = "Acceso al Sistema";
+    sub.textContent = "Ingresa tus credenciales";
+    btn.textContent = "Entrar";
+    toggle.textContent = "¿No tienes cuenta? Regístrate aquí";
+  }
+};
 
 window.doLogin = async function(){
   const u = document.getElementById('userIn').value.trim();
   const p = document.getElementById('passIn').value;
-  const btn = document.querySelector('.btn-dologin');
+  const btn = document.getElementById('btnAuth');
   const err = document.getElementById('loginErr');
   
   if(!u || !p) { err.textContent = "✗ Ingresa correo y contraseña"; err.style.display = 'block'; return; }
 
-  btn.textContent = "Verificando..."; btn.style.opacity = "0.5";
+  btn.textContent = "Procesando..."; btn.style.opacity = "0.5";
 
-  // Login a través de Supabase
-  const { data, error } = await supabase.auth.signInWithPassword({ email: u, password: p });
-  
-  if (error) {
-    btn.textContent = "Entrar"; btn.style.opacity = "1";
-    err.textContent = "✗ Credenciales incorrectas"; err.style.display = 'block';
-    console.error("Supabase Auth Error:", error.message);
+  if (isSignUpMode) {
+    // ---- MODO REGISTRO ----
+    const { data, error } = await supabase.auth.signUp({ email: u, password: p });
+    
+    if (error) {
+      btn.textContent = "Registrarse"; btn.style.opacity = "1";
+      err.textContent = "✗ Error: " + error.message; err.style.display = 'block';
+    } else {
+      // Verificamos si Supabase requiere confirmación de email por defecto
+      if (data.session == null) {
+        alert("¡Usuario creado exitosamente! Por favor, revisa tu correo para verificar tu cuenta antes de iniciar sesión.");
+        window.toggleAuthMode(); // Cambiamos de vuelta al modo login
+      } else {
+        err.style.display = 'none';
+        window.closeLogin();
+      }
+      btn.textContent = "Registrarse"; btn.style.opacity = "1";
+    }
+
   } else {
-    // Si entró correctamente, obtenemos su ROL desde la tabla perfiles
-    const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', data.user.id).single();
-    userRole = profile ? profile.rol : 'usuario';
+    // ---- MODO INICIO DE SESIÓN ----
+    const { data, error } = await supabase.auth.signInWithPassword({ email: u, password: p });
+    
+    if (error) {
+      btn.textContent = "Entrar"; btn.style.opacity = "1";
+      err.textContent = "✗ Credenciales incorrectas"; err.style.display = 'block';
+      console.error("Supabase Auth Error:", error.message);
+    } else {
+      const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', data.user.id).single();
+      userRole = profile ? profile.rol : 'usuario';
 
-    err.style.display = 'none';
-    window.closeLogin();
-    btn.textContent = "Entrar"; btn.style.opacity = "1";
-    
-    document.getElementById('btnLogin').style.display = 'none';
-    document.getElementById('loggedBadge').style.display = 'flex';
-    document.getElementById('loggedName').textContent = u.split('@')[0];
-    
-    if(document.getElementById('dscreen').classList.contains('open')){ 
-        document.getElementById('fabBtn').style.display = (userRole === 'admin') ? '' : 'none'; 
+      err.style.display = 'none';
+      window.closeLogin();
+      btn.textContent = "Entrar"; btn.style.opacity = "1";
+      
+      document.getElementById('btnLogin').style.display = 'none';
+      document.getElementById('loggedBadge').style.display = 'flex';
+      document.getElementById('loggedName').textContent = u.split('@')[0];
     }
   }
 };
@@ -856,16 +895,12 @@ window.doLogout = async function(){
 /* ▶ 4. OBSERVADOR DE ESTADO EN TIEMPO REAL */
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (session) {
-    // Cuando el usuario recarga la página, recuperamos su rol
     const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', session.user.id).single();
     userRole = profile ? profile.rol : 'usuario';
 
     document.getElementById('btnLogin').style.display = 'none';
     document.getElementById('loggedBadge').style.display = 'flex';
     document.getElementById('loggedName').textContent = session.user.email.split('@')[0]; 
-    if(document.getElementById('dscreen').classList.contains('open')){ 
-        document.getElementById('fabBtn').style.display = (userRole === 'admin') ? '' : 'none'; 
-    }
   } else {
     userRole = null;
     document.getElementById('btnLogin').style.display = '';
