@@ -33,7 +33,9 @@ body::before{
   padding:5px 12px;cursor:pointer;transition:all .2s;text-transform:uppercase; text-decoration:none;
 }
 .btn-back:hover{border-color:var(--mustard);color:var(--mustard);}
-.logged-badge{display:flex;align-items:center;gap:8px;font-family:'Special Elite',cursive;font-size:.7rem;}
+.logged-badge{display:flex;align-items:center;gap:12px;font-family:'Special Elite',cursive;font-size:.7rem;}
+.btn-out{background:none;border:none;color:rgba(240,230,200,.3);font-size:.67rem;cursor:pointer;font-family:'Special Elite',cursive;}
+.btn-out:hover{color:var(--rust);}
 
 /* ── HEADER SEMANA ── */
 .header{padding:2rem 1.6rem;max-width:900px;margin:0 auto;border-bottom:1px solid rgba(212,168,68,.2);}
@@ -108,7 +110,10 @@ iframe{width:100%;height:100%;background:#fff;border-radius:4px;border:none;}
 
 <div class="topbar">
   <a href="index.html" class="btn-back">← Volver al Dashboard</a>
-  <div class="logged-badge" id="authStatus">Conectando...</div>
+  <div class="logged-badge">
+    <span id="authStatus">Conectando...</span>
+    <button class="btn-out" id="btnLogout" style="display:none;" onclick="window.doLogout()">Salir</button>
+  </div>
 </div>
 
 <div class="header">
@@ -163,8 +168,8 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 /* =========================================================================
    👇👇👇 PEGA AQUÍ TUS LLAVES DE SUPABASE 👇👇👇
 ========================================================================= */
-const supabaseUrl = 'https://crtyrcabkowrfrwcyidx.supabase.co';
-const supabaseKey = 'sb_publishable_wpMYnrhXcLjegU5y72Ls9g_MpoKjoIK';
+const supabaseUrl = 'https://TU_PROYECTO.supabase.co';
+const supabaseKey = 'TU_ANON_KEY';
 const supabase = createClient(supabaseUrl, supabaseKey);
 /* 👆👆👆 ================================================================ */
 
@@ -183,17 +188,25 @@ async function checkAuth() {
     const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', currentUser.id).single();
     userRole = profile ? profile.rol : 'usuario';
     document.getElementById('authStatus').textContent = `👤 ${currentUser.email.split('@')[0]} (${userRole})`;
+    document.getElementById('btnLogout').style.display = 'inline-block';
     
-    // Habilitar botones si es admin (o usuario general para sugerir)
+    // Habilitar botones si es admin o usuario general
     if(userRole === 'admin' || userRole === 'usuario'){
       document.getElementById('btnUpload').style.display = 'block';
       if(userRole === 'admin') document.getElementById('btnEditTitle').style.display = 'block';
     }
   } else {
     document.getElementById('authStatus').textContent = "Modo Invitado (Solo lectura)";
+    document.getElementById('btnLogout').style.display = 'none';
   }
   loadWeekData();
 }
+
+// NUEVO: Función para cerrar sesión desde esta misma página
+window.doLogout = async function() {
+  await supabase.auth.signOut();
+  window.location.reload(); // Recarga la página y te convierte en invitado
+};
 
 // 3. Cargar datos de la base de datos
 async function loadWeekData() {
