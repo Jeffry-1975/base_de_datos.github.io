@@ -434,7 +434,7 @@ body::before{
     <div class="info-card about-me">
       <div class="profile-wrap">
         <div class="profile-pic">
-          <img src="/base_de_datos.github.io/img/Foto.webp" alt="Eitr">
+          <img src="/img/Foto.webp" alt="Eitr">
         </div>
         <div class="profile-desc">
           <h4>Hola, soy Jefferson</h4>
@@ -567,7 +567,7 @@ const CATS = [
   { id:'opt',  name:'Optimización',  range:'Sem. 13–16', color:'#5a7a5a', rgb:'90,122,90', weeks:[13,14,15,16],g:['#7a9e6a','#3d5c3d','#6b8c5a'], sc1:'#7a9e6a', sc2:'#3d5c3d' },
 ];
 const ACTIVE = 6, TOTAL = 16, SPEED = 0.055; 
-let currentWeek = null, filesDB = {}, angle = 0, isCarouselHovered = false;
+let currentWeek = null, filesDB = {}, angle = 0, isCarouselHovered = false, userRole = null;
 
 function getCat(w){ return CATS.find(c => c.weeks.includes(w)); }
 function getStatus(w){ return w < ACTIVE ? 'done' : w === ACTIVE ? 'active' : 'pending'; }
@@ -729,8 +729,8 @@ window.openWeek = function(w){
   document.getElementById('dtitle').textContent=`Semana ${w}`;
   document.getElementById('dsubtitle').textContent = conf && conf.titulo ? conf.titulo : cat.name;
   
-  // Por ahora se activa de forma temporal (lo vincularemos a auth más adelante)
-  document.getElementById('fabBtn').style.display = '';
+  // Validamos si es Admin para mostrar el botón
+  document.getElementById('fabBtn').style.display = (userRole === 'admin') ? '' : 'none';
   
   const linksContainer = document.getElementById('enlaces-semana-container'), linksGrid = document.getElementById('links-grid');
   if(conf && conf.enlaces && conf.enlaces.length > 0) {
@@ -804,7 +804,7 @@ window.confirmUpload = function(){
   window.closeUpload(); renderFiles(); buildAllLibs(); buildShelves();
 };
 
-/* ▶ 3. AUTENTICACIÓN (Preparado para Supabase) */
+/* ▶ 3. AUTENTICACIÓN SUPABASE (REAL) */
 window.openLogin = function(){ document.getElementById('loginErr').style.display='none'; document.getElementById('loginModal').classList.add('open'); };
 window.closeLogin = function(){ document.getElementById('loginModal').classList.remove('open'); };
 
@@ -818,60 +818,61 @@ window.doLogin = async function(){
 
   btn.textContent = "Verificando..."; btn.style.opacity = "0.5";
 
-  // -------------------------------------------------------------------
-  // LÓGICA TEMPORAL (Para que sigas diseñando sin base de datos por ahora)
-  // -------------------------------------------------------------------
-  setTimeout(() => {
+  // Login a través de Supabase
+  const { data, error } = await supabase.auth.signInWithPassword({ email: u, password: p });
+  
+  if (error) {
+    btn.textContent = "Entrar"; btn.style.opacity = "1";
+    err.textContent = "✗ Credenciales incorrectas"; err.style.display = 'block';
+    console.error("Supabase Auth Error:", error.message);
+  } else {
+    // Si entró correctamente, obtenemos su ROL desde la tabla perfiles
+    const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', data.user.id).single();
+    userRole = profile ? profile.rol : 'usuario';
+
     err.style.display = 'none';
     window.closeLogin();
     btn.textContent = "Entrar"; btn.style.opacity = "1";
     
     document.getElementById('btnLogin').style.display = 'none';
     document.getElementById('loggedBadge').style.display = 'flex';
-    document.getElementById('loggedName').textContent = u.split('@')[0] || u;
-    if(document.getElementById('dscreen').classList.contains('open')){ document.getElementById('fabBtn').style.display = ''; }
-  }, 800);
-
-  const { data, error } = await supabase.auth.signInWithPassword({ email: u, password: p });
-  if (error) {
-    btn.textContent = "Entrar"; btn.style.opacity = "1";
-    err.textContent = "✗ Credenciales incorrectas"; err.style.display = 'block';
-    console.error("Supabase Auth Error:", error.message);
-  } else {
-    err.style.display = 'none';
-    window.closeLogin();
-    btn.textContent = "Entrar"; btn.style.opacity = "1";
+    document.getElementById('loggedName').textContent = u.split('@')[0];
+    
+    if(document.getElementById('dscreen').classList.contains('open')){ 
+        document.getElementById('fabBtn').style.display = (userRole === 'admin') ? '' : 'none'; 
+    }
   }
 };
 
 window.doLogout = async function(){
-  // Lógica temporal para limpiar la UI:
+  await supabase.auth.signOut();
+  userRole = null;
   document.getElementById('userIn').value = ''; document.getElementById('passIn').value = '';
   document.getElementById('btnLogin').style.display = '';
   document.getElementById('loggedBadge').style.display = 'none';
   document.getElementById('fabBtn').style.display = 'none';
-  
-  /*
-  // Lógica Supabase real:
-  await supabase.auth.signOut();
-  */
 };
 
-/* ▶ 4. OBSERVADOR DE ESTADO EN TIEMPO REAL (Supabase Guardián) */
-/* // Descomenta esto para que Supabase recuerde si cerraste la página sin salir
-supabase.auth.onAuthStateChange((event, session) => {
+/* ▶ 4. OBSERVADOR DE ESTADO EN TIEMPO REAL */
+supabase.auth.onAuthStateChange(async (event, session) => {
   if (session) {
+    // Cuando el usuario recarga la página, recuperamos su rol
+    const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', session.user.id).single();
+    userRole = profile ? profile.rol : 'usuario';
+
     document.getElementById('btnLogin').style.display = 'none';
     document.getElementById('loggedBadge').style.display = 'flex';
     document.getElementById('loggedName').textContent = session.user.email.split('@')[0]; 
-    if(document.getElementById('dscreen').classList.contains('open')){ document.getElementById('fabBtn').style.display = ''; }
+    if(document.getElementById('dscreen').classList.contains('open')){ 
+        document.getElementById('fabBtn').style.display = (userRole === 'admin') ? '' : 'none'; 
+    }
   } else {
+    userRole = null;
     document.getElementById('btnLogin').style.display = '';
     document.getElementById('loggedBadge').style.display = 'none';
     document.getElementById('fabBtn').style.display = 'none';
   }
 });
-*/
 
 /* ─── INICIALIZACIÓN ─── */
 buildScene(); buildShelves(); buildAllLibs();
