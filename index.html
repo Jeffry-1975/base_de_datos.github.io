@@ -23,6 +23,15 @@ body::before{
   opacity:.5;
 }
 
+/* ── MODO ADMIN (Botones de edición ocultos por defecto) ── */
+.btn-edit-admin {
+  display: none; position: absolute; z-index: 100;
+  background: rgba(10,8,6,0.8); border: 1px solid var(--mustard); color: white;
+  border-radius: 4px; padding: 4px 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
+}
+.btn-edit-admin:hover { background: var(--mustard); color: var(--ink); transform: scale(1.1); }
+body.admin-mode .btn-edit-admin { display: block; }
+
 /* ── TOPBAR ── */
 .topbar{
   background:var(--brown);border-bottom:2px solid var(--mustard);
@@ -48,7 +57,6 @@ body::before{
 }
 .nav-btn:hover{color:var(--cream);background:rgba(212,168,68,.1);}
 .nav-btn.active{color:var(--mustard);background:rgba(212,168,68,.14);border-bottom:2px solid var(--mustard);}
-.nav-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle;}
 .topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .btn-login-top{
   background:none;border:1px solid rgba(212,168,68,.35);border-radius:2px;
@@ -56,7 +64,7 @@ body::before{
   padding:5px 12px;cursor:pointer;transition:all .2s;letter-spacing:1px;text-transform:uppercase;
 }
 .btn-login-top:hover{border-color:var(--mustard);color:var(--mustard);}
-.logged-badge{display:none;align-items:center;gap:8px;}
+.logged-badge{display:flex;align-items:center;gap:8px;}
 .btn-out{background:none;border:none;color:rgba(240,230,200,.3);font-size:.67rem;cursor:pointer;font-family:'Special Elite',cursive;}
 .btn-out:hover{color:var(--rust);}
 
@@ -75,7 +83,7 @@ body::before{
 .hero-rule{width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--mustard),transparent);margin:1rem auto .6rem;}
 .hero-sub{color:rgba(240,230,200,.35);font-size:.72rem;letter-spacing:3px;font-family:'Special Elite',cursive;}
 
-/* Tarjetas de Información en Inicio */
+/* Tarjetas de Información */
 .info-section {
   display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center;
   max-width: 900px; margin: 1.5rem auto 2rem; padding: 0 1.6rem;
@@ -90,19 +98,14 @@ body::before{
   font-size: 1.1rem; margin-bottom: 0.8rem; border-bottom: 1px dashed rgba(212,168,68,.3);
   padding-bottom: 0.5rem;
 }
-.info-card p {
-  font-size: 0.85rem; line-height: 1.5; color: rgba(240,230,200,.75);
-}
+.info-card p { font-size: 0.85rem; line-height: 1.5; color: rgba(240,230,200,.75); }
 .profile-wrap { display: flex; align-items: center; gap: 1rem; }
-.profile-pic {
-  width: 70px; height: 70px; border-radius: 4px; overflow: hidden; flex-shrink: 0;
-  border: 2px solid var(--mustard); background: var(--brown);
-}
+.profile-pic { width: 70px; height: 70px; border-radius: 4px; overflow: hidden; flex-shrink: 0; border: 2px solid var(--mustard); background: var(--brown); }
 .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
 .profile-desc h4 { font-family: 'Playfair Display', serif; color: var(--cream); font-size: 1.2rem; }
 .profile-desc span { font-family: 'Special Elite', cursive; color: var(--rust); font-size: 0.7rem; letter-spacing: 1px; }
 
-/* ── CAROUSEL MEJORADO (FUNDAS Y ANIMACIÓN) ── */
+/* ── CARRUSEL 3D ── */
 .carousel-section{
   width:100%;padding:1rem 0 3.4rem;display:flex;flex-direction:column;align-items:center;
   position:relative;overflow:hidden;
@@ -113,19 +116,17 @@ body::before{
 .carousel-section::before{left:0;background:linear-gradient(90deg,var(--ink) 45%,transparent);}
 .carousel-section::after{right:0;background:linear-gradient(270deg,var(--ink) 45%,transparent);}
 .c-label{font-family:'Special Elite',cursive;color:rgba(212,168,68,.3);font-size:.62rem;letter-spacing:3px;margin-bottom:2rem;text-transform:uppercase;}
-.c-scene{position:relative;width:min(96%,700px);height:300px;}
+.c-scene{position:relative;width:min(96%,700px);height:300px;z-index:10;}
 
 .vitem{
   position:absolute;left:0;top:0;cursor:pointer;
   display:flex; align-items:center; justify-content:center;
 }
 .vitem.locked{cursor:default;}
-
 .vface{
   border-radius:6px; position:absolute; inset:0; overflow:hidden;
   display:flex; align-items:center; justify-content:center; flex-direction:column;
-  z-index:5;
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  z-index:5; transition: transform 0.4s ease, opacity 0.4s ease;
   box-shadow: -2px 5px 15px rgba(0,0,0,0.4);
 }
 .vface::before{
@@ -149,15 +150,11 @@ body::before{
 @keyframes vpulse{0%,100%{opacity:1;}50%{opacity:.35;}}
 
 .v-disc {
-  position: absolute;
-  width: 96%; height: 96%; border-radius: 50%;
-  background: #111;
+  position: absolute; width: 96%; height: 96%; border-radius: 50%; background: #111;
   background-image: repeating-radial-gradient(circle at 50% 50%, #151515 0, #151515 2px, #0a0a0a 3px, #151515 4px);
-  z-index: 1;
-  top: 2%; left: 2%;
+  z-index: 1; top: 2%; left: 2%;
   transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.8);
-  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;
 }
 .v-disc-label { width: 33%; height: 33%; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 .v-disc-hole { width: 15%; height: 15%; background: var(--ink); border-radius: 50%; }
@@ -165,124 +162,102 @@ body::before{
 .vitem:hover .v-disc { transform: translateY(-25%) rotate(45deg); }
 .vitem:hover .vface { transform: translateY(4%); }
 .vitem.extracting .v-disc {
-  transform: translateY(-90%) scale(2.2) rotate(360deg);
-  opacity: 0;
-  transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s 0.6s;
-  z-index: 20;
+  transform: translateY(-90%) scale(2.2) rotate(360deg); opacity: 0;
+  transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s 0.6s; z-index: 20;
 }
-.vitem.extracting .vface {
-  transform: translateY(30px); opacity: 0; transition: all 0.5s;
-}
+.vitem.extracting .vface { transform: translateY(30px); opacity: 0; transition: all 0.5s; }
 
-/* ── SHELVES SECTION ── */
-.shelves-section{width:100%;padding:0 1.6rem 3rem;max-width:900px;margin:0 auto;}
+/* ── NUEVA SECCIÓN DE GABINETES/UNIDADES ── */
+.shelves-section{width:100%;padding:0 1.6rem 4rem;max-width:1000px;margin:0 auto;}
 .shelves-divider{display:flex;align-items:center;gap:1rem;margin-bottom:2.2rem;}
 .shelves-divider::before,.shelves-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,68,.25),transparent);}
 .shelves-divider-text{font-family:'Special Elite',cursive;color:rgba(212,168,68,.45);font-size:.63rem;letter-spacing:3px;white-space:nowrap;text-transform:uppercase;}
-.shelf-unit{margin-bottom:2.8rem;}
-.shelf-header{display:flex;align-items:center;gap:10px;margin-bottom:.85rem;padding-bottom:.5rem;border-bottom:1px solid rgba(212,168,68,.12);}
-.shelf-color-bar{width:4px;height:28px;border-radius:2px;flex-shrink:0;}
-.shelf-cat-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);}
-.shelf-cat-range{font-family:'Special Elite',cursive;font-size:.63rem;color:rgba(240,230,200,.3);margin-left:auto;letter-spacing:1px;}
-.shelf-board{
-  background:linear-gradient(180deg,rgba(59,42,26,.55) 0%,rgba(42,28,14,.82) 100%);
-  border:1px solid rgba(107,76,42,.38);border-radius:4px;
-  padding:1.5rem 1.2rem;position:relative;
-  box-shadow:inset 0 2px 8px rgba(0,0,0,.4),0 5px 14px rgba(0,0,0,.35);
-}
-.shelf-board::after{
-  content:'';position:absolute;bottom:-6px;left:4px;right:4px;height:6px;
-  background:linear-gradient(180deg,rgba(42,28,14,.88),rgba(28,18,8,.55));
-  border-radius:0 0 3px 3px;box-shadow:0 3px 6px rgba(0,0,0,.4);
-}
-.shelf-vinyls{display:flex;align-items:flex-end;gap:12px;min-height:90px;flex-wrap:wrap;}
 
-/* ── VINILOS DE LAS ESTANTERÍAS ── */
-.shelf-vinyl-item{
-  display:flex;flex-direction:column;align-items:center;
-  cursor:pointer;transition:transform .22s;position:relative;flex-shrink:0;
+.view-container { display: grid; grid-template-columns: 1fr; grid-template-rows: 1fr; align-items: start; }
+
+/* Vista de las 4 puertas */
+.cabinets-grid {
+  grid-column: 1 / -1; grid-row: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
+  opacity: 1; transform: scale(1); visibility: visible;
 }
-.shelf-vinyl-item:hover{transform:translateY(-8px); z-index: 50;}
+.cabinets-grid.hidden { opacity: 0; transform: scale(0.92); pointer-events: none; visibility: hidden; }
+
+@media (max-width: 800px) { .cabinets-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 450px) { .cabinets-grid { grid-template-columns: 1fr; } }
+
+.cabinet-door {
+  background: linear-gradient(180deg, rgba(59,42,26,.85) 0%, rgba(28,20,16,.95) 100%);
+  border: 1px solid rgba(212,168,68,.3); border-radius: 6px; height: 320px; cursor: pointer; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 8px 15px rgba(0,0,0,0.5);
+}
+.cabinet-door::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 5px; background: linear-gradient(90deg, rgba(0,0,0,0.6), transparent); }
+.cabinet-door:hover { border-color: var(--mustard); transform: translateY(-5px); box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 15px 25px rgba(212,168,68,0.15); }
+.cabinet-glass {
+  width: 75%; height: 60%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;
+  margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+}
+.cabinet-glass::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 40%, transparent 100%); pointer-events: none; }
+.cabinet-icon { font-size: 3rem; opacity: 0.8; text-shadow: 0 0 15px currentColor; }
+.cabinet-info { text-align: center; padding: 0 10px; }
+.cabinet-unit { font-family: 'Special Elite', cursive; color: var(--mustard); font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 5px; }
+.cabinet-name { font-family: 'Playfair Display', serif; color: var(--cream); font-size: 1.1rem; line-height: 1.2; }
+
+/* Vista interior de la estantería seleccionada */
+.inside-cabinet {
+  grid-column: 1 / -1; grid-row: 1 / -1; opacity: 0; transform: scale(1.08);
+  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s; pointer-events: none; visibility: hidden;
+}
+.inside-cabinet.active { opacity: 1; transform: scale(1); pointer-events: auto; visibility: visible; }
+
+.inside-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(212,168,68,.2); flex-wrap: wrap; gap: 15px;
+}
+.btn-back-cabinet { background: none; border: 1px solid rgba(212,168,68,.3); border-radius: 2px; color: var(--cream); font-family: 'Special Elite', cursive; font-size: 0.75rem; padding: 6px 14px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
+.btn-back-cabinet:hover { background: rgba(212,168,68,.1); border-color: var(--mustard); color: var(--mustard); }
+.inside-title-wrap { text-align: right; }
+.inside-subtitle { display: block; font-family: 'Special Elite', cursive; font-size: 0.65rem; color: rgba(240,230,200,.4); letter-spacing: 2px; margin-bottom: 3px; }
+.inside-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--cream); }
+
+/* Repisa interior */
+.shelf-board{ background:linear-gradient(180deg,rgba(59,42,26,.55) 0%,rgba(42,28,14,.82) 100%); border:1px solid rgba(107,76,42,.38);border-radius:4px; padding:3rem 1.5rem 1.5rem;position:relative; box-shadow:inset 0 2px 8px rgba(0,0,0,.4),0 5px 14px rgba(0,0,0,.35); }
+.shelf-board::after{ content:'';position:absolute;bottom:-6px;left:4px;right:4px;height:6px; background:linear-gradient(180deg,rgba(42,28,14,.88),rgba(28,18,8,.55)); border-radius:0 0 3px 3px;box-shadow:0 3px 6px rgba(0,0,0,.4); }
+.shelf-vinyls{display:flex;align-items:flex-end;justify-content: center; gap: 20px; min-height: 120px; flex-wrap:wrap;}
+
+/* VINILOS EN ESTANTERÍAS */
+.shelf-vinyl-item{ display:flex;flex-direction:column;align-items:center; cursor:pointer;transition:transform .22s;position:relative;flex-shrink:0; }
+.shelf-vinyl-item:hover{transform:translateY(-12px); z-index: 50;}
 .shelf-vinyl-item.locked{cursor:default;opacity:.6;}
 
 .sv-disc {
-  position: absolute; width: 80px; height: 80px; border-radius: 50%;
-  background: #111;
-  background-image: repeating-radial-gradient(circle at 50% 50%, #151515 0, #151515 2px, #0a0a0a 3px, #151515 4px);
-  z-index: 1; top: 2.5px; left: 2.5px;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center;
+  position: absolute; width: 94px; height: 94px; border-radius: 50%; background: #111; background-image: repeating-radial-gradient(circle at 50% 50%, #151515 0, #151515 2px, #0a0a0a 3px, #151515 4px);
+  z-index: 1; top: 3px; left: 3px; opacity: 0; transform: translateX(0) scale(0.8) rotate(0deg); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 3px 10px rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center;
 }
 .sv-disc-label { width: 35%; height: 35%; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 .sv-disc-hole { width: 15%; height: 15%; background: var(--ink); border-radius: 50%; }
 
 .sv-cover{
-  width:85px;height:85px;border-radius:3px;
-  background:linear-gradient(135deg,var(--sv-c1),var(--sv-c2));
-  position:relative;overflow:hidden;transition:box-shadow .2s, transform 0.4s ease;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  border: 1px solid rgba(255,255,255,0.1); box-shadow: -3px 3px 6px rgba(0,0,0,0.4); z-index: 2;
+  width:100px;height:100px;border-radius:3px; background:linear-gradient(135deg,var(--sv-c1),var(--sv-c2)); position:relative;overflow:hidden;transition:box-shadow .2s, transform 0.4s ease;
+  display:flex;flex-direction:column;align-items:center;justify-content:center; border: 1px solid rgba(255,255,255,0.1); box-shadow: -3px 3px 6px rgba(0,0,0,0.4); z-index: 2;
 }
-.sv-cover::before {
-  content:'';position:absolute;inset:0;
-  background:repeating-radial-gradient(circle at 50% 50%,transparent 0px,transparent 4px,rgba(0,0,0,.1) 4px,rgba(0,0,0,.1) 5px);
-  z-index:1;
-}
-.sv-cover::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.2) 0%,transparent 50%,rgba(0,0,0,.3) 100%);
-  z-index:2;
-}
+.sv-cover::before { content:'';position:absolute;inset:0; background:repeating-radial-gradient(circle at 50% 50%,transparent 0px,transparent 4px,rgba(0,0,0,.1) 4px,rgba(0,0,0,.1) 5px); z-index:1; }
+.sv-cover::after{ content:'';position:absolute;inset:0; background:linear-gradient(135deg,rgba(255,255,255,.2) 0%,transparent 50%,rgba(0,0,0,.3) 100%); z-index:2; }
 .shelf-vinyl-item:hover .sv-cover{box-shadow: -2px 2px 14px rgba(var(--sv-rgb),.6);}
-.shelf-vinyl-item:hover .sv-disc { transform: translateX(35%) rotate(45deg); }
+.shelf-vinyl-item:hover .sv-disc { transform: translateX(45%) scale(1) rotate(90deg); opacity: 1; }
+
 .shelf-vinyl-item.extracting { z-index: 999 !important; }
-.shelf-vinyl-item.extracting .sv-disc {
-  transform: translateX(130%) rotate(360deg); opacity: 0;
-  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s 0.4s; z-index: 20;
-}
+.shelf-vinyl-item.extracting .sv-disc { transform: translateX(130%) scale(1.1) rotate(360deg); opacity: 0; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s 0.4s; z-index: 20; }
 .shelf-vinyl-item.extracting .sv-cover { transform: translateX(-10px); }
-.sv-num{ font-family:'Playfair Display',serif;font-weight:900;font-size:1.1rem; color:rgba(255,255,255,.9);letter-spacing:1px;z-index:3; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-.sv-title { font-family:'Courier Prime',monospace; font-size: 0.5rem; color: rgba(255,255,255,0.7); z-index:3; margin-top:4px; text-align: center; padding: 0 4px; }
-.sv-dot{ position:absolute; top: 6px; right: 6px; width:6px;height:6px;border-radius:50%;z-index:3; }
-.sv-tooltip{
-  position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);
-  background:var(--brown);border:1px solid var(--mustard);border-radius:2px;
-  padding:4px 10px;font-family:'Special Elite',cursive;font-size:.65rem;
-  color:var(--mustard);white-space:nowrap;pointer-events:none;
-  opacity:0;transition:opacity .15s;z-index:50;letter-spacing:1px;
-}
-.shelf-vinyl-item:hover .sv-tooltip{opacity:1;}
+
+.sv-num{ font-family:'Playfair Display',serif;font-weight:900;font-size:1.3rem; color:rgba(255,255,255,.9);letter-spacing:1px;z-index:3; text-shadow: 1px 1px 3px rgba(0,0,0,0.6); }
+.sv-title { font-family:'Courier Prime',monospace; font-size: 0.55rem; color: rgba(255,255,255,0.8); z-index:3; margin-top:6px; text-align: center; padding: 0 4px; }
+.sv-dot{ position:absolute; top: 6px; right: 6px; width:8px;height:8px;border-radius:50%;z-index:3; box-shadow: 0 0 5px rgba(0,0,0,0.5); }
 
 /* ── PAGES & OTHERS ── */
 .page{display:none;}
 .page.active{display:block;}
-.lib-page{padding:1.8rem 1.6rem 3rem;max-width:860px;margin:0 auto;}
-.lib-page-title{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--cream);margin-bottom:1.4rem;border-bottom:1px solid rgba(212,168,68,.18);padding-bottom:.8rem;}
-.lib-full-shelf{
-  background:linear-gradient(180deg,rgba(59,42,26,.55),rgba(42,28,14,.82)); border:1px solid rgba(107,76,42,.38);border-radius:4px;
-  padding:1rem 1.2rem; box-shadow:inset 0 2px 8px rgba(0,0,0,.4),0 5px 14px rgba(0,0,0,.35); position:relative;
-}
-.lib-full-shelf::after{
-  content:'';position:absolute;bottom:-6px;left:4px;right:4px;height:6px;
-  background:linear-gradient(180deg,rgba(42,28,14,.88),rgba(28,18,8,.55)); border-radius:0 0 3px 3px;box-shadow:0 3px 6px rgba(0,0,0,.4);
-}
-.lib-shelf-row{
-  display:flex;align-items:center;gap:12px; padding:.55rem .6rem;border-radius:3px;cursor:pointer;transition:background .14s;
-  border-bottom:1px solid rgba(255,255,255,.04);
-}
-.lib-shelf-row:last-child{border-bottom:none;}
-.lib-shelf-row:hover{background:rgba(255,255,255,.05);}
-.lib-shelf-row.locked{opacity:.22;cursor:default;pointer-events:none;}
-.lsr-spine{width:10px;height:40px;border-radius:2px;flex-shrink:0;}
-.lsr-info{flex:1;}
-.lsr-name{font-family:'Playfair Display',serif;font-size:.8rem;font-weight:700;color:var(--cream);}
-.lsr-bar-w{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:4px;}
-.lsr-bar-f{height:100%;border-radius:2px;transition:width .5s;}
-.lsr-status{font-family:'Special Elite',cursive;font-size:.6rem;padding:2px 8px;border-radius:2px;font-weight:700;letter-spacing:1px;white-space:nowrap;}
-.st-done{background:rgba(90,122,90,.22);color:#a8d4a8;border:1px solid rgba(90,122,90,.35);}
-.st-active{background:rgba(201,144,58,.18);color:var(--mustard);border:1px solid rgba(201,144,58,.38);}
-.st-pending{background:rgba(28,20,16,.6);color:rgba(240,230,200,.22);border:1px solid rgba(255,255,255,.05);}
-.lsr-files{font-size:.6rem;color:rgba(212,168,68,.4);font-family:'Special Elite',cursive;}
 
 /* ── LOGIN MODAL ── */
 .mbackdrop{display:none;position:fixed;inset:0;background:rgba(10,8,6,.9);align-items:center;justify-content:center;z-index:200;}
@@ -316,81 +291,6 @@ body::before{
 .skip{display:block;margin-top:.8rem;color:rgba(240,230,200,.28);font-size:.68rem;cursor:pointer;font-family:'Special Elite',cursive;letter-spacing:1px;}
 .skip:hover{color:rgba(240,230,200,.55);}
 .login-err{color:#e8a0a0;font-size:.7rem;margin-top:.4rem;margin-bottom:.3rem;font-family:'Special Elite',cursive;letter-spacing:1px;display:none;}
-
-/* ── WEEK DETAIL ── 
-   (Oculto por defecto ya que ahora se abrirá en semana.html)
-*/
-.dscreen{display:none;flex-direction:column;min-height:100vh;background:var(--ink);}
-.dscreen.open{display:flex;}
-.dtop{background:var(--brown);border-bottom:2px solid var(--mustard);padding:.75rem 1.4rem;display:flex;align-items:center;gap:12px;}
-.bbk{
-  background:none;border:1px solid rgba(107,76,42,.45);border-radius:2px; color:rgba(240,230,200,.45);font-size:.73rem;cursor:pointer;padding:5px 10px;
-  font-family:'Special Elite',cursive;letter-spacing:1px;transition:all .2s;text-transform:uppercase;
-}
-.bbk:hover{color:var(--mustard);border-color:var(--mustard);}
-.dtitle{font-family:'Playfair Display',serif;color:var(--cream);font-size:.95rem;font-weight:700;}
-.dsubtitle {font-family:'Courier Prime',monospace; color:rgba(212,168,68,.7); font-size: 0.8rem; margin-left:10px; border-left: 1px solid rgba(212,168,68,.4); padding-left: 10px;}
-.btn-subir{
-  margin-left:auto;background:linear-gradient(90deg,var(--rust),var(--mocha)); border:1px solid rgba(212,168,68,.25);border-radius:2px;
-  color:var(--cream);font-size:.7rem;padding:6px 14px;cursor:pointer; font-family:'Special Elite',cursive;letter-spacing:1.5px;text-transform:uppercase; transition:opacity .2s;
-}
-.btn-subir:hover{opacity:.85;}
-.dbody{flex:1;padding:1.4rem;}
-.links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 2rem; }
-.link-card { background:rgba(46,125,110,.2); border: 1px dashed rgba(46,125,110,.5); padding: 0.8rem; border-radius: 4px; text-decoration: none; color: var(--cream); transition: background 0.2s;}
-.link-card:hover { background:rgba(46,125,110,.4); }
-.link-icon { font-size: 1.2rem; display:block; margin-bottom: 5px; }
-.section-label { font-family:'Special Elite',cursive; color:var(--mustard); font-size:0.8rem; border-bottom:1px solid rgba(212,168,68,.3); padding-bottom:0.4rem; margin-bottom: 1rem; }
-.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
-.fc{background:rgba(59,42,26,.55);border:1px solid rgba(107,76,42,.38);border-radius:4px;padding:.9rem .75rem;text-align:center;transition:border-color .2s;cursor:pointer;}
-.fc:hover{border-color:var(--mustard);}
-.fi{font-size:1.6rem;display:block;margin-bottom:.4rem;}
-.fn{font-size:.68rem;color:rgba(240,230,200,.7);word-break:break-all;font-family:'Courier Prime',monospace;}
-.fe{font-size:.6rem;color:rgba(240,230,200,.28);display:block;margin-top:3px;font-family:'Special Elite',cursive;}
-.emptyw{color:rgba(240,230,200,.2);text-align:center;padding:2.5rem 1rem;font-size:.82rem;grid-column:1/-1;font-family:'Special Elite',cursive;letter-spacing:2px;}
-
-/* ── UPLOAD MODAL ── */
-.ubackdrop{display:none;position:fixed;inset:0;background:rgba(10,8,6,.9);align-items:center;justify-content:center;z-index:300;}
-.ubackdrop.open{display:flex;}
-.ubox{
-  background:var(--brown);border:2px solid var(--mustard);border-radius:4px; padding:1.8rem 1.6rem;width:min(400px,92vw);
-  box-shadow:0 0 60px rgba(192,82,42,.18);position:relative;overflow:hidden;
-}
-.ubox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rust),var(--mustard),var(--rust));}
-.ubox h3{font-family:'Playfair Display',serif;color:var(--mustard);font-size:.95rem;margin-bottom:1.1rem;letter-spacing:2px;}
-.ubox label{color:rgba(240,230,200,.45);font-size:.7rem;display:block;margin-bottom:.3rem;font-family:'Special Elite',cursive;letter-spacing:1px;}
-.ubox input[type=text]{
-  width:100%;padding:.55rem .8rem;background:rgba(28,20,16,.8); border:1px solid rgba(107,76,42,.55);border-radius:2px;color:var(--cream);
-  font-size:.8rem;outline:none;margin-bottom:.8rem;font-family:'Courier Prime',monospace;transition:border-color .2s;
-}
-.ubox input[type=text]:focus{border-color:var(--mustard);}
-.dropz{
-  border:2px dashed rgba(107,76,42,.45);border-radius:3px;padding:1.4rem; text-align:center;color:rgba(240,230,200,.3);font-size:.76rem;cursor:pointer;
-  transition:all .2s;margin-bottom:.8rem;font-family:'Special Elite',cursive;letter-spacing:1px;
-}
-.dropz:hover{border-color:var(--mustard);color:var(--mustard);}
-.dropz input{display:none;}
-.ftr{display:flex;gap:6px;justify-content:center;margin-top:.45rem;flex-wrap:wrap;}
-.fp{font-size:.6rem;padding:2px 7px;border-radius:2px;border:1px solid;font-family:'Special Elite',cursive;letter-spacing:1px;}
-.fp-p{color:var(--rust);border-color:rgba(192,82,42,.45);}
-.fp-i{color:var(--mustard);border-color:rgba(201,144,58,.45);}
-.fp-d{color:#a8c8d8;border-color:rgba(168,200,216,.35);}
-.selfile{color:var(--mustard);font-size:.72rem;text-align:center;margin-bottom:.8rem;display:none;font-family:'Special Elite',cursive;}
-.uact{display:flex;gap:8px;justify-content:flex-end;}
-.bcnl{background:none;border:1px solid rgba(107,76,42,.45);border-radius:2px;color:rgba(240,230,200,.38);padding:.45rem 1.1rem;cursor:pointer;font-size:.73rem;font-family:'Special Elite',cursive;letter-spacing:1px;transition:all .2s;text-transform:uppercase;}
-.bcnl:hover{color:var(--cream);border-color:rgba(240,230,200,.38);}
-.bgo{background:linear-gradient(90deg,var(--rust),var(--mocha));border:1px solid rgba(212,168,68,.25);border-radius:2px;color:var(--cream);padding:.45rem 1.1rem;cursor:pointer;font-size:.73rem;font-weight:700;font-family:'Special Elite',cursive;letter-spacing:1px;text-transform:uppercase;transition:opacity .2s;}
-.bgo:hover{opacity:.85;}
-
-/* ── VIEWER MODAL (PARA VER PDFs) ── */
-.vbackdrop{display:none;position:fixed;inset:0;background:rgba(10,8,6,.95);z-index:400;flex-direction:column;}
-.vbackdrop.open{display:flex;}
-.vtop{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.6rem;background:var(--brown);border-bottom:1px solid var(--mustard);}
-.vtop span{font-family:'Playfair Display',serif;color:var(--cream);font-size:1.1rem;font-weight:700;}
-.vclose{background:none;border:1px solid var(--rust);color:#e8a0a0;padding:5px 15px;border-radius:2px;cursor:pointer;font-family:'Special Elite',cursive;text-transform:uppercase;transition:all .2s;}
-.vclose:hover{background:var(--rust);color:var(--cream);}
-.vbox{flex:1;width:100%;height:100%;display:flex;justify-content:center;align-items:center;padding:1rem;}
-#viewerFrame{width:100%;height:100%;max-width:1200px;background:#fff;border:2px solid rgba(212,168,68,.3);border-radius:4px;}
 </style>
 </head>
 <body>
@@ -400,17 +300,13 @@ body::before{
   <span class="topbar-logo">◈ BD·II</span>
   <nav class="topbar-nav">
     <button class="nav-btn active" id="nav-inicio" onclick="window.goPage('inicio')">Inicio</button>
-    <button class="nav-btn" id="nav-fund" onclick="window.goPage('fund')"><span class="nav-dot" style="background:#b87333;"></span>Fundamentos</button>
-    <button class="nav-btn" id="nav-mod"  onclick="window.goPage('mod')"><span class="nav-dot" style="background:#2e7d6e;"></span>Modelado</button>
-    <button class="nav-btn" id="nav-sql"  onclick="window.goPage('sql')"><span class="nav-dot" style="background:#7a2233;"></span>Consultas SQL</button>
-    <button class="nav-btn" id="nav-opt"  onclick="window.goPage('opt')"><span class="nav-dot" style="background:#5a7a5a;"></span>Optimización</button>
   </nav>
   <div class="topbar-right">
-    <div class="logged-badge" id="loggedBadge">
-      <span id="loggedName" style="color:rgba(240,230,200,.45);font-size:.7rem;font-family:'Special Elite',cursive;"></span>
-      <button class="btn-out" onclick="window.doLogout()">Salir</button>
+    <div class="logged-badge" id="loggedBadge" style="display:flex;">
+      <span id="loggedName" style="color:rgba(240,230,200,.45);font-size:.7rem;font-family:'Special Elite',cursive;">Verificando...</span>
+      <button class="btn-out" id="btnLogout" style="display:none;" onclick="window.doLogout()">Salir</button>
     </div>
-    <button class="btn-login-top" id="btnLogin" onclick="window.openLogin()">Iniciar sesión</button>
+    <button class="btn-login-top" id="btnLogin" style="display:none;" onclick="window.openLogin()">Iniciar sesión</button>
   </div>
 </div>
 
@@ -423,6 +319,7 @@ body::before{
     <div class="hero-sub">Colección académica curada por Eitr</div>
   </div>
 
+  <!-- SECCIÓN DEL CARRUSEL 3D -->
   <div class="carousel-section">
     <div class="c-label">◈ Semanas del semestre</div>
     <div class="c-scene" id="scene"></div>
@@ -436,7 +333,7 @@ body::before{
     <div class="info-card about-me">
       <div class="profile-wrap">
         <div class="profile-pic">
-          <img src="/img/Foto.webp" alt="Eitr">
+          <img src="/img/Foto.webp" alt="Eitr" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%233b2a1a\'/><text x=\'50\' y=\'55\' font-family=\'sans-serif\' font-size=\'30\' fill=\'%23c9903a\' text-anchor=\'middle\'>E</text></svg>'">
         </div>
         <div class="profile-desc">
           <h4>Hola, soy Jefferson</h4>
@@ -447,34 +344,36 @@ body::before{
     </div>
   </div>
 
-  <div class="shelves-section" id="shelvesSection"></div>
-</div>
+  <!-- SECCIÓN DE ESTANTERÍAS -->
+  <div class="shelves-section">
+    <div class="shelves-divider"><div class="shelves-divider-text" id="loadingText">◈ Conectando a la Base de Datos...</div></div>
+    
+    <div class="view-container">
+      <!-- Vista 1: Las 4 puertas de los Gabinetes -->
+      <div id="cabinets-view" class="cabinets-grid">
+        <!-- Generado dinámicamente -->
+      </div>
 
-<!-- PÁGINAS CATEGORÍAS -->
-<div class="page" id="page-fund"><div class="lib-page"><div class="lib-page-title">◈ Fundamentos — Semanas 1 al 4</div><div class="lib-full-shelf" id="lib-fund"></div></div></div>
-<div class="page" id="page-mod"><div class="lib-page"><div class="lib-page-title">◈ Modelado — Semanas 5 al 8</div><div class="lib-full-shelf" id="lib-mod"></div></div></div>
-<div class="page" id="page-sql"><div class="lib-page"><div class="lib-page-title">◈ Consultas SQL — Semanas 9 al 12</div><div class="lib-full-shelf" id="lib-sql"></div></div></div>
-<div class="page" id="page-opt"><div class="lib-page"><div class="lib-page-title">◈ Optimización — Semanas 13 al 16</div><div class="lib-full-shelf" id="lib-opt"></div></div></div>
-
-<!-- DETALLE SEMANA (Ya no se usa como pop-up, pero se deja para no romper la app) -->
-<div class="dscreen" id="dscreen">
-  <div class="dtop">
-    <button class="bbk" onclick="window.closeDetail()">← Volver</button>
-    <span class="dtitle" id="dtitle"></span>
-    <span class="dsubtitle" id="dsubtitle"></span>
-    <button class="btn-subir" id="fabBtn" style="display:none;" onclick="window.openUpload()">+ Subir Archivo</button>
-  </div>
-  <div class="dbody">
-    <div id="enlaces-semana-container" style="display:none;">
-      <div class="section-label">◈ Material y Enlaces Fijos</div>
-      <div class="links-grid" id="links-grid"></div>
+      <!-- Vista 2: El interior del Gabinete -->
+      <div id="inside-cabinet-view" class="inside-cabinet">
+        <div class="inside-header">
+          <button class="btn-back-cabinet" onclick="window.closeCabinet()">← Volver a Unidades</button>
+          <div class="inside-title-wrap">
+            <span class="inside-subtitle" id="ic-sub">UNIDAD X</span>
+            <h3 class="inside-title" id="ic-title">Nombre de la Unidad</h3>
+          </div>
+        </div>
+        <div class="shelf-board" id="ic-board">
+          <div class="shelf-vinyls" id="inside-vinyls">
+            <!-- Generado dinámicamente -->
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="section-label" style="margin-top: 1rem;">◈ Archivos Subidos</div>
-    <div class="fgrid" id="fgrid"></div>
   </div>
 </div>
 
-<!-- LOGIN MODAL (AHORA CON OPCIÓN DE REGISTRO) -->
+<!-- LOGIN MODAL -->
 <div class="mbackdrop" id="loginModal">
   <div class="mbox">
     <div class="mbox-vinyl"></div>
@@ -484,468 +383,335 @@ body::before{
     <input type="password" id="passIn" placeholder="Contraseña"/>
     <div class="login-err" id="loginErr">✗ Credenciales incorrectas</div>
     <button class="btn-dologin" id="btnAuth" onclick="window.doLogin()">Entrar</button>
-    
-    <!-- Botón para alternar entre Login y Registro -->
     <span class="skip" id="authToggle" onclick="window.toggleAuthMode()">¿No tienes cuenta? Regístrate aquí</span>
-    
     <span class="skip" onclick="window.closeLogin()" style="margin-top: 5px; color: rgba(240,230,200,0.15);">Continuar sin iniciar sesión</span>
   </div>
 </div>
 
-<!-- UPLOAD MODAL -->
-<div class="ubackdrop" id="uploadModal">
-  <div class="ubox">
-    <h3>◈ Subir Material</h3>
-    <label>Título del archivo</label>
-    <input type="text" id="fileTitle" placeholder="Ej: Informe Semana 3"/>
-    <div class="dropz" onclick="document.getElementById('fileIn').click()">
-      Arrastra o haz clic para seleccionar
-      <div class="ftr">
-        <span class="fp fp-p">PDF</span>
-        <span class="fp fp-i">JPG · PNG</span>
-        <span class="fp fp-d">DOCX</span>
-      </div>
-      <input type="file" id="fileIn" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc" onchange="window.filePicked(this)"/>
-    </div>
-    <div class="selfile" id="selFile"></div>
-    <div class="uact">
-      <button class="bcnl" onclick="window.closeUpload()">Cancelar</button>
-      <button class="bgo"  onclick="window.confirmUpload()">Subir</button>
-    </div>
-  </div>
-</div>
-
-<!-- VIEWER MODAL (PARA VER PDFs) -->
-<div class="vbackdrop" id="viewerModal">
-  <div class="vtop">
-    <span id="viewerTitle">Visualizador de Documentos</span>
-    <button class="vclose" onclick="window.closeViewer()">Cerrar</button>
-  </div>
-  <div class="vbox">
-    <iframe id="viewerFrame" src="" frameborder="0"></iframe>
-  </div>
-</div>
-
-<!-- ========================================== -->
-<!-- SCRIPT TIPO MÓDULO CON SUPABASE INTEGRADO  -->
-<!-- ========================================== -->
+<!-- SCRIPT TIPO MÓDULO -->
 <script type="module">
-/* ▶ 1. IMPORTACIONES DE SUPABASE (CDN) */
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+import { supabaseUrl, supabaseKey } from './config.js';
 
-/* =========================================================================
-   👇👇👇 PEGA AQUÍ TU CONFIGURACIÓN DE SUPABASE 👇👇👇
-   En tu panel de Supabase ve a: Project Settings -> API
-========================================================================= */
-const supabaseUrl = 'https://crtyrcabkowrfrwcyidx.supabase.co';
-// ¡IMPORTANTE! Reemplaza la siguiente llave por tu llave ANON PÚBLICA (que empieza con eyJ...)
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNydHlyY2Fia293cmZyd2N5aWR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNTY2OTksImV4cCI6MjA5MTkzMjY5OX0.Vl-aZTTugDXn_mYw8_eUkSGA25K0x_SYlSHGXzjxzTQ'; 
-
-// Configuramos Supabase para que la sesión muera al cerrar la pestaña/ventana (sessionStorage)
 const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    storage: window.sessionStorage
-  }
+  auth: { storage: window.sessionStorage }
 });
-/* 👆👆👆 HASTA AQUÍ 👆👆👆 ============================================== */
 
 /* =========================================================================
-   ▶ CONFIGURACIÓN INDEPENDIENTE DE NOMBRES Y ENLACES
+   ▶ LÓGICA DE DATOS DINÁMICOS (CONEXIÓN SUPABASE)
 ========================================================================= */
-const CONFIG_SEMANAS = {
-  1: {
-    titulo: "Introducción y Arquitectura",
-    // Se eliminó la urlExterna para que pase directo al nuevo visualizador en nueva ventana
-    enlaces: [
-      { nombre: "Diapositivas - Tema 1", url: "#", icono: "📑" },
-      { nombre: "Lectura: Historia de BD", url: "https://es.wikipedia.org/wiki/Base_de_datos", icono: "📖" },
-      { nombre: "Enlace Temporal A", url: "https://ejemplo.com", icono: "🔗" }
-    ]
-  },
-  2: {
-    titulo: "Modelado Relacional Básico",
-    enlaces: [ { nombre: "Diagrama Entidad-Relación", url: "#", icono: "📊" } ]
-  },
-  3: { titulo: "Normalización de Datos", enlaces: [] },
-  4: { titulo: "Evaluación Práctica 1", enlaces: [] },
-  5: { titulo: "Diseño Conceptual" },
-  6: { titulo: "Pasando al Físico" },
-};
-
-/* ─── DATOS CATEGORÍAS Y GLOBALES ─── */
-const CATS = [
-  { id:'fund', name:'Fundamentos',   range:'Sem. 1–4',   color:'#b87333', rgb:'184,115,51', weeks:[1,2,3,4],   g:['#d4924a','#8b5a2b','#c0522a'], sc1:'#d4924a', sc2:'#8b5a2b' },
-  { id:'mod',  name:'Modelado',      range:'Sem. 5–8',   color:'#2e7d6e', rgb:'46,125,110', weeks:[5,6,7,8],   g:['#3da090','#1d5c52','#4a8c6e'], sc1:'#3da090', sc2:'#1d5c52' },
-  { id:'sql',  name:'Consultas SQL', range:'Sem. 9–12',  color:'#7a2233', rgb:'122,34,51', weeks:[9,10,11,12],g:['#a33044','#5a1825','#8b3040'], sc1:'#a33044', sc2:'#5a1825' },
-  { id:'opt',  name:'Optimización',  range:'Sem. 13–16', color:'#5a7a5a', rgb:'90,122,90', weeks:[13,14,15,16],g:['#7a9e6a','#3d5c3d','#6b8c5a'], sc1:'#7a9e6a', sc2:'#3d5c3d' },
+const COLOR_CONFIG = [
+  { id: 1, range:'Sem. 1–4',   color:'#b87333', rgb:'184,115,51', weeks:[1,2,3,4],   g:['#d4924a','#8b5a2b','#c0522a'] },
+  { id: 2, range:'Sem. 5–8',   color:'#2e7d6e', rgb:'46,125,110', weeks:[5,6,7,8],   g:['#3da090','#1d5c52','#4a8c6e'] },
+  { id: 3, range:'Sem. 9–12',  color:'#7a2233', rgb:'122,34,51', weeks:[9,10,11,12],g:['#a33044','#5a1825','#8b3040'] },
+  { id: 4, range:'Sem. 13–16', color:'#5a7a5a', rgb:'90,122,90', weeks:[13,14,15,16],g:['#7a9e6a','#3d5c3d','#6b8c5a'] },
 ];
-const ACTIVE = 6, TOTAL = 16, SPEED = 0.055; 
-let currentWeek = null, filesDB = {}, angle = 0, isCarouselHovered = false, userRole = null;
-let isSignUpMode = false; // Variable para controlar el estado del Login/Registro
 
-function getCat(w){ return CATS.find(c => c.weeks.includes(w)); }
-function getStatus(w){ return w < ACTIVE ? 'done' : w === ACTIVE ? 'active' : 'pending'; }
+let dbCabinets = [...COLOR_CONFIG]; 
+let dbWeeks = {};    
+const ACTIVE_WEEK = 6; 
+function getStatus(w){ return w < ACTIVE_WEEK ? 'done' : w === ACTIVE_WEEK ? 'active' : 'pending'; }
 
-/* ─── NAVEGACIÓN (Expuesta a window) ─── */
-window.goPage = function(id){
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.getElementById('nav-'+id).classList.add('active');
+/* ── VARIABLES DEL CARRUSEL 3D ── */
+const TOTAL = 16, SPEED = 0.055; 
+let angle = 0, isCarouselHovered = false, isAnimating = false;
+
+/* =========================================================================
+   ▶ FUNCIONES NÚCLEO (A PRUEBA DE FALLOS)
+========================================================================= */
+
+window.loadDashboardData = async function() {
+  try {
+    document.getElementById('loadingText').textContent = "◈ Cargando colección...";
+
+    // Pedir datos a Supabase (Seguro)
+    const { data: estData } = await supabase.from('estanterias').select('*').order('id');
+    const { data: semData } = await supabase.from('semanas').select('id, titulo').order('id');
+
+    if(semData) semData.forEach(s => { dbWeeks[s.id] = s.titulo; });
+
+    dbCabinets = COLOR_CONFIG.map(config => {
+      const dbItem = estData ? estData.find(e => e.id === config.id) : null;
+      return {
+        ...config,
+        name: dbItem ? dbItem.nombre : 'Unidad ' + config.id,
+        icon: dbItem ? dbItem.icono : '📁'
+      };
+    });
+
+    document.getElementById('loadingText').textContent = "◈ Colección por Unidad";
+    buildCabinets();
+    buildScene(); // Reconstruye el carrusel con la data nueva
+  } catch(e) {
+    console.error("Fallo al conectar con Supabase:", e);
+    // Si falla, al menos mostramos el esqueleto por defecto
+    buildCabinets();
+    buildScene();
+  }
 };
 
-/* ─── CARRUSEL ─── */
+/* ─── LÓGICA DEL CARRUSEL 3D ─── */
 function buildScene(){
-  const sc = document.getElementById('scene'); sc.innerHTML = '';
-  for(let i = 0; i < TOTAL; i++){
-    const w = i+1, st = getStatus(w), cat = getCat(w);
-    const conf = CONFIG_SEMANAS[w];
-    const title = conf && conf.titulo ? conf.titulo : cat.name;
-    const dotC = st==='done'?'#7a9e6a':st==='active'?'#c9903a':'#2a1a0a';
-    const dotG = st==='done'?'0 0 6px #7a9e6a':st==='active'?'0 0 6px #c9903a':'none';
+  try {
+    const sc = document.getElementById('scene'); 
+    if(!sc) return;
+    sc.innerHTML = '';
     
-    const el = document.createElement('div');
-    el.className = 'vitem'+(st==='pending'?' locked':'');
-    el.dataset.i = i;
-
-    el.addEventListener('mouseenter', () => isCarouselHovered = true);
-    el.addEventListener('mouseleave', () => isCarouselHovered = false);
-
-    el.innerHTML = `
-      <div class="v-disc" id="vdisc${i}">
-        <div class="v-disc-label" style="background:linear-gradient(135deg, ${cat.g[0]}, ${cat.g[1]})">
-          <div class="v-disc-hole"></div>
+    for(let i = 0; i < TOTAL; i++){
+      const w = i+1, st = getStatus(w);
+      const cat = dbCabinets.find(c => c.weeks && c.weeks.includes(w)) || COLOR_CONFIG[0];
+      const title = dbWeeks[w] || 'Semana ' + w;
+      const dotC = st==='done'?'#7a9e6a':st==='active'?'#c9903a':'#2a1a0a';
+      const dotG = st==='done'?'0 0 6px #7a9e6a':st==='active'?'0 0 6px #c9903a':'none';
+      
+      const el = document.createElement('div');
+      el.className = 'vitem'+(st==='pending'?' locked':'');
+      el.innerHTML = `
+        <div class="v-disc"><div class="v-disc-label" style="background:linear-gradient(135deg, ${cat.g[0]}, ${cat.g[1]})"><div class="v-disc-hole"></div></div></div>
+        <div class="vface" id="vf${i}" style="background:linear-gradient(145deg,${cat.g[0]},${cat.g[1]},${cat.g[2]});">
+          <div class="vface-inner"><span class="vface-label" id="lbl${i}">S${w}</span><span class="vface-week" id="wk${i}">${title}</span></div>
+          <div class="vstatus-ring ${st==='active'?'vpulse':''}" id="vd${i}" style="background:${dotC};box-shadow:${dotG};"></div>
         </div>
-      </div>
-      <div class="vface" id="vf${i}" style="background:linear-gradient(145deg,${cat.g[0]},${cat.g[1]},${cat.g[2]});">
-        <div class="vface-inner">
-          <span class="vface-label" id="lbl${i}">S${w}</span>
-          <span class="vface-week"  id="wk${i}">${title}</span>
-        </div>
-        <div class="vstatus-ring ${st==='active'?'vpulse':''}" id="vd${i}" style="background:${dotC};box-shadow:${dotG};"></div>
-      </div>
-    `;
-
-    el.addEventListener('click', () => {
-      if(el.classList.contains('extracting')) return; 
-      isCarouselHovered = true; 
-      el.classList.add('extracting');
-      setTimeout(() => {
-        window.openWeek(w);
-        el.classList.remove('extracting');
-        isCarouselHovered = false;
-      }, 1100); 
-    });
-    sc.appendChild(el);
+      `;
+      el.addEventListener('mouseenter', () => isCarouselHovered = true);
+      el.addEventListener('mouseleave', () => isCarouselHovered = false);
+      el.addEventListener('click', () => {
+        if(el.classList.contains('extracting') || st==='pending') return; 
+        isCarouselHovered = true; el.classList.add('extracting');
+        setTimeout(() => { window.open(`semana.html?id=${w}`, '_blank'); el.classList.remove('extracting'); isCarouselHovered = false; }, 1100); 
+      });
+      sc.appendChild(el);
+    }
+  } catch(e) {
+    console.error("Error crítico construyendo carrusel:", e);
   }
 }
 
 function renderCarousel(){
-  const sc = document.getElementById('scene'); if(!sc) return;
-  const W=sc.offsetWidth||700, H=sc.offsetHeight||300;
-  const cx=W/2, cy=H*0.62, RX=W*0.43, RY=H*0.36;
-  
-  document.querySelectorAll('.vitem').forEach((el,i) => {
-    const rad = (((i/TOTAL)*360+angle)%360)*Math.PI/180;
-    const ex=cx+RX*Math.sin(rad), ey=cy-RY*Math.cos(rad);
-    const front=(1+Math.cos(rad))/2;
-    const sz=45+(145-45)*front; 
-    const cat=getCat(i+1);
-
-    const vf=document.getElementById('vf'+i);
-    const lbl=document.getElementById('lbl'+i);
-    const wk=document.getElementById('wk'+i);
-    const vd=document.getElementById('vd'+i);
-
-    el.style.width=sz+'px'; el.style.height=sz+'px';
-
-    if(vf){ vf.style.boxShadow=front>.5?`0 ${Math.round(front*8)}px ${Math.round(front*22)}px rgba(0,0,0,.5),0 0 ${Math.round(front*18)}px rgba(${cat.rgb},.38)`:'none'; }
-    if(lbl){ lbl.style.fontSize=Math.max(.35,front*1)+'rem'; lbl.style.opacity=front>.3?Math.min(1,(front-.3)/.25):'0'; }
-    if(wk){  wk.style.fontSize=Math.max(.22,front*.45)+'rem';  wk.style.opacity=front>.55?Math.min(1,(front-.55)/.2):'0'; }
-    if(vd){ const ds=Math.max(4,Math.round(front*10)); vd.style.width=ds+'px'; vd.style.height=ds+'px'; vd.style.opacity=front>.35?'1':'0'; }
+  try {
+    const sc = document.getElementById('scene'); 
+    if(!sc) return;
+    const W = sc.offsetWidth || 700, H = sc.offsetHeight || 300;
+    const cx = W/2, cy = H*0.62, RX = W*0.43, RY = H*0.36;
     
-    if(!el.classList.contains('extracting')) {
-      el.style.transform=`translate(${ex-sz/2}px,${ey-sz/2}px)`;
-      el.style.opacity=0.1+0.9*front;
-      el.style.zIndex=Math.round(front*100);
-    } else {
-      el.style.zIndex=999;
-    }
-  });
+    // Aquí es vital buscar SOLO los vitem del carrusel, no los de las estanterías
+    const items = document.querySelectorAll('#scene .vitem');
+    items.forEach((el,i) => {
+      const rad = (((i/TOTAL)*360+angle)%360)*Math.PI/180;
+      const front = (1+Math.cos(rad))/2, sz = 45+(145-45)*front; 
+      const w = i+1;
+      const cat = dbCabinets.find(c => c.weeks && c.weeks.includes(w)) || COLOR_CONFIG[0];
+      
+      const vf = document.getElementById('vf'+i), lbl = document.getElementById('lbl'+i), wk = document.getElementById('wk'+i), vd = document.getElementById('vd'+i);
+      
+      el.style.width = sz+'px'; el.style.height = sz+'px';
+      el.style.transform = `translate(${cx+RX*Math.sin(rad)-sz/2}px,${cy-RY*Math.cos(rad)-sz/2}px)`;
+      el.style.opacity = 0.1+0.9*front; 
+      el.style.zIndex = Math.round(front*100);
+
+      if(vf) vf.style.boxShadow = front>.5?`0 ${Math.round(front*8)}px ${Math.round(front*22)}px rgba(0,0,0,.5),0 0 ${Math.round(front*18)}px rgba(${cat.rgb},.38)`:'none';
+      if(lbl){ lbl.style.fontSize=Math.max(.35,front*1)+'rem'; lbl.style.opacity=front>.3?Math.min(1,(front-.3)/.25):'0'; }
+      if(wk){  wk.style.fontSize=Math.max(.22,front*.45)+'rem';  wk.style.opacity=front>.55?Math.min(1,(front-.55)/.2):'0'; }
+      if(vd){ const ds=Math.max(4,Math.round(front*10)); vd.style.width=ds+'px'; vd.style.height=ds+'px'; vd.style.opacity=front>.35?'1':'0'; }
+      
+      if(el.classList.contains('extracting')) el.style.zIndex=999;
+    });
+  } catch(e) {
+    console.error("Error crítico animando carrusel:", e);
+  }
 }
 
 function frame(){ 
   if(!isCarouselHovered) angle=(angle+SPEED)%360; 
   renderCarousel(); 
-  requestAnimationFrame(frame); 
+  if(isAnimating) requestAnimationFrame(frame); 
 }
 
-/* ─── ESTANTERÍAS ─── */
-window.extractShelf = function(el, w) {
-  if(el.classList.contains('extracting')) return;
-  el.classList.add('extracting');
-  setTimeout(() => {
-    window.openWeek(w);
-    el.classList.remove('extracting');
-  }, 800);
-};
+/* ── RENDERIZAR GABINETES (PUERTAS) ── */
+function buildCabinets() {
+  const view = document.getElementById('cabinets-view');
+  view.innerHTML = dbCabinets.map((cat, idx) => `
+    <div class="cabinet-door" onclick="window.openCabinet(${idx})" style="border-color: rgba(${cat.rgb}, 0.4);">
+      <button class="btn-edit-admin" style="top:8px; right:8px;" onclick="event.stopPropagation(); window.editCabinetName(${cat.id}, '${cat.name}', '${cat.icon}')">✏️ Editar Estantería</button>
+      <div class="cabinet-glass">
+         <div class="cabinet-icon" style="color:${cat.color}">${cat.icon}</div>
+      </div>
+      <div class="cabinet-info">
+        <div class="cabinet-unit">UNIDAD ${cat.id}</div>
+        <div class="cabinet-name">${cat.name}</div>
+      </div>
+    </div>
+  `).join('');
+}
 
-function buildShelves(){
-  const sec = document.getElementById('shelvesSection');
-  sec.innerHTML = `<div class="shelves-divider"><div class="shelves-divider-text">◈ Colección por estantería</div></div>`;
-  CATS.forEach(cat => {
-    const vinyls = cat.weeks.map(w => {
-      const st=getStatus(w), dotC=st==='done'?'#7a9e6a':st==='active'?'#c9903a':'#2a1a0a';
-      const conf = CONFIG_SEMANAS[w];
-      const title = conf && conf.titulo ? conf.titulo : cat.name;
+/* ── ABRIR UN GABINETE Y MOSTRAR VINILOS ── */
+window.openCabinet = function(idx) {
+  const cat = dbCabinets[idx];
+  
+  document.getElementById('ic-sub').textContent = `UNIDAD ${cat.id} · ${cat.range}`;
+  document.getElementById('ic-title').textContent = cat.name;
+  document.getElementById('ic-title').style.color = cat.color;
+  document.getElementById('ic-board').style.borderColor = `rgba(${cat.rgb}, 0.5)`;
 
-      return `<div class="shelf-vinyl-item ${st==='pending'?'locked':''}" onclick="window.extractShelf(this, ${w})"
+  const vinylsHtml = cat.weeks.map(w => {
+    const st = getStatus(w);
+    const dotC = st==='done'?'#7a9e6a':st==='active'?'#c9903a':'#2a1a0a';
+    const title = dbWeeks[w] || 'Por definir';
+
+    return `
+      <div class="shelf-vinyl-item ${st==='pending'?'locked':''}" onclick="window.extractShelf(this, ${w})"
         style="--sv-c1:${cat.g[0]};--sv-c2:${cat.g[1]};--sv-rgb:${cat.rgb};">
+        <button class="btn-edit-admin" style="top:-15px; right:-15px; border-radius:50%; width:30px; height:30px; padding:0;" onclick="event.stopPropagation(); window.editWeekTitle(${w}, '${title}')">✏️</button>
         <div class="sv-disc"><div class="sv-disc-label" style="background:linear-gradient(135deg, ${cat.g[0]}, ${cat.g[1]})"><div class="sv-disc-hole"></div></div></div>
         <div class="sv-cover">
           <span class="sv-num">S${w}</span>
-          <span class="sv-title">${title.substring(0, 10)}${title.length>10?'...':''}</span>
+          <span class="sv-title">${title.substring(0, 11)}${title.length>11?'...':''}</span>
           <div class="sv-dot" style="background:${dotC};"></div>
         </div>
         <div class="sv-tooltip">Semana ${w} · ${title}</div>
       </div>`;
-    }).join('');
-    
-    const unit = document.createElement('div');
-    unit.className = 'shelf-unit';
-    unit.innerHTML = `<div class="shelf-header"><div class="shelf-color-bar" style="background:linear-gradient(180deg,${cat.sc1},${cat.sc2});box-shadow:0 0 8px rgba(${cat.rgb},.38);"></div><span class="shelf-cat-name">${cat.name}</span><span class="shelf-cat-range">${cat.range}</span></div><div class="shelf-board"><div class="shelf-vinyls">${vinyls}</div></div>`;
-    sec.appendChild(unit);
-  });
-}
-
-function buildLibPage(cat){
-  const el = document.getElementById('lib-'+cat.id); if(!el) return;
-  el.innerHTML = cat.weeks.map(w => {
-    const st=getStatus(w), bar=st==='done'?100:st==='active'?50:0, fc=(filesDB[w]||[]).length;
-    const stCls=st==='done'?'st-done':st==='active'?'st-active':'st-pending', stTxt=st==='done'?'Listo':st==='active'?'Activo':'Pendiente';
-    return `<div class="lib-shelf-row ${st==='pending'?'locked':''}" onclick="window.openWeek(${w})">
-      <div class="lsr-spine" style="background:linear-gradient(180deg,${cat.g[0]},${cat.g[1]});box-shadow:0 0 5px rgba(${cat.rgb},.38);border-radius:2px;"></div>
-      <div class="lsr-info"><div class="lsr-name">Semana ${w}</div><div class="lsr-bar-w"><div class="lsr-bar-f" style="width:${bar}%;background:${cat.color};"></div></div></div>
-      <span class="lsr-status ${stCls}">${stTxt}</span>${fc>0?`<span class="lsr-files">${fc} arch.</span>`:''}
-    </div>`;
   }).join('');
-}
-function buildAllLibs(){ CATS.forEach(buildLibPage); }
 
-/* ─── LÓGICA DE DETALLE SEMANA ─── */
-window.openWeek = function(w){
-  if(getStatus(w)==='pending') return;
-  
-  // REDIRECCIÓN PRINCIPAL:
-  // Abre una nueva pestaña (o ventana) pasando el id de la semana en la URL
-  // Luego puedes crear tu archivo "semana.html" para capturar ese ID y mostrar el contenido
-  window.open(`semana.html?id=${w}`, '_blank');
-  
-  // Ya no mostramos el dscreen antiguo aquí.
+  document.getElementById('inside-vinyls').innerHTML = vinylsHtml;
+  document.getElementById('cabinets-view').classList.add('hidden');
+  document.getElementById('inside-cabinet-view').classList.add('active');
 };
 
-window.closeDetail = function(){ document.getElementById('dscreen').classList.remove('open'); currentWeek=null; };
+window.closeCabinet = function() {
+  document.getElementById('inside-cabinet-view').classList.remove('active');
+  document.getElementById('cabinets-view').classList.remove('hidden');
+};
 
-function renderFiles(){
-  const g=document.getElementById('fgrid'), files=filesDB[currentWeek]||[];
-  if(!files.length){ g.innerHTML='<div class="emptyw">◈ Sin archivos subidos en esta semana</div>'; return; }
-  const ic={pdf:'📄',jpg:'🖼',jpeg:'🖼',png:'🖼',docx:'📝',doc:'📝'};
-  
-  // Archivos con evento click para abrir en visor
-  g.innerHTML=files.map((f, i)=>{ 
-    const e=f.name.split('.').pop().toLowerCase(); 
-    return `<div class="fc" onclick="window.viewFile(${currentWeek}, ${i})"><span class="fi">${ic[e]||'📁'}</span><span class="fn">${f.title||f.name}</span><span class="fe">.${e}</span></div>`; 
-  }).join('');
-}
+window.extractShelf = function(el, w) {
+  if(el.classList.contains('extracting') || getStatus(w)==='pending') return;
+  el.classList.add('extracting');
+  setTimeout(() => {
+    window.open(`semana.html?id=${w}`, '_blank');
+    el.classList.remove('extracting');
+  }, 800);
+};
 
-/* ─── VISUALIZADOR DE ARCHIVOS (NUEVO) ─── */
-window.viewFile = function(w, idx) {
-  const fileData = filesDB[w][idx];
-  
-  if(fileData.fileObj) {
-    const url = URL.createObjectURL(fileData.fileObj);
-    const ext = fileData.name.split('.').pop().toLowerCase();
+/* =========================================================================
+   ▶ FUNCIONES DE EDICIÓN (SOLO ADMIN)
+========================================================================= */
+window.editCabinetName = async function(id, currentName, currentIcon) {
+  const newName = prompt("Nuevo nombre para la estantería (Unidad " + id + "):", currentName);
+  if(!newName || newName.trim() === "") return;
+  const newIcon = prompt("Nuevo icono (emoji) para la estantería:", currentIcon);
+  if(!newIcon || newIcon.trim() === "") return;
 
-    if (ext === 'pdf') {
-      document.getElementById('viewerTitle').textContent = fileData.title;
-      document.getElementById('viewerFrame').src = url;
-      document.getElementById('viewerModal').classList.add('open');
-    } else {
-      window.open(url, '_blank');
-    }
+  const { error } = await supabase.from('estanterias').update({ nombre: newName, icono: newIcon }).eq('id', id);
+  if(!error) { alert("¡Estantería actualizada!"); window.loadDashboardData(); } 
+  else { alert("Error al actualizar: " + error.message); }
+};
+
+window.editWeekTitle = async function(id, currentTitle) {
+  const newTitle = prompt("Nuevo título para la Semana " + id + ":", currentTitle);
+  if(newTitle && newTitle.trim() !== "") {
+    const { error } = await supabase.from('semanas').update({ titulo: newTitle }).eq('id', id);
+    if(!error) { alert("¡Semana actualizada!"); window.closeCabinet(); window.loadDashboardData(); } 
+    else { alert("Error al actualizar: " + error.message); }
   }
 };
 
-window.closeViewer = function() {
-  document.getElementById('viewerModal').classList.remove('open');
-  document.getElementById('viewerFrame').src = ''; 
-};
-
-
-/* ─── UPLOAD MODAL ─── */
-window.openUpload = function(){ document.getElementById('uploadModal').classList.add('open'); };
-window.closeUpload = function(){
-  document.getElementById('uploadModal').classList.remove('open');
-  document.getElementById('fileTitle').value=''; document.getElementById('selFile').style.display='none'; document.getElementById('fileIn').value='';
-};
-window.filePicked = function(inp){ const el=document.getElementById('selFile'); if(inp.files[0]){ el.textContent='✦ '+inp.files[0].name; el.style.display='block'; } };
-
-window.confirmUpload = function(){
-  const t=document.getElementById('fileTitle').value.trim(), fi=document.getElementById('fileIn');
-  const file = fi.files[0];
-  
-  if(!file){ console.warn('No hay archivo'); return; }
-  if(!filesDB[currentWeek]) filesDB[currentWeek]=[];
-  
-  filesDB[currentWeek].push({
-    name: file.name,
-    title: t || file.name,
-    fileObj: file
-  });
-  
-  window.closeUpload(); renderFiles(); buildAllLibs(); buildShelves();
-};
-
-/* ▶ 3. AUTENTICACIÓN SUPABASE (REAL) */
-window.openLogin = function(){ 
-  document.getElementById('loginErr').style.display='none'; 
-  document.getElementById('loginModal').classList.add('open'); 
-};
+/* =========================================================================
+   ▶ AUTENTICACIÓN Y ARRANQUE SEGURO
+========================================================================= */
+let isSignUpMode = false;
+window.openLogin = function(){ document.getElementById('loginErr').style.display='none'; document.getElementById('loginModal').classList.add('open'); };
 window.closeLogin = function(){ document.getElementById('loginModal').classList.remove('open'); };
-
-// Función para alternar el modo Registro/Inicio de Sesión
 window.toggleAuthMode = function() {
   isSignUpMode = !isSignUpMode;
-  
-  const title = document.getElementById('authTitle');
-  const sub = document.getElementById('authSub');
-  const btn = document.getElementById('btnAuth');
-  const toggle = document.getElementById('authToggle');
-  const err = document.getElementById('loginErr');
-  
-  err.style.display = 'none';
-  
-  if (isSignUpMode) {
-    title.textContent = "Crear Usuario";
-    sub.textContent = "Registra tus credenciales";
-    btn.textContent = "Registrarse";
-    toggle.textContent = "¿Ya tienes cuenta? Inicia sesión";
-  } else {
-    title.textContent = "Acceso al Sistema";
-    sub.textContent = "Ingresa tus credenciales";
-    btn.textContent = "Entrar";
-    toggle.textContent = "¿No tienes cuenta? Regístrate aquí";
-  }
+  const title = document.getElementById('authTitle'), sub = document.getElementById('authSub'), btn = document.getElementById('btnAuth'), toggle = document.getElementById('authToggle');
+  document.getElementById('loginErr').style.display = 'none';
+  if (isSignUpMode) { title.textContent = "Crear Usuario"; sub.textContent = "Registra tus credenciales"; btn.textContent = "Registrarse"; toggle.textContent = "¿Ya tienes cuenta? Inicia sesión"; } 
+  else { title.textContent = "Acceso al Sistema"; sub.textContent = "Ingresa tus credenciales"; btn.textContent = "Entrar"; toggle.textContent = "¿No tienes cuenta? Regístrate aquí"; }
 };
 
 window.doLogin = async function(){
-  const u = document.getElementById('userIn').value.trim();
-  const p = document.getElementById('passIn').value;
-  const btn = document.getElementById('btnAuth');
-  const err = document.getElementById('loginErr');
-  
+  const u = document.getElementById('userIn').value.trim(), p = document.getElementById('passIn').value;
+  const btn = document.getElementById('btnAuth'), err = document.getElementById('loginErr');
   if(!u || !p) { err.textContent = "✗ Ingresa correo y contraseña"; err.style.display = 'block'; return; }
-
   btn.textContent = "Procesando..."; btn.style.opacity = "0.5";
 
-  // AGREGADO: Bloque try/catch para atrapar fallos silenciosos por llaves inválidas
   try {
     if (isSignUpMode) {
-      // ---- MODO REGISTRO ----
       const { data, error } = await supabase.auth.signUp({ email: u, password: p });
-      
-      if (error) {
-        btn.textContent = "Registrarse"; btn.style.opacity = "1";
-        err.textContent = "✗ Error: " + error.message; err.style.display = 'block';
-      } else {
-        if (data.session == null) {
-          alert("¡Usuario creado exitosamente! Por favor, revisa tu correo para verificar tu cuenta antes de iniciar sesión.");
-          window.toggleAuthMode();
-        } else {
-          err.style.display = 'none';
-          window.closeLogin();
-        }
-        btn.textContent = "Registrarse"; btn.style.opacity = "1";
-      }
-
+      if (error) throw error;
+      if (data.session == null) { alert("¡Usuario creado! Por favor revisa tu correo."); window.toggleAuthMode(); } else { window.closeLogin(); }
     } else {
-      // ---- MODO INICIO DE SESIÓN ----
       const { data, error } = await supabase.auth.signInWithPassword({ email: u, password: p });
-      
-      if (error) {
-        btn.textContent = "Entrar"; btn.style.opacity = "1";
-        err.textContent = "✗ Credenciales incorrectas"; err.style.display = 'block';
-        console.error("Supabase Auth Error:", error.message);
-      } else {
-        const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', data.user.id).single();
-        userRole = profile ? profile.rol : 'usuario';
-
-        err.style.display = 'none';
-        window.closeLogin();
-        btn.textContent = "Entrar"; btn.style.opacity = "1";
-        
-        document.getElementById('btnLogin').style.display = 'none';
-        document.getElementById('loggedBadge').style.display = 'flex';
-        document.getElementById('loggedName').textContent = u.split('@')[0];
-      }
+      if (error) { err.textContent = "✗ Credenciales incorrectas"; err.style.display = 'block'; } else { window.closeLogin(); }
     }
-  } catch (excepcion) {
-    // Si la llave de Supabase es inválida, el error caerá aquí directamente
-    btn.textContent = isSignUpMode ? "Registrarse" : "Entrar"; 
-    btn.style.opacity = "1";
-    err.textContent = "✗ Falla de conexión. Revisa tu API Key de Supabase."; 
-    err.style.display = 'block';
-    console.error("Error crítico capturado:", excepcion);
+  } catch (ex) {
+    err.textContent = "✗ " + (ex.message || "Falla de conexión."); err.style.display = 'block';
+  } finally {
+    btn.textContent = isSignUpMode ? "Registrarse" : "Entrar"; btn.style.opacity = "1";
   }
 };
 
-window.doLogout = async function(){
-  await supabase.auth.signOut();
-  userRole = null;
-  document.getElementById('userIn').value = ''; document.getElementById('passIn').value = '';
-  document.getElementById('btnLogin').style.display = '';
-  document.getElementById('loggedBadge').style.display = 'none';
-  document.getElementById('fabBtn').style.display = 'none';
-};
+window.doLogout = async function(){ await supabase.auth.signOut(); window.location.reload(); };
 
-/* ▶ 4. VERIFICAR SESIÓN INICIAL Y OBSERVADOR DE ESTADO EN TIEMPO REAL */
-
-// Buscamos la sesión guardada inmediatamente al cargar la página
 async function checkInitialSession() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) {
-    const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', session.user.id).single();
-    userRole = profile ? profile.rol : 'usuario';
-
-    document.getElementById('btnLogin').style.display = 'none';
-    document.getElementById('loggedBadge').style.display = 'flex';
-    document.getElementById('loggedName').textContent = session.user.email.split('@')[0];
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      document.getElementById('btnLogin').style.display = 'none';
+      document.getElementById('loggedBadge').style.display = 'flex';
+      document.getElementById('loggedName').textContent = session.user.email.split('@')[0];
+      document.getElementById('btnLogout').style.display = 'inline-block';
+      
+      const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', session.user.id).single();
+      if(profile && profile.rol === 'admin') document.body.classList.add('admin-mode');
+    } else {
+      document.getElementById('btnLogin').style.display = 'inline-block';
+      document.getElementById('loggedBadge').style.display = 'none';
+      document.getElementById('btnLogout').style.display = 'none';
+      document.body.classList.remove('admin-mode');
+    }
+  } catch(e) {
+    console.error("No se pudo verificar la sesión", e);
+    document.getElementById('btnLogin').style.display = 'inline-block';
+    document.getElementById('loggedBadge').style.display = 'none';
   }
 }
-checkInitialSession();
 
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (session) {
-    const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', session.user.id).single();
-    userRole = profile ? profile.rol : 'usuario';
-
     document.getElementById('btnLogin').style.display = 'none';
     document.getElementById('loggedBadge').style.display = 'flex';
     document.getElementById('loggedName').textContent = session.user.email.split('@')[0]; 
+    document.getElementById('btnLogout').style.display = 'inline-block';
+    const { data: profile } = await supabase.from('perfiles').select('rol').eq('id', session.user.id).single();
+    if(profile && profile.rol === 'admin') document.body.classList.add('admin-mode');
   } else {
-    userRole = null;
-    document.getElementById('btnLogin').style.display = '';
+    document.getElementById('btnLogin').style.display = 'inline-block';
     document.getElementById('loggedBadge').style.display = 'none';
-    document.getElementById('fabBtn').style.display = 'none';
+    document.getElementById('btnLogout').style.display = 'none';
+    document.body.classList.remove('admin-mode');
   }
 });
 
-/* ─── INICIALIZACIÓN ─── */
-buildScene(); buildShelves(); buildAllLibs();
-setTimeout(()=>{ renderCarousel(); frame(); }, 80);
+/* ─── ARRANQUE MAESTRO SINCRONIZADO ─── */
+async function startApp() {
+  // 1. Verificamos quién eres
+  await checkInitialSession();
+  
+  // 2. Traemos toda la base de datos (esto antes rompía si se adelantaba)
+  await window.loadDashboardData();
+  
+  // 3. Cuando todo está listo, encendemos el carrusel
+  isAnimating = true;
+  renderCarousel(); 
+  requestAnimationFrame(frame);
+}
+
+// Iniciar aplicación
+startApp();
+
+// Refrescar tamaño al girar la pantalla
 window.addEventListener('resize',()=>{ clearTimeout(window._rt); window._rt=setTimeout(renderCarousel,100); });
 document.getElementById('passIn').addEventListener('keydown',e=>{ if(e.key==='Enter') window.doLogin(); });
-document.getElementById('userIn').addEventListener('keydown',e=>{ if(e.key==='Enter') window.doLogin(); });
 </script>
 </body>
 </html>
