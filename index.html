@@ -407,7 +407,7 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
               <li class="track-li" style="justify-content:center; color: var(--mustard);">Cargando pistas...</li>
             </ul>
             
-            <button class="btn-manage-week" id="pv-manage-btn" onclick="">Gestionar Unidad</button>
+            <button class="btn-manage-week" id="pv-manage-btn" onclick="">Ver en el sitio</button>
           </div>
 
           <div class="player-record-wrap">
@@ -467,7 +467,7 @@ let dbWeeks = {
   1: "Introducción a la arquitectura DB", 2: "Gestores de la BD", 3: "Diseño de arquitectura de BD", 4: "Tipos de Arquitectura de BD"
 };    
 
-const ACTIVE_WEEK = 6; 
+const ACTIVE_WEEK = 17; // Todas las semanas activas
 function getStatus(w){ return w < ACTIVE_WEEK ? 'done' : w === ACTIVE_WEEK ? 'active' : 'pending'; }
 
 const TOTAL = 16, SPEED = 0.055; 
@@ -524,7 +524,7 @@ function buildScene(){
       el.addEventListener('click', () => {
         if(el.classList.contains('extracting') || st==='pending') return; 
         isCarouselHovered = true; el.classList.add('extracting');
-        setTimeout(() => { window.open(`semana.html?id=${w}`, '_blank'); el.classList.remove('extracting'); isCarouselHovered = false; }, 1100); 
+        setTimeout(() => { window.open(`contenido.html?id=${w}`, '_blank'); el.classList.remove('extracting'); isCarouselHovered = false; }, 1100); 
       });
       sc.appendChild(el);
     }
@@ -679,7 +679,7 @@ window.playRecord = async function(w, wStr, title, colors) {
   // Configurar textos de la Tracklist
   document.getElementById('pv-week-num').textContent = `SEMANA ${wStr}`;
   document.getElementById('pv-title').textContent = title;
-  document.getElementById('pv-manage-btn').onclick = () => window.open(`semana.html?id=${w}`, '_blank');
+  document.getElementById('pv-manage-btn').onclick = () => window.open(`contenido.html?id=${w}`, '_blank');
 
   // Buscar archivos en Supabase
   const trackUl = document.getElementById('pv-tracks');
