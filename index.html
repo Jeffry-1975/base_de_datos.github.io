@@ -3,327 +3,320 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Base de Datos II</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"/>
+<title>Base de Datos II - Data Canvas</title>
+<!-- Fuentes modernas: Inter para legibilidad, JetBrains Mono para toques "Tech" -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --cream:#f0e6c8;--parchment:#e8d9b0;--brown:#3b2a1a;--mocha:#6b4c2a;
-  --rust:#c0522a;--mustard:#c9903a;--teal:#2e7d6e;--burgundy:#7a2233;
-  --sage:#5a7a5a;--ink:#1c1410;--gold:#d4a844;
+  --bg-base: #030305;
+  --surface-1: rgba(20, 20, 25, 0.4);
+  --surface-2: rgba(30, 30, 40, 0.6);
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
+  
+  /* Paleta Neón / Tech */
+  --neon-cyan: #00f0ff;
+  --neon-purple: #b537f2;
+  --neon-amber: #ff9900;
+  --neon-green: #39ff14;
 }
+
 body{
-  background:var(--ink);font-family:'Courier Prime',monospace;color:var(--cream);min-height:100vh;
-  background-image:radial-gradient(ellipse at 20% 80%,rgba(107,76,42,.22) 0%,transparent 50%),
-    radial-gradient(ellipse at 80% 20%,rgba(192,82,42,.1) 0%,transparent 50%);
+  background-color: var(--bg-base);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+  min-height: 100vh;
   overflow-x: hidden;
+  /* Cuadrícula estilo "Miro" / Blueprint futurista */
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+  background-size: 30px 30px;
 }
-body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity:.5;
+
+/* Efecto de luz difusa de fondo (Active Theory vibe) */
+body::before, body::after {
+  content: ''; position: fixed; width: 600px; height: 600px; border-radius: 50%;
+  filter: blur(120px); z-index: -1; pointer-events: none; opacity: 0.15;
 }
+body::before { top: -100px; left: -100px; background: var(--neon-purple); }
+body::after { bottom: -100px; right: -100px; background: var(--neon-cyan); }
 
 /* ── MODO ADMIN ── */
 .btn-edit-admin {
   display: none; position: absolute; z-index: 100;
-  background: rgba(10,8,6,0.8); border: 1px solid var(--mustard); color: white;
-  border-radius: 50%; width: 30px; height: 30px; padding: 0; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
-  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.1); border: 1px solid var(--surface-border); color: white; backdrop-filter: blur(4px);
+  border-radius: 50%; width: 28px; height: 28px; padding: 0; font-size: 0.75rem; cursor: pointer; transition: all 0.2s;
+  align-items: center; justify-content: center;
 }
-.btn-edit-admin:hover { background: var(--mustard); color: var(--ink); transform: scale(1.1); }
+.btn-edit-admin:hover { background: white; color: black; transform: scale(1.1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
 body.admin-mode .btn-edit-admin { display: flex; } 
 body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 
-/* ── TOPBAR ── */
+/* ── TOPBAR (Glassmorphism) ── */
 .topbar{
-  background:var(--brown);border-bottom:2px solid var(--mustard);
-  padding:0 1.6rem;display:flex;align-items:center;justify-content:space-between;
-  min-height:52px;gap:1rem;position:relative; z-index: 100;
-}
-.topbar::after{
-  content:'';position:absolute;bottom:-5px;left:0;right:0;height:4px;
-  background:repeating-linear-gradient(90deg,var(--mustard) 0,var(--mustard) 8px,transparent 8px,transparent 16px); opacity:.35;
+  background: rgba(10, 10, 12, 0.6); backdrop-filter: blur(12px); border-bottom: 1px solid var(--surface-border);
+  padding:0 2rem; display:flex; align-items:center; justify-content:space-between;
+  min-height: 60px; gap:1rem; position:relative; z-index: 100;
 }
 .topbar-logo{
-  font-family:'Playfair Display',serif;color:var(--mustard);font-size:.95rem;
-  font-weight:900;letter-spacing:3px;white-space:nowrap;flex-shrink:0; text-shadow:0 0 18px rgba(212,168,68,.3);
+  font-family:'JetBrains Mono', monospace; font-weight:700; letter-spacing:1px; font-size: 1rem;
+  background: linear-gradient(90deg, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.topbar-nav{display:flex;align-items:center;gap:2px;flex:1;justify-content:center;flex-wrap:wrap;padding:.5rem 0;}
+.topbar-nav{display:flex;align-items:center;gap:15px;flex:1;justify-content:center;}
 .nav-btn{
-  background:none;border:none;color:rgba(240,230,200,.45); font-family:'Special Elite',cursive;font-size:.68rem;padding:5px 12px;
-  border-radius:2px;cursor:pointer;letter-spacing:1.5px;transition:all .2s; white-space:nowrap;text-transform:uppercase;
+  background:none;border:none;color:var(--text-muted); font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:6px 14px;
+  border-radius:20px;cursor:pointer; transition:all .2s; text-transform:uppercase; letter-spacing: 1px;
 }
-.nav-btn:hover{color:var(--cream);background:rgba(212,168,68,.1);}
-.nav-btn.active{color:var(--mustard);background:rgba(212,168,68,.14);border-bottom:2px solid var(--mustard);}
-.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.nav-btn:hover{color:var(--text-main); background: var(--surface-1);}
+.nav-btn.active{color:var(--neon-cyan); background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0,240,255,0.2);}
+.topbar-right{display:flex;align-items:center;gap:12px;flex-shrink:0;}
 .btn-login-top{
-  background:none;border:1px solid rgba(212,168,68,.35);border-radius:2px; color:rgba(240,230,200,.55);font-family:'Special Elite',cursive;font-size:.67rem;
-  padding:5px 12px;cursor:pointer;transition:all .2s;letter-spacing:1px;text-transform:uppercase;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--surface-border); border-radius: 20px; 
+  color:var(--text-main); font-family:'JetBrains Mono',monospace; font-size:.7rem;
+  padding:8px 16px; cursor:pointer; transition:all .2s;
 }
-.btn-login-top:hover{border-color:var(--mustard);color:var(--mustard);}
-.logged-badge{display:flex;align-items:center;gap:8px;}
-.btn-out{background:none;border:none;color:rgba(240,230,200,.3);font-size:.67rem;cursor:pointer;font-family:'Special Elite',cursive;}
-.btn-out:hover{color:var(--rust);}
+.btn-login-top:hover{border-color: var(--text-main); background: rgba(255,255,255,0.1);}
+.logged-badge{display:flex;align-items:center;gap:10px;}
+.btn-out{background:none;border:none;color:var(--text-muted);font-size:.7rem;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+.btn-out:hover{color: #ff4444;}
 
-/* ── HERO SECTION (Compacto y arriba) ── */
-.hero{ text-align:center; padding: 0.8rem 1rem 0.2rem; background:radial-gradient(ellipse at 50% 0%,rgba(192,82,42,.09) 0%,transparent 60%); width: 100%; }
-.hero-eyebrow{font-family:'Special Elite',cursive;color:var(--mustard);font-size:.6rem;letter-spacing:4px;margin-bottom:.3rem;opacity:.6;text-transform:uppercase;}
-.hero-title{ font-family:'Playfair Display',serif;font-size:clamp(1.8rem, 3.5vw, 2.5rem);font-weight:900; background:linear-gradient(160deg,var(--cream) 0%,var(--mustard) 50%,var(--rust) 100%); -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; letter-spacing:4px;line-height:1; }
-.hero-rule{width:100px;height:1px;background:linear-gradient(90deg,transparent,var(--mustard),transparent);margin:0.5rem auto 0.3rem;}
-.hero-sub{color:rgba(240,230,200,.35);font-size:.65rem;letter-spacing:2px;font-family:'Special Elite',cursive;}
+/* ── HERO SECTION ── */
+.hero{ text-align:center; padding: 2rem 1rem 0; width: 100%; }
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;color:var(--neon-cyan);font-size:.7rem;letter-spacing:3px;margin-bottom:.5rem;text-transform:uppercase;}
+.hero-title{ 
+  font-family:'Inter',sans-serif; font-size:clamp(2rem, 4vw, 3.5rem); font-weight:800; letter-spacing: -1px;
+  background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  line-height:1.2;
+}
+.hero-sub{color:var(--text-muted);font-size:.8rem;letter-spacing:1px;font-family:'JetBrains Mono',monospace; margin-top: 10px;}
 
 /* =========================================================
-   LAYOUT DE 3 COLUMNAS ESTRICTAS
+   LAYOUT 3 COLUMNAS ESTRICTAS
    ========================================================= */
 .main-layout-3cols {
   display: flex; flex-direction: row; justify-content: space-between; align-items: center; 
-  width: 100%; max-width: 1400px; margin: 0 auto; padding: 0.5rem 2rem 2rem; gap: 2rem;
+  width: 100%; max-width: 1400px; margin: 0 auto; padding: 1rem 2rem 2rem; gap: 2rem;
 }
-.layout-left, .layout-right { display: flex; flex-direction: column; gap: 1.5rem; width: 110px; flex-shrink: 0; }
+.layout-left, .layout-right { display: flex; flex-direction: column; gap: 1.5rem; width: 120px; flex-shrink: 0; }
 .layout-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
 
-/* ── DISEÑO DE LAS ESTANTERÍAS LATERALES ── */
+/* ── DISEÑO DE CLÚSTERES (EX-ESTANTERÍAS) ── */
 .vertical-cabinet {
-  background: linear-gradient(180deg, rgba(40,28,18,0.95) 0%, rgba(20,14,10,0.98) 100%);
-  border: 1px solid rgba(212,168,68,.3); border-radius: 8px; height: 220px; 
+  background: var(--surface-1); backdrop-filter: blur(10px);
+  border: 1px solid var(--surface-border); border-radius: 16px; height: 220px; 
   width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.6);
+  cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden;
 }
-.vertical-cabinet::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(90deg, rgba(0,0,0,0.6), transparent); }
-.vertical-cabinet:hover { border-color: var(--mustard); transform: scale(1.04); box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 0 25px rgba(212,168,68,0.2); }
-.vc-icon { font-size: 2rem; margin-bottom: 1.2rem; opacity: 0.9; text-shadow: 0 0 10px currentColor; }
-.vc-text { writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'Special Elite', cursive; color: var(--cream); font-size: 0.85rem; letter-spacing: 4px; white-space: nowrap; }
+.vertical-cabinet::before { 
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; 
+  background: var(--cluster-color, var(--surface-border)); box-shadow: 0 0 10px var(--cluster-color);
+}
+.vertical-cabinet:hover { transform: translateY(-5px); background: var(--surface-2); border-color: rgba(255,255,255,0.2); }
+.vc-icon { font-size: 1.8rem; margin-bottom: 1.5rem; filter: drop-shadow(0 0 8px var(--cluster-color)); }
+.vc-text { writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-main); font-size: 0.8rem; letter-spacing: 3px; white-space: nowrap; }
 
 /* ── RESPONSIVIDAD ── */
 @media (max-width: 1100px) {
   .main-layout-3cols { flex-direction: column; padding: 1rem; gap: 1rem; }
   .layout-left, .layout-right { flex-direction: row; width: 100%; justify-content: center; flex-wrap: wrap; }
-  .vertical-cabinet { width: 160px; height: 90px; flex-direction: row; padding: 0 1rem; justify-content: flex-start; }
-  .vc-icon { margin-bottom: 0; margin-right: 1rem; font-size: 2rem; }
+  .vertical-cabinet { width: 180px; height: 80px; flex-direction: row; padding: 0 1.5rem; justify-content: flex-start; }
+  .vc-icon { margin-bottom: 0; margin-right: 1rem; font-size: 1.5rem; }
   .vc-text { writing-mode: horizontal-tb; transform: none; font-size: 0.8rem; }
 }
 
-/* ── CAROUSEL (Centro) ── */
+/* ── CAROUSEL DE NODOS (Centro) ── */
 .carousel-section{ width:100%; padding:0; display:flex; flex-direction:column; align-items:center; position:relative; overflow:hidden; }
-.carousel-section::before,.carousel-section::after{ content:'';position:absolute;top:0;bottom:0;width:120px;z-index:20;pointer-events:none; }
-.carousel-section::before{left:0;background:linear-gradient(90deg,var(--ink) 30%,transparent);}
-.carousel-section::after{right:0;background:linear-gradient(270deg,var(--ink) 30%,transparent);}
-.c-label{font-family:'Special Elite',cursive;color:rgba(212,168,68,.3);font-size:.62rem;letter-spacing:3px;margin-bottom:1rem;text-transform:uppercase;}
-.c-scene{position:relative;width:min(100%, 700px);height:280px;z-index:10;}
+/* Máscaras difuminadas a los lados */
+.carousel-section::before,.carousel-section::after{ content:'';position:absolute;top:0;bottom:0;width:150px;z-index:20;pointer-events:none; }
+.carousel-section::before{left:0;background:linear-gradient(90deg,var(--bg-base) 10%,transparent);}
+.carousel-section::after{right:0;background:linear-gradient(270deg,var(--bg-base) 10%,transparent);}
+
+.c-label{font-family:'JetBrains Mono',monospace;color:var(--text-muted);font-size:.65rem;letter-spacing:2px;margin-bottom:1rem;text-transform:uppercase;}
+.c-scene{position:relative;width:min(100%, 700px);height:300px;z-index:10;}
 
 .vitem{ position:absolute;left:0;top:0;cursor:pointer; display:flex; align-items:center; justify-content:center; }
-.vitem.locked{cursor:default;}
-.vface{
-  border-radius:6px; position:absolute; inset:0; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-direction:column;
-  z-index:5; transition: transform 0.4s ease, opacity 0.4s ease; box-shadow: -2px 5px 15px rgba(0,0,0,0.4);
-}
-.vface::before{ content:'';position:absolute;inset:0; background:repeating-radial-gradient(circle at 50% 50%,transparent 0px,transparent 4px,rgba(0,0,0,.15) 4px,rgba(0,0,0,.15) 5px); z-index:1; }
-.vface::after{ content:'';position:absolute;inset:0; background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 50%,rgba(0,0,0,.22) 100%); z-index:2;pointer-events:none; }
-.vface-inner{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px; padding: 10px;}
-.vface-label{font-family:'Playfair Display',serif;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.9);text-align:center;}
-.vface-week{ font-family:'Special Elite',cursive;color:rgba(255,255,255,.6);letter-spacing:1px; text-align:center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.vstatus-ring{position:absolute;bottom:6px;right:6px;z-index:6;border-radius:50%;border:1px solid rgba(0,0,0,.6);}
-.vpulse{animation:vpulse 1.6s ease-in-out infinite;}
-@keyframes vpulse{0%,100%{opacity:1;}50%{opacity:.35;}}
-.v-disc {
-  position: absolute; width: 96%; height: 96%; border-radius: 50%; background: #111; background-image: repeating-radial-gradient(circle at 50% 50%, #151515 0, #151515 2px, #0a0a0a 3px, #151515 4px);
-  z-index: 1; top: 2%; left: 2%; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;
-}
-.v-disc-label { width: 33%; height: 33%; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.v-disc-hole { width: 15%; height: 15%; background: var(--ink); border-radius: 50%; }
+.vitem.locked{cursor:default; opacity: 0.5;}
 
-.vitem:hover .v-disc { transform: translateY(-25%) rotate(45deg); }
-.vitem:hover .vface { transform: translateY(4%); }
-.vitem.extracting .v-disc { transform: translateY(-90%) scale(2.2) rotate(360deg); opacity: 0; transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s 0.6s; z-index: 20; }
-.vitem.extracting .vface { transform: translateY(30px); opacity: 0; transition: all 0.5s; }
+/* La tarjeta del Nodo */
+.vface{
+  border-radius: 12px; position:absolute; inset:0; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-direction:column;
+  z-index:5; transition: transform 0.4s ease, opacity 0.4s ease; 
+  background: rgba(20,20,25,0.8); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.vface::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%); pointer-events: none;}
+.vface-inner{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px; padding: 15px;}
+.vface-label{font-family:'JetBrains Mono',monospace;font-weight:700; color:var(--text-main); text-align:center;}
+.vface-week{ font-family:'Inter',sans-serif; color:var(--text-muted); font-size: 0.8rem; text-align:center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* El anillo holográfico (Ex-disco) */
+.v-disc {
+  position: absolute; width: 110%; height: 110%; border-radius: 50%;
+  border: 1px dashed var(--node-color); opacity: 0.3;
+  z-index: 1; top: -5%; left: -5%; transition: all 0.6s ease;
+  display: flex; align-items: center; justify-content: center;
+}
+.vitem:hover .v-disc { transform: rotate(90deg) scale(1.1); opacity: 0.8; border-style: solid; box-shadow: 0 0 20px var(--node-color); }
+.vitem:hover .vface { transform: translateY(-10px); border-color: var(--node-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+/* Animación de extracción */
+.vitem.extracting .v-disc { transform: scale(2) rotate(180deg); opacity: 0; transition: all 0.8s; z-index: 20; }
+.vitem.extracting .vface { transform: scale(1.1) translateY(20px); opacity: 0; transition: all 0.5s; }
 
 /* ── CARDS INFERIORES ── */
 .info-section { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; max-width: 1000px; padding: 0 1rem; margin: 0 auto 3rem; }
-.info-card { background: rgba(59,42,26,.3); border: 1px solid rgba(212,168,68,.2); border-radius: 4px; padding: 1.5rem; flex: 1; min-width: 250px; box-shadow: inset 0 0 20px rgba(0,0,0,.2); }
-.info-card h3 { font-family: 'Playfair Display', serif; color: var(--mustard); font-size: 1.1rem; margin-bottom: 0.8rem; border-bottom: 1px dashed rgba(212,168,68,.3); padding-bottom: 0.5rem; }
-.info-card p { font-size: 0.85rem; line-height: 1.5; color: rgba(240,230,200,.75); }
+.info-card { background: var(--surface-1); backdrop-filter: blur(10px); border: 1px solid var(--surface-border); border-radius: 12px; padding: 1.5rem; flex: 1; min-width: 250px; }
+.info-card h3 { font-family: 'Inter', sans-serif; font-weight: 500; color: var(--text-main); font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;}
+.info-card h3::before { content:''; display:inline-block; width:8px; height:8px; border-radius:50%; background: var(--neon-cyan); box-shadow: 0 0 8px var(--neon-cyan);}
+.info-card p { font-size: 0.9rem; line-height: 1.6; color: var(--text-muted); }
 .profile-wrap { display: flex; align-items: center; gap: 1rem; }
-.profile-pic { width: 70px; height: 70px; border-radius: 4px; overflow: hidden; flex-shrink: 0; border: 2px solid var(--mustard); background: var(--brown); }
+.profile-pic { width: 60px; height: 60px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid var(--surface-border); }
 .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
-.profile-desc h4 { font-family: 'Playfair Display', serif; color: var(--cream); font-size: 1.2rem; }
-.profile-desc span { font-family: 'Special Elite', cursive; color: var(--rust); font-size: 0.7rem; letter-spacing: 1px; }
+.profile-desc h4 { font-family: 'Inter', sans-serif; font-weight: 500; color: var(--text-main); font-size: 1.1rem; }
+.profile-desc span { font-family: 'JetBrains Mono', monospace; color: var(--neon-cyan); font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; }
 
 /* =========================================================
-   MODAL MÁGICO 3D (El gabinete)
+   MODAL DE INSPECCIÓN (El panel futurista)
    ========================================================= */
 .cab-modal {
   position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center;
-  perspective: 2000px; visibility: hidden; opacity: 0; transition: all 0.4s ease;
+  visibility: hidden; opacity: 0; transition: all 0.3s ease;
 }
 .cab-modal.open { visibility: visible; opacity: 1; }
-.cab-modal-backdrop { position: absolute; inset: 0; background: rgba(10,8,6,0.92); backdrop-filter: blur(4px); }
+.cab-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
 
 .cab-modal-box {
-  width: 90%; max-width: 950px; min-height: 400px; position: relative;
-  background: linear-gradient(180deg,rgba(59,42,26,1) 0%,rgba(28,20,16,1) 100%);
-  border: 2px solid var(--mustard); border-radius: 8px; box-shadow: 0 20px 80px rgba(0,0,0,0.9);
-  transform: scale(0.7) translateZ(-300px); transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transform-style: preserve-3d; display: flex; flex-direction: column;
+  width: 90%; max-width: 1000px; min-height: 500px; position: relative;
+  background: rgba(15,15,18,0.85); backdrop-filter: blur(20px);
+  border: 1px solid var(--surface-border); border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+  transform: translateY(20px) scale(0.98); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex; flex-direction: column; overflow: hidden;
 }
-.cab-modal.open .cab-modal-box { transform: scale(1) translateZ(0); }
+.cab-modal.open .cab-modal-box { transform: translateY(0) scale(1); }
+/* Brillo superior en el modal */
+.cab-modal-box::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, var(--cluster-color, var(--neon-cyan)), transparent); }
 
-/* Puertas 3D */
-.cab-door {
-  position: absolute; top: 0; bottom: 0; width: 50%; z-index: 20;
-  background: linear-gradient(180deg, rgba(74,54,34,1) 0%, rgba(38,26,18,1) 100%);
-  border: 2px solid rgba(212,168,68,.6); transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.8), 0 0 15px rgba(0,0,0,0.5);
+/* Header del panel */
+.inside-header { 
+  display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--surface-border); background: rgba(0,0,0,0.2);
 }
-.cab-door-left { left: 0; transform-origin: left center; border-right: 1px solid rgba(0,0,0,0.8); border-radius: 6px 0 0 6px; }
-.cab-door-right { right: 0; transform-origin: right center; border-left: 1px solid rgba(255,255,255,0.1); border-radius: 0 6px 6px 0; }
-.door-panel { position: absolute; inset: 20px; border: 1px dashed rgba(212,168,68,0.3); border-radius: 4px; }
-.door-knob { position: absolute; top: 50%; width: 12px; height: 35px; background: var(--mustard); border-radius: 6px; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); transform: translateY(-50%); }
-.cab-door-left .door-knob { right: 15px; }
-.cab-door-right .door-knob { left: 15px; }
-
-.cab-modal.doors-open .cab-door-left { transform: rotateY(-110deg); box-shadow: inset 0 0 40px rgba(0,0,0,0.9); }
-.cab-modal.doors-open .cab-door-right { transform: rotateY(110deg); box-shadow: inset 0 0 40px rgba(0,0,0,0.9); }
-
-/* Contenido interior del Gabinete */
-.cab-inside { padding: 2rem; opacity: 0; transition: opacity 0.5s 0.6s; flex: 1; display: flex; flex-direction: column; }
-.cab-modal.doors-open .cab-inside { opacity: 1; }
-
-.inside-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(212,168,68,.2); flex-wrap: wrap; gap: 15px; }
-.btn-back-cabinet { background: none; border: 1px solid rgba(212,168,68,.3); border-radius: 2px; color: var(--cream); font-family: 'Special Elite', cursive; font-size: 0.75rem; padding: 6px 14px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
-.btn-back-cabinet:hover { background: rgba(212,168,68,.1); border-color: var(--mustard); color: var(--mustard); }
+.btn-back-cabinet { background: rgba(255,255,255,0.05); border: 1px solid var(--surface-border); border-radius: 20px; color: var(--text-main); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 8px 16px; cursor: pointer; transition: all 0.2s; }
+.btn-back-cabinet:hover { background: rgba(255,255,255,0.1); }
 .inside-title-wrap { text-align: right; }
-.inside-subtitle { display: block; font-family: 'Special Elite', cursive; font-size: 0.65rem; color: rgba(240,230,200,.4); letter-spacing: 2px; margin-bottom: 3px; }
-.inside-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--cream); }
+.inside-subtitle { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--cluster-color, var(--neon-cyan)); letter-spacing: 2px; margin-bottom: 5px; }
+.inside-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-main); letter-spacing: -0.5px; }
 
-.shelf-board {
-  background:linear-gradient(180deg,rgba(42,28,14,.9) 0%,rgba(28,18,8,.95) 100%);
-  border:1px solid rgba(107,76,42,.5); border-radius:4px; padding:2rem; position:relative;
-  box-shadow:inset 0 10px 20px rgba(0,0,0,.8); flex: 1; display: flex; align-items: center; justify-content: center;
-}
-.shelf-board::after{ content:'';position:absolute;bottom:-8px;left:2px;right:2px;height:8px; background:linear-gradient(180deg,rgba(74,54,34,.9),rgba(42,28,14,.9)); border-radius:0 0 4px 4px; box-shadow:0 5px 10px rgba(0,0,0,.6); }
+/* Cuerpo del panel */
+.shelf-board { padding: 2rem; flex: 1; display: flex; position: relative; }
 
-/* =========================================================
-   VISTAS INTERNAS: LISTA vs REPRODUCTOR (NUEVO UX)
-   ========================================================= */
-.view-panel { display: none; width: 100%; animation: fadeZoomIn 0.4s ease; }
+/* VISTAS INTERNAS */
+.view-panel { display: none; width: 100%; animation: fadeZoomIn 0.3s ease; }
 .view-panel.active { display: flex; }
-@keyframes fadeZoomIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+@keyframes fadeZoomIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* FASE 1: LISTA (Columna de Vinilos lado izquierdo, títulos largos) */
-.shelf-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+/* FASE 1: LISTA DE NODOS */
+.shelf-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; align-content: start;}
 .shelf-list-item {
-  display: flex; align-items: center; background: rgba(20,14,10,0.6);
-  border: 1px solid rgba(212,168,68,0.15); border-radius: 6px;
-  padding: 10px 15px; cursor: pointer; transition: all 0.2s; gap: 20px; position: relative;
+  display: flex; align-items: center; background: rgba(255,255,255,0.03);
+  border: 1px solid var(--surface-border); border-radius: 12px;
+  padding: 15px; cursor: pointer; transition: all 0.2s; gap: 15px; position: relative;
 }
-.shelf-list-item:hover { background: rgba(212,168,68,0.1); border-color: rgba(212,168,68,0.4); transform: translateX(8px); }
-.shelf-list-item.locked { cursor: default; opacity: 0.6; }
-.shelf-list-item.locked:hover { transform: none; background: rgba(20,14,10,0.6); border-color: rgba(212,168,68,0.15); }
+.shelf-list-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); transform: translateY(-3px); }
+.shelf-list-item.locked { cursor: default; opacity: 0.5; filter: grayscale(1); }
+.shelf-list-item.locked:hover { transform: none; background: rgba(255,255,255,0.03); border-color: var(--surface-border); }
 
-/* Cover pequeño en la lista */
-.sli-cover-wrap { width: 70px; height: 70px; border-radius: 3px; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 8px rgba(0,0,0,0.5); flex-shrink: 0; }
-.sli-cover-wrap::before { content:'';position:absolute;inset:0; background:repeating-radial-gradient(circle at 50% 50%,transparent 0px,transparent 4px,rgba(0,0,0,.1) 4px,rgba(0,0,0,.1) 5px); z-index:1; }
-.sli-cover-wrap::after { content:'';position:absolute;inset:0; background:linear-gradient(135deg,rgba(255,255,255,.25) 0%,transparent 50%,rgba(0,0,0,.4) 100%); z-index:2; }
-.sli-num { position: absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:900; font-size:1.2rem; color:rgba(255,255,255,.95); z-index:3; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
-.sli-dot { position:absolute; top: 4px; right: 4px; width:6px;height:6px;border-radius:50%;z-index:3; box-shadow: 0 0 4px rgba(0,0,0,0.5); }
+/* Ícono del nodo en la lista */
+.sli-cover-wrap { 
+  width: 50px; height: 50px; border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.5); border: 1px solid var(--node-color); box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+.sli-num { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:1rem; color:var(--node-color); }
+.sli-dot { position:absolute; top: -3px; right: -3px; width:8px;height:8px;border-radius:50%; background: var(--text-muted); }
+.sli-dot.active { background: var(--neon-cyan); box-shadow: 0 0 8px var(--neon-cyan); }
 
-/* Detalles texto en la lista */
-.sli-details { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.sli-week { font-family: 'Special Elite', cursive; color: var(--mustard); font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 5px; }
-.sli-title { font-family: 'Courier Prime', monospace; color: var(--cream); font-size: 1.1rem; }
+.sli-details { flex: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden;}
+.sli-week { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; }
+.sli-title { font-family: 'Inter', sans-serif; font-weight: 500; color: var(--text-main); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 
-/* FASE 2: REPRODUCTOR (Vinilo a la derecha, Tracklist a la izquierda) */
-#player-view { flex-direction: row; align-items: center; justify-content: space-between; gap: 30px; }
+/* FASE 2: INSPECTOR DE ARCHIVOS */
+#player-view { flex-direction: row; align-items: stretch; justify-content: space-between; gap: 40px; }
 
-/* Tracklist (Las Canciones) */
-.player-tracklist { flex: 1; display: flex; flex-direction: column; height: 100%; border-right: 1px solid rgba(212,168,68,0.2); padding-right: 30px; }
-.player-tracklist h4 { font-family: 'Playfair Display', serif; color: var(--cream); font-size: 1.4rem; margin-bottom: 5px; }
-.player-tracklist .pv-sub { font-family: 'Special Elite', cursive; color: var(--mustard); font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 20px; display: block; border-bottom: 1px dashed rgba(212,168,68,0.3); padding-bottom: 10px; }
+/* Lado Izquierdo: Archivos (Tracklist) */
+.player-tracklist { flex: 1; display: flex; flex-direction: column; }
+.pv-sub { font-family: 'JetBrains Mono', monospace; color: var(--node-color); font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 8px; display: block; }
+.player-tracklist h4 { font-family: 'Inter', sans-serif; font-weight: 800; color: var(--text-main); font-size: 1.8rem; margin-bottom: 20px; line-height: 1.1;}
 
-.track-ul { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow-y: auto; flex: 1; }
-/* Estilos Scrollbar para Tracklist */
-.track-ul::-webkit-scrollbar { width: 6px; }
-.track-ul::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
-.track-ul::-webkit-scrollbar-thumb { background: rgba(212,168,68,0.4); border-radius: 4px; }
+.track-ul { list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px;}
+.track-ul::-webkit-scrollbar { width: 4px; }
+.track-ul::-webkit-scrollbar-track { background: transparent; }
+.track-ul::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
 
-.track-li { display: flex; align-items: center; padding: 10px 5px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: all 0.2s; color: rgba(240,230,200,0.8); font-size: 0.9rem; }
-.track-li:hover { background: rgba(212,168,68,0.1); color: var(--mustard); padding-left: 10px; }
-.track-li-num { color: var(--rust); font-weight: bold; margin-right: 15px; font-family: 'Special Elite', cursive; }
-.track-li-icon { margin-right: 10px; font-size: 1.1rem; }
+.track-li { 
+  display: flex; align-items: center; padding: 12px 15px; background: rgba(255,255,255,0.03); 
+  border: 1px solid transparent; border-radius: 8px; cursor: pointer; transition: all 0.2s; 
+}
+.track-li:hover { background: rgba(255,255,255,0.08); border-color: var(--surface-border); transform: translateX(5px); }
+.track-li-icon { margin-right: 15px; font-size: 1.2rem; opacity: 0.8; }
+.track-li-title { font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text-main); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 
 .btn-manage-week { 
-  margin-top: 20px; padding: 10px; background: linear-gradient(90deg,var(--rust),var(--mocha));
-  border: 1px solid rgba(212,168,68,0.5); border-radius: 4px; color: var(--cream); font-family: 'Special Elite', cursive;
-  cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: opacity 0.2s; align-self: flex-start;
+  margin-top: 20px; padding: 12px 24px; background: var(--text-main); color: var(--bg-base); border: none;
+  border-radius: 24px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.8rem;
+  cursor: pointer; text-transform: uppercase; transition: all 0.2s; align-self: flex-start;
 }
-.btn-manage-week:hover { opacity: 0.85; }
+.btn-manage-week:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
 
-/* El Gran Vinilo Animado (Derecha) */
-.player-record-wrap { width: 220px; height: 220px; position: relative; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-right: 80px; /* Margen para que el disco tenga espacio para salir */ }
+/* Lado Derecho: Holograma del Nodo */
+.player-record-wrap { width: 250px; display: flex; align-items: center; justify-content: center; position: relative;}
 
-/* El Disco que sale y gira */
-.pr-disc-container {
-  position: absolute; width: 200px; height: 200px; border-radius: 50%;
-  transform: translateX(0) scale(0.8); transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 1; display: flex; align-items: center; justify-content: center;
-}
-/* Trigger de la animación de salida */
-.player-view-active .pr-disc-container { transform: translateX(65%) scale(1); }
-
-.pr-disc {
-  width: 100%; height: 100%; border-radius: 50%; background: #111; 
-  background-image: repeating-radial-gradient(circle at 50% 50%, #151515 0, #151515 2px, #0a0a0a 3px, #151515 4px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center;
-}
-/* Trigger de la rotación infinita */
-.player-view-active .pr-disc { animation: spinRecord 4s linear infinite; }
-@keyframes spinRecord { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-.pr-disc-label { width: 33%; height: 33%; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.pr-disc-hole { width: 15%; height: 15%; background: var(--ink); border-radius: 50%; }
-
-/* La Caja (Carátula) */
-.pr-cover {
-  width: 220px; height: 220px; border-radius: 4px; position: relative; overflow: hidden;
+/* Animación de Escáner Holográfico */
+.hologram-container {
+  width: 200px; height: 280px; border: 1px solid var(--surface-border); border-radius: 12px;
+  background: rgba(0,0,0,0.5); position: relative; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  border: 1px solid rgba(255,255,255,0.15); box-shadow: -8px 8px 25px rgba(0,0,0,0.8); z-index: 2;
 }
-.pr-cover::before { content:'';position:absolute;inset:0; background:repeating-radial-gradient(circle at 50% 50%,transparent 0px,transparent 4px,rgba(0,0,0,.1) 4px,rgba(0,0,0,.1) 5px); z-index:1; }
-.pr-cover::after { content:'';position:absolute;inset:0; background:linear-gradient(135deg,rgba(255,255,255,.25) 0%,transparent 50%,rgba(0,0,0,.4) 100%); z-index:2; }
-.pr-num { font-family:'Playfair Display',serif; font-weight:900; font-size:3rem; color:rgba(255,255,255,.95); z-index:3; text-shadow: 3px 3px 6px rgba(0,0,0,0.8); }
+.hologram-container::after {
+  content: ''; position: absolute; left: 0; right: 0; height: 2px; background: var(--node-color);
+  box-shadow: 0 0 10px var(--node-color); animation: scanline 3s linear infinite;
+}
+@keyframes scanline { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+.holo-num { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:3.5rem; color:transparent; -webkit-text-stroke: 1px var(--node-color); opacity: 0.5; }
+.holo-text { font-family:'Inter',sans-serif; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-top: 10px; letter-spacing: 2px;}
 
 /* ── LOGIN MODAL ── */
-.mbackdrop{display:none;position:fixed;inset:0;background:rgba(10,8,6,.9);align-items:center;justify-content:center;z-index:1000;}
+.mbackdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); align-items:center;justify-content:center;z-index:1000;}
 .mbackdrop.open{display:flex;}
-.mbox{ background:var(--brown);border:2px solid var(--mustard);border-radius:4px; padding:2.2rem 2rem;width:min(360px,92vw);text-align:center; box-shadow:0 0 60px rgba(192,82,42,.18),inset 0 1px 0 rgba(212,168,68,.18); position:relative;overflow:hidden; }
-.mbox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rust),var(--mustard),var(--rust));}
-.mbox h3{font-family:'Playfair Display',serif;color:var(--mustard);font-size:1.1rem;font-weight:700;letter-spacing:2px;margin-bottom:.3rem;}
-.mbox p{color:rgba(240,230,200,.38);font-size:.72rem;margin-bottom:1.4rem;font-family:'Special Elite',cursive;letter-spacing:1px;}
-.mbox input{ width:100%;padding:.6rem .9rem;background:rgba(28,20,16,.8); border:1px solid rgba(107,76,42,.55);border-radius:2px; color:var(--cream);font-size:.8rem;margin-bottom:.7rem;outline:none; font-family:'Courier Prime',monospace;transition:border-color .2s; }
-.mbox input:focus{border-color:var(--mustard);}
-.btn-dologin{ width:100%;padding:.65rem; background:linear-gradient(90deg,var(--rust),var(--mocha)); border:1px solid rgba(212,168,68,.28);border-radius:2px; color:var(--cream);font-weight:700;font-size:.82rem;cursor:pointer; letter-spacing:2px;font-family:'Special Elite',cursive; text-transform:uppercase;transition:opacity .2s; }
-.btn-dologin:hover{opacity:.85;}
-.skip{display:block;margin-top:.8rem;color:rgba(240,230,200,.28);font-size:.68rem;cursor:pointer;font-family:'Special Elite',cursive;letter-spacing:1px;}
-.skip:hover{color:rgba(240,230,200,.55);}
-.login-err{color:#e8a0a0;font-size:.7rem;margin-top:.4rem;margin-bottom:.3rem;font-family:'Special Elite',cursive;letter-spacing:1px;display:none;}
+.mbox{ background:rgba(15,15,18,0.9);border:1px solid var(--surface-border);border-radius:16px; padding:2.5rem 2rem;width:min(360px,92vw);text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.8); position:relative;}
+.mbox h3{font-family:'Inter',sans-serif;color:var(--text-main);font-size:1.4rem;font-weight:800;margin-bottom:.5rem;}
+.mbox p{color:var(--text-muted);font-size:.85rem;margin-bottom:1.5rem;}
+.mbox input{ width:100%;padding:12px 15px;background:rgba(0,0,0,0.5); border:1px solid var(--surface-border);border-radius:8px; color:var(--text-main);font-size:.9rem;margin-bottom:1rem;outline:none; transition:border-color .2s; }
+.mbox input:focus{border-color:var(--neon-cyan);}
+.btn-dologin{ width:100%;padding:12px; background:var(--text-main); border:none;border-radius:8px; color:var(--bg-base);font-weight:700;font-size:.9rem;cursor:pointer; transition:all .2s; margin-bottom: 1rem;}
+.btn-dologin:hover{transform: translateY(-2px);}
+.skip{display:block;color:var(--text-muted);font-size:.8rem;cursor:pointer; transition: color 0.2s;}
+.skip:hover{color:var(--text-main);}
+.login-err{color:#ff4444;font-size:.8rem;margin-bottom:1rem;display:none;}
 </style>
 </head>
 <body>
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <span class="topbar-logo">◈ BD·II</span>
+  <span class="topbar-logo">SYS_DB_II</span>
   <nav class="topbar-nav">
-    <button class="nav-btn active">Inicio</button>
+    <button class="nav-btn active">Terminal</button>
   </nav>
   <div class="topbar-right">
     <div class="logged-badge" id="loggedBadge" style="display:flex;">
-      <span id="loggedName" style="color:rgba(240,230,200,.45);font-size:.7rem;font-family:'Special Elite',cursive;">Verificando...</span>
-      <button class="btn-out" id="btnLogout" style="display:none;" onclick="window.doLogout()">Salir</button>
+      <span id="loggedName" style="color:var(--text-muted);font-size:.8rem;font-family:'JetBrains Mono',monospace;">Conectando...</span>
+      <button class="btn-out" id="btnLogout" style="display:none;" onclick="window.doLogout()">Logout</button>
     </div>
-    <button class="btn-login-top" id="btnLogin" style="display:none;" onclick="window.openLogin()">Iniciar sesión</button>
+    <button class="btn-login-top" id="btnLogin" style="display:none;" onclick="window.openLogin()">Autenticar</button>
   </div>
 </div>
 
@@ -331,17 +324,16 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 <div class="page active" id="page-inicio">
   
   <div class="hero">
-    <div class="hero-eyebrow" id="loadingText">◈ Conectando a Supabase...</div>
+    <div class="hero-eyebrow" id="loadingText">Iniciando protocolo Supabase...</div>
     <div class="hero-title">BASE DE DATOS II</div>
-    <div class="hero-rule"></div>
-    <div class="hero-sub">Colección académica curada por Jefferson</div>
+    <div class="hero-sub">Colección académica · Curaduría de Jefferson</div>
   </div>
 
   <div class="main-layout-3cols">
     <div class="layout-left" id="left-cabinets"></div>
     <div class="layout-center">
       <div class="carousel-section">
-        <div class="c-label">◈ Semanas del semestre</div>
+        <div class="c-label">Nodos de Conocimiento</div>
         <div class="c-scene" id="scene"></div>
       </div>
     </div>
@@ -350,18 +342,18 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 
   <div class="info-section">
     <div class="info-card db-info">
-      <h3>◈ Sobre la Materia</h3>
-      <p>Una <strong>Base de Datos</strong> es un sistema organizado para la recopilación, almacenamiento y gestión de grandes volúmenes de información. En este curso avanzado exploraremos arquitecturas robustas y entornos de producción.</p>
+      <h3>Arquitectura del Curso</h3>
+      <p>Una <strong>Base de Datos</strong> es un sistema organizado para la recopilación y gestión de grandes volúmenes de información. Exploramos modelado complejo, optimización SQL y arquitecturas robustas en entornos de producción.</p>
     </div>
     <div class="info-card about-me">
       <div class="profile-wrap">
         <div class="profile-pic">
-          <img src="/img/Foto.webp" alt="Jefferson" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%233b2a1a\'/><text x=\'50\' y=\'55\' font-family=\'sans-serif\' font-size=\'30\' fill=\'%23c9903a\' text-anchor=\'middle\'>J</text></svg>'">
+          <img src="/img/Foto.webp" alt="Jefferson" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%23141419\'/><text x=\'50\' y=\'55\' font-family=\'sans-serif\' font-size=\'30\' fill=\'%2300f0ff\' text-anchor=\'middle\'>J</text></svg>'">
         </div>
         <div class="profile-desc">
-          <h4>Hola, soy Jefferson</h4>
-          <span>ESTUDIANTE / DESARROLLADOR</span>
-          <p style="margin-top: 0.5rem;">Estudiante de Ingeniería de Sistemas. Apasionado por la tecnología y las bases de datos.</p>
+          <h4>Jefferson</h4>
+          <span>System Architect / Developer</span>
+          <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">Estudiante de Ingeniería de Sistemas. Entusiasta del desarrollo web y la escalabilidad de datos.</p>
         </div>
       </div>
     </div>
@@ -369,79 +361,66 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 
 </div>
 
-<!-- EL MODAL MÁGICO 3D (El gabinete) -->
+<!-- EL MODAL DE INSPECCIÓN (El nuevo Gabinete) -->
 <div class="cab-modal" id="cabModal">
   <div class="cab-modal-backdrop" onclick="window.closeCabinetLogic()"></div>
-  <div class="cab-modal-box">
+  <div class="cab-modal-box" id="modalBox">
     
-    <div class="cab-door cab-door-left"><div class="door-panel"></div><div class="door-knob"></div></div>
-    <div class="cab-door cab-door-right"><div class="door-panel"></div><div class="door-knob"></div></div>
-
-    <div class="cab-inside" id="cabInside">
-      <div class="inside-header">
-        <button class="btn-back-cabinet" id="btn-back-modal" onclick="window.closeCabinetLogic()">← Volver a Unidades</button>
-        <div class="inside-title-wrap">
-          <span class="inside-subtitle" id="ic-sub">UNIDAD X</span>
-          <h3 class="inside-title" id="ic-title">Nombre de la Unidad</h3>
-        </div>
+    <div class="inside-header">
+      <div class="inside-title-wrap" style="text-align: left;">
+        <span class="inside-subtitle" id="ic-sub">CLUSTER 01</span>
+        <h3 class="inside-title" id="ic-title">Nombre del Clúster</h3>
       </div>
-      
-      <div class="shelf-board" id="ic-board">
-        
-        <!-- VISTA 1: LISTA (Por Defecto) -->
-        <div id="list-view" class="view-panel active">
-          <div class="shelf-list" id="inside-vinyls">
-            <!-- Pistas/Semanas inyectadas por JS -->
-          </div>
-        </div>
-
-        <!-- VISTA 2: REPRODUCTOR (Al hacer clic en un vinilo) -->
-        <div id="player-view" class="view-panel">
-          
-          <div class="player-tracklist">
-            <span class="pv-sub" id="pv-week-num">SEMANA 01</span>
-            <h4 id="pv-title">Cargando Título...</h4>
-            
-            <ul class="track-ul" id="pv-tracks">
-              <!-- Archivos inyectados por JS -->
-              <li class="track-li" style="justify-content:center; color: var(--mustard);">Cargando pistas...</li>
-            </ul>
-            
-            <button class="btn-manage-week" id="pv-manage-btn" onclick="">Ver en el sitio</button>
-          </div>
-
-          <div class="player-record-wrap">
-            <!-- El disco que sale y gira -->
-            <div class="pr-disc-container">
-              <div class="pr-disc">
-                <div class="pr-disc-label" id="pv-label"><div class="pr-disc-hole"></div></div>
-              </div>
-            </div>
-            <!-- La cubierta -->
-            <div class="pr-cover" id="pv-cover">
-              <span class="pr-num" id="pv-num">S00</span>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
+      <button class="btn-back-cabinet" id="btn-back-modal" onclick="window.closeCabinetLogic()">Cerrar Panel</button>
     </div>
+    
+    <div class="shelf-board" id="ic-board">
+      
+      <!-- VISTA 1: LISTA (Grilla de tarjetas) -->
+      <div id="list-view" class="view-panel active">
+        <div class="shelf-list" id="inside-vinyls">
+          <!-- Nodos inyectados por JS -->
+        </div>
+      </div>
 
+      <!-- VISTA 2: INSPECTOR (Detalle de Archivos) -->
+      <div id="player-view" class="view-panel">
+        
+        <div class="player-tracklist">
+          <span class="pv-sub" id="pv-week-num">NODO 01</span>
+          <h4 id="pv-title">Cargando...</h4>
+          
+          <ul class="track-ul" id="pv-tracks">
+            <li class="track-li" style="justify-content:center;">Indexando archivos...</li>
+          </ul>
+          
+          <button class="btn-manage-week" id="pv-manage-btn" onclick="">Acceder al Nodo</button>
+        </div>
+
+        <div class="player-record-wrap">
+          <div class="hologram-container" id="pv-holo-box">
+            <div class="holo-num" id="pv-num">S00</div>
+            <div class="holo-text">Conexión Segura</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
   </div>
 </div>
 
 <!-- LOGIN MODAL -->
 <div class="mbackdrop" id="loginModal">
   <div class="mbox">
-    <h3 id="authTitle">Acceso al Sistema</h3>
-    <p id="authSub">Ingresa tus credenciales</p>
-    <input type="text"     id="userIn" placeholder="Correo electrónico" autocomplete="off"/>
-    <input type="password" id="passIn" placeholder="Contraseña"/>
-    <div class="login-err" id="loginErr">✗ Credenciales incorrectas</div>
-    <button class="btn-dologin" id="btnAuth" onclick="window.doLogin()">Entrar</button>
-    <span class="skip" id="authToggle" onclick="window.toggleAuthMode()">¿No tienes cuenta? Regístrate aquí</span>
-    <span class="skip" onclick="window.closeLogin()" style="margin-top: 5px; color: rgba(240,230,200,0.15);">Continuar sin iniciar sesión</span>
+    <h3 id="authTitle">Autenticación</h3>
+    <p id="authSub">Requiere credenciales de nivel 1</p>
+    <input type="text"     id="userIn" placeholder="ID de Usuario (Email)" autocomplete="off"/>
+    <input type="password" id="passIn" placeholder="Código de Acceso"/>
+    <div class="login-err" id="loginErr">✗ Acceso Denegado</div>
+    <button class="btn-dologin" id="btnAuth" onclick="window.doLogin()">Conectar</button>
+    <span class="skip" id="authToggle" onclick="window.toggleAuthMode()" style="margin-bottom: 10px;">Solicitar credenciales</span>
+    <span class="skip" onclick="window.closeLogin()" style="opacity: 0.5;">Cancelar</span>
   </div>
 </div>
 
@@ -453,21 +432,19 @@ import { supabaseUrl, supabaseKey } from './config.js';
 const supabase = createClient(supabaseUrl, supabaseKey, { auth: { storage: window.sessionStorage } });
 
 /* =========================================================================
-   ▶ CONFIGURACIÓN BASE Y GLOBALES
+   ▶ CONFIGURACIÓN BASE Y GLOBALES (Colores Neón / Tech)
 ========================================================================= */
 const COLOR_CONFIG = [
-  { id: 1, name: 'Arquitectura de datos', icon: '🏛️', range:'Sem. 1–4',   color:'#b87333', rgb:'184,115,51', weeks:[1,2,3,4],   g:['#d4924a','#8b5a2b','#c0522a'] },
-  { id: 2, name: 'Modelado',              icon: '📐', range:'Sem. 5–8',   color:'#2e7d6e', rgb:'46,125,110', weeks:[5,6,7,8],   g:['#3da090','#1d5c52','#4a8c6e'] },
-  { id: 3, name: 'Consultas SQL',         icon: '🔍', range:'Sem. 9–12',  color:'#7a2233', rgb:'122,34,51', weeks:[9,10,11,12],g:['#a33044','#5a1825','#8b3040'] },
-  { id: 4, name: 'Optimización',          icon: '⚡', range:'Sem. 13–16', color:'#5a7a5a', rgb:'90,122,90', weeks:[13,14,15,16],g:['#7a9e6a','#3d5c3d','#6b8c5a'] },
+  { id: 1, name: 'Arquitectura', icon: '🏛️', range:'Nodos 1–4',   color:'var(--neon-cyan)',   rgb:'0, 240, 255',   weeks:[1,2,3,4],   g:['rgba(0,240,255,0.8)','rgba(0,240,255,0.2)'] },
+  { id: 2, name: 'Modelado',     icon: '📐', range:'Nodos 5–8',   color:'var(--neon-purple)', rgb:'181, 55, 242',  weeks:[5,6,7,8],   g:['rgba(181,55,242,0.8)','rgba(181,55,242,0.2)'] },
+  { id: 3, name: 'Consultas',    icon: '🔍', range:'Nodos 9–12',  color:'var(--neon-amber)',  rgb:'255, 153, 0',   weeks:[9,10,11,12],g:['rgba(255,153,0,0.8)','rgba(255,153,0,0.2)'] },
+  { id: 4, name: 'Optimización', icon: '⚡', range:'Nodos 13–16', color:'var(--neon-green)',  rgb:'57, 255, 20',   weeks:[13,14,15,16],g:['rgba(57,255,20,0.8)','rgba(57,255,20,0.2)'] },
 ];
 
 let dbCabinets = [...COLOR_CONFIG]; 
-let dbWeeks = {
-  1: "Introducción a la arquitectura DB", 2: "Gestores de la BD", 3: "Diseño de arquitectura de BD", 4: "Tipos de Arquitectura de BD"
-};    
+let dbWeeks = { 1: "Intro DB", 2: "Gestores", 3: "Diseño DB", 4: "Tipos de Arquitectura" };    
 
-const ACTIVE_WEEK = 17; // Todas las semanas activas
+const ACTIVE_WEEK = 17; 
 function getStatus(w){ return w < ACTIVE_WEEK ? 'done' : w === ACTIVE_WEEK ? 'active' : 'pending'; }
 
 const TOTAL = 16, SPEED = 0.055; 
@@ -488,17 +465,17 @@ window.loadDashboardData = async function() {
       return { ...config, name: dbItem ? dbItem.nombre : config.name, icon: dbItem ? dbItem.icono : config.icon };
     });
 
-    document.getElementById('loadingText').textContent = "◈ Semestre 2026";
+    document.getElementById('loadingText').textContent = "Sistema en línea · Semestre 2026";
     buildCabinets(); buildScene(); 
   } catch(e) {
-    console.error("Fallo al conectar con Supabase:", e);
-    document.getElementById('loadingText').textContent = "◈ Semestre 2026";
+    console.error("Fallo conexión Supabase:", e);
+    document.getElementById('loadingText').textContent = "Modo Offline · Semestre 2026";
     buildCabinets(); buildScene();
   }
 };
 
 /* =========================================================================
-   ▶ CARRUSEL 3D CENTRAL
+   ▶ CARRUSEL DE NODOS
 ========================================================================= */
 function buildScene(){
   try {
@@ -506,17 +483,19 @@ function buildScene(){
     for(let i = 0; i < TOTAL; i++){
       const w = i+1; const wStr = w < 10 ? '0' + w : w; 
       const st = getStatus(w); const cat = dbCabinets.find(c => c.weeks && c.weeks.includes(w)) || COLOR_CONFIG[0];
-      const title = dbWeeks[w] || 'Tema por definir';
-      const dotC = st==='done'?'#7a9e6a':st==='active'?'#c9903a':'#2a1a0a';
-      const dotG = st==='done'?'0 0 6px #7a9e6a':st==='active'?'0 0 6px #c9903a':'none';
+      const title = dbWeeks[w] || 'Nodo sin definir';
       
       const el = document.createElement('div');
       el.className = 'vitem'+(st==='pending'?' locked':'');
+      el.style.setProperty('--node-color', `rgb(${cat.rgb})`);
+      
       el.innerHTML = `
-        <div class="v-disc"><div class="v-disc-label" style="background:linear-gradient(135deg, ${cat.g[0]}, ${cat.g[1]})"><div class="v-disc-hole"></div></div></div>
-        <div class="vface" id="vf${i}" style="background:linear-gradient(145deg,${cat.g[0]},${cat.g[1]},${cat.g[2]});">
-          <div class="vface-inner"><span class="vface-label" id="lbl${i}">S${wStr}</span><span class="vface-week" id="wk${i}">${title}</span></div>
-          <div class="vstatus-ring ${st==='active'?'vpulse':''}" id="vd${i}" style="background:${dotC};box-shadow:${dotG};"></div>
+        <div class="v-disc"></div>
+        <div class="vface" id="vf${i}">
+          <div class="vface-inner">
+            <span class="vface-label" id="lbl${i}">N-${wStr}</span>
+            <span class="vface-week" id="wk${i}">${title}</span>
+          </div>
         </div>
       `;
       el.addEventListener('mouseenter', () => isCarouselHovered = true);
@@ -535,23 +514,21 @@ function renderCarousel(){
   try {
     const sc = document.getElementById('scene'); if(!sc) return;
     const W = sc.offsetWidth || 700, H = sc.offsetHeight || 280;
-    const cx = W/2, cy = H*0.62, RX = W*0.43, RY = H*0.36;
+    const cx = W/2, cy = H*0.55, RX = W*0.43, RY = H*0.3;
     const items = document.querySelectorAll('#scene .vitem');
     
     items.forEach((el,i) => {
       const rad = (((i/TOTAL)*360+angle)%360)*Math.PI/180;
-      const front = (1+Math.cos(rad))/2, sz = 45+(145-45)*front; 
-      const w = i+1; const cat = dbCabinets.find(c => c.weeks && c.weeks.includes(w)) || COLOR_CONFIG[0];
-      const vf = document.getElementById('vf'+i), lbl = document.getElementById('lbl'+i), wk = document.getElementById('wk'+i), vd = document.getElementById('vd'+i);
+      const front = (1+Math.cos(rad))/2, sz = 60+(130-60)*front; 
+      
+      const vf = document.getElementById('vf'+i), lbl = document.getElementById('lbl'+i), wk = document.getElementById('wk'+i);
       
       el.style.width = sz+'px'; el.style.height = sz+'px';
       el.style.transform = `translate(${cx+RX*Math.sin(rad)-sz/2}px,${cy-RY*Math.cos(rad)-sz/2}px)`;
       el.style.opacity = 0.1+0.9*front; el.style.zIndex = Math.round(front*100);
 
-      if(vf) vf.style.boxShadow = front>.5?`0 ${Math.round(front*8)}px ${Math.round(front*22)}px rgba(0,0,0,.5),0 0 ${Math.round(front*18)}px rgba(${cat.rgb},.38)`:'none';
-      if(lbl){ lbl.style.fontSize=Math.max(.35,front*1)+'rem'; lbl.style.opacity=front>.3?Math.min(1,(front-.3)/.25):'0'; }
-      if(wk){  wk.style.fontSize=Math.max(.22,front*.45)+'rem';  wk.style.opacity=front>.55?Math.min(1,(front-.55)/.2):'0'; }
-      if(vd){ const ds=Math.max(4,Math.round(front*10)); vd.style.width=ds+'px'; vd.style.height=ds+'px'; vd.style.opacity=front>.35?'1':'0'; }
+      if(lbl){ lbl.style.fontSize=Math.max(.5,front*1.2)+'rem'; lbl.style.opacity=front>.3?1:'0.3'; }
+      if(wk){  wk.style.fontSize=Math.max(.3,front*.6)+'rem';  wk.style.opacity=front>.6?1:'0'; }
       if(el.classList.contains('extracting')) el.style.zIndex=999;
     });
   } catch(e) { console.error("Error animando carrusel:", e); }
@@ -564,15 +541,15 @@ function frame(){
 }
 
 /* =========================================================================
-   ▶ GABINETES LATERALES
+   ▶ CLÚSTERES LATERALES
 ========================================================================= */
 function renderCabHTML(cat, idx) {
   const numText = cat.id < 10 ? '0' + cat.id : cat.id; 
   return `
-    <div class="vertical-cabinet" onclick="window.openCabinet(${idx})" style="border-color: rgba(${cat.rgb}, 0.5);">
+    <div class="vertical-cabinet" onclick="window.openCabinet(${idx})" style="--cluster-color: rgb(${cat.rgb});">
       <button class="btn-edit-admin" style="top:5px; right:5px;" onclick="event.stopPropagation(); window.editCabinetName(${cat.id}, '${cat.name}', '${cat.icon}')">✏️</button>
-      <div class="vc-icon" style="color:${cat.color};">${cat.icon}</div>
-      <div class="vc-text">UNIDAD ${numText}</div>
+      <div class="vc-icon" style="color: rgb(${cat.rgb});">${cat.icon}</div>
+      <div class="vc-text">CLÚSTER ${numText}</div>
     </div>
   `;
 }
@@ -583,130 +560,110 @@ function buildCabinets() {
 }
 
 /* =========================================================================
-   ▶ LÓGICA DE UX DEL MODAL: LISTA -> REPRODUCTOR
+   ▶ LÓGICA DEL PANEL DE INSPECCIÓN
 ========================================================================= */
-let currentOpenCabinet = null; // Para saber a qué gabinete volver
+let currentOpenCabinet = null; 
 
 window.openCabinet = function(idx) {
   currentOpenCabinet = idx;
   const cat = dbCabinets[idx];
   const numText = cat.id < 10 ? '0' + cat.id : cat.id;
   
-  // Títulos del Header del Gabinete
-  document.getElementById('ic-sub').textContent = `UNIDAD ${numText} · ${cat.range}`;
+  // Títulos del Panel
+  document.getElementById('ic-sub').textContent = `CLÚSTER ${numText} · ${cat.range}`;
+  document.getElementById('ic-sub').style.color = `rgb(${cat.rgb})`;
   document.getElementById('ic-title').textContent = cat.name;
-  document.getElementById('ic-title').style.color = cat.color;
+  
+  // Dar color al borde del modal para reflejar el clúster activo
+  document.getElementById('modalBox').style.setProperty('--cluster-color', `rgb(${cat.rgb})`);
 
-  // Restaurar estado visual a la Lista (Vista 1)
+  // Restaurar estado visual a la Lista
   document.getElementById('player-view').classList.remove('active');
-  document.getElementById('ic-board').classList.remove('player-view-active');
   document.getElementById('list-view').classList.add('active');
-  document.getElementById('btn-back-modal').textContent = '← Volver a Unidades';
+  document.getElementById('btn-back-modal').textContent = 'Cerrar Panel';
 
-  // Generar Pistas (Vinilos en lista)
+  // Generar Nodos en lista
   const vinylsHtml = cat.weeks.map(w => {
     const wStr = w < 10 ? '0' + w : w;
     const st = getStatus(w);
-    const dotC = st==='done'?'#7a9e6a':st==='active'?'#c9903a':'#2a1a0a';
     const title = dbWeeks[w] || 'Por definir';
-
-    // Ahora pasamos los colores en JSON para reconstruir el reproductor fácilmente
-    const colorData = JSON.stringify({ g0: cat.g[0], g1: cat.g[1], g2: cat.g[2], rgb: cat.rgb });
+    const isAct = st === 'active' ? 'active' : '';
 
     return `
-      <div class="shelf-list-item ${st==='pending'?'locked':''}" onclick='window.playRecord(${w}, "${wStr}", "${title.replace(/'/g,"\\'")}", ${colorData})'>
-        
+      <div class="shelf-list-item ${st==='pending'?'locked':''}" style="--node-color: rgb(${cat.rgb})" onclick='window.playRecord(${w}, "${wStr}", "${title.replace(/'/g,"\\'")}", "${cat.rgb}")'>
         <button class="btn-edit-admin" style="top:-8px; right:-8px;" onclick="event.stopPropagation(); window.editWeekTitle(${w}, '${title.replace(/'/g,"\\'")}')">✏️</button>
         
-        <!-- Cover en miniatura -->
-        <div class="sli-cover-wrap" style="background:linear-gradient(135deg, ${cat.g[0]}, ${cat.g[1]}); border-color: rgba(${cat.rgb}, 0.5);">
-          <span class="sli-num">S${wStr}</span>
-          <div class="sli-dot" style="background:${dotC};"></div>
+        <div class="sli-cover-wrap">
+          <span class="sli-num">N${wStr}</span>
+          <div class="sli-dot ${isAct}"></div>
         </div>
         
-        <!-- Textos a la derecha -->
         <div class="sli-details">
-          <div class="sli-week">SEMANA ${wStr}</div>
+          <div class="sli-week">NODO ${wStr}</div>
           <div class="sli-title">${title}</div>
         </div>
-
       </div>`;
   }).join('');
 
   document.getElementById('inside-vinyls').innerHTML = vinylsHtml;
 
-  // Animación de Apertura de Puertas
   const modal = document.getElementById('cabModal');
-  modal.classList.remove('doors-open'); 
   modal.classList.add('open');          
-  setTimeout(() => { modal.classList.add('doors-open'); }, 500);
 };
 
-// Función principal del botón "Atrás" dentro del Gabinete
 window.closeCabinetLogic = function() {
-  // Si estamos en el reproductor, volver a la lista
   if(document.getElementById('player-view').classList.contains('active')) {
     document.getElementById('player-view').classList.remove('active');
-    document.getElementById('ic-board').classList.remove('player-view-active');
     document.getElementById('list-view').classList.add('active');
-    document.getElementById('btn-back-modal').textContent = '← Volver a Unidades';
+    document.getElementById('btn-back-modal').textContent = 'Cerrar Panel';
   } else {
-    // Si estamos en la lista, cerrar todo el gabinete
-    const modal = document.getElementById('cabModal');
-    modal.classList.remove('doors-open'); 
-    setTimeout(() => { modal.classList.remove('open'); }, 700);
+    document.getElementById('cabModal').classList.remove('open'); 
   }
 };
 
-/* ── EL NUEVO REPRODUCTOR (Al hacer click en la lista) ── */
-window.playRecord = async function(w, wStr, title, colors) {
+/* ── INSPECTOR DE ARCHIVOS ── */
+window.playRecord = async function(w, wStr, title, rgbColor) {
   if (getStatus(w) === 'pending') return;
 
-  // Cambiar vista
   document.getElementById('list-view').classList.remove('active');
   document.getElementById('player-view').classList.add('active');
-  
-  // Darle la señal al CSS para animar el disco hacia afuera
-  setTimeout(() => document.getElementById('ic-board').classList.add('player-view-active'), 50);
+  document.getElementById('btn-back-modal').textContent = '← Volver al Clúster';
 
-  document.getElementById('btn-back-modal').textContent = '← Volver a Lista';
-
-  // Configurar colores del reproductor gigante
-  document.getElementById('pv-cover').style.background = `linear-gradient(145deg, ${colors.g0}, ${colors.g1}, ${colors.g2})`;
-  document.getElementById('pv-label').style.background = `linear-gradient(135deg, ${colors.g0}, ${colors.g1})`;
-  document.getElementById('pv-num').textContent = `S${wStr}`;
+  // Configurar Holograma
+  const holoBox = document.getElementById('pv-holo-box');
+  holoBox.style.setProperty('--node-color', `rgb(${rgbColor})`);
+  holoBox.style.borderColor = `rgba(${rgbColor}, 0.5)`;
+  document.getElementById('pv-num').textContent = `N${wStr}`;
   
-  // Configurar textos de la Tracklist
-  document.getElementById('pv-week-num').textContent = `SEMANA ${wStr}`;
+  // Configurar textos
+  document.getElementById('pv-week-num').textContent = `NODO ${wStr}`;
+  document.getElementById('pv-week-num').style.color = `rgb(${rgbColor})`;
   document.getElementById('pv-title').textContent = title;
   document.getElementById('pv-manage-btn').onclick = () => window.open(`contenido.html?id=${w}`, '_blank');
 
-  // Buscar archivos en Supabase
+  // Buscar archivos
   const trackUl = document.getElementById('pv-tracks');
-  trackUl.innerHTML = '<li class="track-li" style="justify-content:center; color: var(--mustard);">Buscando pistas en Supabase...</li>';
+  trackUl.innerHTML = '<li class="track-li" style="justify-content:center; color: var(--text-muted);">Consultando BD...</li>';
 
   try {
     const { data: files, error } = await supabase.from('materiales').select('*').eq('semana_id', w).order('creado_en', { ascending: true });
     
     if (error) throw error;
     if (files.length === 0) {
-      trackUl.innerHTML = '<li class="track-li" style="justify-content:center; color: rgba(240,230,200,0.4);">Aún no hay archivos en esta semana.</li>';
+      trackUl.innerHTML = '<li class="track-li" style="justify-content:center; color: var(--surface-border);">Directorio vacío.</li>';
     } else {
       trackUl.innerHTML = files.map((f, i) => {
         const ext = f.url_o_ruta.split('.').pop().split('?')[0].toLowerCase();
         let icon = '📁'; if(ext==='pdf') icon='📄'; else if(['jpg','png','jpeg'].includes(ext)) icon='🖼';
-        const num = (i + 1) < 10 ? '0' + (i + 1) : (i + 1);
         
         return `<li class="track-li" onclick="window.open('${f.url_o_ruta}', '_blank')">
-                  <span class="track-li-num">${num}.</span>
                   <span class="track-li-icon">${icon}</span>
-                  <span style="flex:1;">${f.titulo}</span>
+                  <span class="track-li-title">${f.titulo}</span>
                 </li>`;
       }).join('');
     }
   } catch (e) {
-    console.error("Error al cargar archivos:", e);
-    trackUl.innerHTML = '<li class="track-li" style="color: #e8a0a0;">Error al cargar las pistas.</li>';
+    trackUl.innerHTML = '<li class="track-li" style="color: #ff4444;">Error en la consulta.</li>';
   }
 };
 
@@ -715,9 +672,9 @@ window.playRecord = async function(w, wStr, title, colors) {
    ▶ FUNCIONES DE EDICIÓN (ADMIN)
 ========================================================================= */
 window.editCabinetName = async function(id, currentName, currentIcon) {
-  const newName = prompt("Nuevo nombre para la Unidad " + id + ":", currentName);
+  const newName = prompt("Designación del Clúster " + id + ":", currentName);
   if(!newName || newName.trim() === "") return;
-  const newIcon = prompt("Nuevo icono para la Unidad " + id + ":", currentIcon);
+  const newIcon = prompt("Ícono del Clúster " + id + ":", currentIcon);
   if(!newIcon || newIcon.trim() === "") return;
 
   const { error } = await supabase.from('estanterias').update({ nombre: newName, icono: newIcon }).eq('id', id);
@@ -725,12 +682,11 @@ window.editCabinetName = async function(id, currentName, currentIcon) {
 };
 
 window.editWeekTitle = async function(id, currentTitle) {
-  const newTitle = prompt("Nuevo título para la Semana " + id + ":", currentTitle);
+  const newTitle = prompt("Etiqueta para el Nodo " + id + ":", currentTitle);
   if(newTitle && newTitle.trim() !== "") {
     const { error } = await supabase.from('semanas').update({ titulo: newTitle }).eq('id', id);
     if(!error) { 
       await window.loadDashboardData(); 
-      // Refrescar el gabinete que está abierto
       if(currentOpenCabinet !== null) window.openCabinet(currentOpenCabinet);
     } else alert("Error: " + error.message);
   }
@@ -746,27 +702,27 @@ window.toggleAuthMode = function() {
   isSignUpMode = !isSignUpMode;
   const title = document.getElementById('authTitle'), sub = document.getElementById('authSub'), btn = document.getElementById('btnAuth'), toggle = document.getElementById('authToggle');
   document.getElementById('loginErr').style.display = 'none';
-  if (isSignUpMode) { title.textContent = "Crear Usuario"; sub.textContent = "Registra tus credenciales"; btn.textContent = "Registrarse"; toggle.textContent = "¿Ya tienes cuenta? Inicia sesión"; } 
-  else { title.textContent = "Acceso al Sistema"; sub.textContent = "Ingresa tus credenciales"; btn.textContent = "Entrar"; toggle.textContent = "¿No tienes cuenta? Regístrate aquí"; }
+  if (isSignUpMode) { title.textContent = "Nuevo Registro"; sub.textContent = "Crear credenciales de nivel 1"; btn.textContent = "Registrar"; toggle.textContent = "Ya tengo credenciales"; } 
+  else { title.textContent = "Autenticación"; sub.textContent = "Requiere credenciales de nivel 1"; btn.textContent = "Conectar"; toggle.textContent = "Solicitar credenciales"; }
 };
 
 window.doLogin = async function(){
   const u = document.getElementById('userIn').value.trim(), p = document.getElementById('passIn').value;
   const btn = document.getElementById('btnAuth'), err = document.getElementById('loginErr');
-  if(!u || !p) { err.textContent = "✗ Ingresa correo y contraseña"; err.style.display = 'block'; return; }
-  btn.textContent = "Procesando..."; btn.style.opacity = "0.5";
+  if(!u || !p) { err.textContent = "✗ Datos incompletos"; err.style.display = 'block'; return; }
+  btn.textContent = "Conectando..."; btn.style.opacity = "0.5";
 
   try {
     if (isSignUpMode) {
       const { data, error } = await supabase.auth.signUp({ email: u, password: p });
       if (error) throw error;
-      if (data.session == null) { alert("¡Usuario creado! Por favor revisa tu correo."); window.toggleAuthMode(); } else window.closeLogin();
+      if (data.session == null) { alert("¡Registro exitoso! Confirma tu email."); window.toggleAuthMode(); } else window.closeLogin();
     } else {
       const { data, error } = await supabase.auth.signInWithPassword({ email: u, password: p });
-      if (error) { err.textContent = "✗ Credenciales incorrectas"; err.style.display = 'block'; } else window.closeLogin();
+      if (error) { err.textContent = "✗ Credenciales inválidas"; err.style.display = 'block'; } else window.closeLogin();
     }
-  } catch (ex) { err.textContent = "✗ " + (ex.message || "Falla."); err.style.display = 'block';
-  } finally { btn.textContent = isSignUpMode ? "Registrarse" : "Entrar"; btn.style.opacity = "1"; }
+  } catch (ex) { err.textContent = "✗ " + (ex.message || "Error de red."); err.style.display = 'block';
+  } finally { btn.textContent = isSignUpMode ? "Registrar" : "Conectar"; btn.style.opacity = "1"; }
 };
 
 window.doLogout = async function(){ await supabase.auth.signOut(); window.location.reload(); };
