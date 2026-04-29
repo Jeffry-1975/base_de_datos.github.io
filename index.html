@@ -87,7 +87,7 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 .hero{ text-align:center; padding: 2rem 1rem 0; width: 100%; }
 .hero-eyebrow{font-family:'JetBrains Mono',monospace;color:var(--neon-cyan);font-size:.7rem;letter-spacing:3px;margin-bottom:.5rem;text-transform:uppercase;}
 .hero-title{ 
-  font-family:'Inter',sans-serif; font-size:clamp(2rem, 4vw, 3.5rem); font-weight:800; letter-spacing: -1px;
+  font-family:'Inter',sans-serif; font-size:clamp(1.8rem, 4vw, 3.5rem); font-weight:800; letter-spacing: -1px;
   background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   line-height:1.2;
 }
@@ -118,18 +118,8 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 .vc-icon { font-size: 1.8rem; margin-bottom: 1.5rem; filter: drop-shadow(0 0 8px var(--cluster-color)); }
 .vc-text { writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-main); font-size: 0.8rem; letter-spacing: 3px; white-space: nowrap; }
 
-/* ── RESPONSIVIDAD ── */
-@media (max-width: 1100px) {
-  .main-layout-3cols { flex-direction: column; padding: 1rem; gap: 1rem; }
-  .layout-left, .layout-right { flex-direction: row; width: 100%; justify-content: center; flex-wrap: wrap; }
-  .vertical-cabinet { width: 180px; height: 80px; flex-direction: row; padding: 0 1.5rem; justify-content: flex-start; }
-  .vc-icon { margin-bottom: 0; margin-right: 1rem; font-size: 1.5rem; }
-  .vc-text { writing-mode: horizontal-tb; transform: none; font-size: 0.8rem; }
-}
-
 /* ── CAROUSEL DE NODOS (Centro) ── */
 .carousel-section{ width:100%; padding:0; display:flex; flex-direction:column; align-items:center; position:relative; overflow:hidden; }
-/* Máscaras difuminadas a los lados */
 .carousel-section::before,.carousel-section::after{ content:'';position:absolute;top:0;bottom:0;width:150px;z-index:20;pointer-events:none; }
 .carousel-section::before{left:0;background:linear-gradient(90deg,var(--bg-base) 10%,transparent);}
 .carousel-section::after{right:0;background:linear-gradient(270deg,var(--bg-base) 10%,transparent);}
@@ -183,13 +173,13 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
    ========================================================= */
 .cab-modal {
   position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center;
-  visibility: hidden; opacity: 0; transition: all 0.3s ease;
+  visibility: hidden; opacity: 0; transition: all 0.3s ease; padding: 1rem;
 }
 .cab-modal.open { visibility: visible; opacity: 1; }
 .cab-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
 
 .cab-modal-box {
-  width: 90%; max-width: 1000px; min-height: 500px; position: relative;
+  width: 95%; max-width: 1000px; min-height: 500px; max-height: 95vh; position: relative;
   background: rgba(15,15,18,0.85); backdrop-filter: blur(20px);
   border: 1px solid var(--surface-border); border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
   transform: translateY(20px) scale(0.98); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -202,7 +192,7 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 /* Header del panel */
 .inside-header { 
   display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--surface-border); background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid var(--surface-border); background: rgba(0,0,0,0.2); flex-wrap: wrap; gap: 1rem;
 }
 .btn-back-cabinet { background: rgba(255,255,255,0.05); border: 1px solid var(--surface-border); border-radius: 20px; color: var(--text-main); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 8px 16px; cursor: pointer; transition: all 0.2s; }
 .btn-back-cabinet:hover { background: rgba(255,255,255,0.1); }
@@ -211,7 +201,7 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 .inside-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-main); letter-spacing: -0.5px; }
 
 /* Cuerpo del panel */
-.shelf-board { padding: 2rem; flex: 1; display: flex; position: relative; }
+.shelf-board { padding: 2rem; flex: 1; display: flex; position: relative; overflow-y: auto;}
 
 /* VISTAS INTERNAS */
 .view-panel { display: none; width: 100%; animation: fadeZoomIn 0.3s ease; }
@@ -287,6 +277,42 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 
 .holo-num { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:3.5rem; color:transparent; -webkit-text-stroke: 1px var(--node-color); opacity: 0.5; }
 .holo-text { font-family:'Inter',sans-serif; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-top: 10px; letter-spacing: 2px;}
+
+/* ── RESPONSIVIDAD GENERAL Y MÓVIL (< 768px) ── */
+@media (max-width: 768px) {
+  /* Topbar en Móvil */
+  .topbar { flex-wrap: wrap; padding: 10px 1rem; height: auto; }
+  .topbar-nav { order: 3; width: 100%; margin-top: 10px; }
+  
+  /* Layout Principal (Clústeres) */
+  .main-layout-3cols { padding: 1rem 1rem 2rem; gap: 1rem; }
+  .layout-left, .layout-right { gap: 10px; }
+  .vertical-cabinet { width: calc(50% - 5px); height: 70px; padding: 0 0.8rem; border-radius: 10px; }
+  .vc-icon { font-size: 1.2rem; margin-right: 0.6rem; }
+  .vc-text { font-size: 0.65rem; letter-spacing: 1px; }
+
+  /* Carrusel en Móvil */
+  .carousel-section::before, .carousel-section::after { width: 50px; }
+  .c-scene { height: 220px; } /* Más pequeño para celulares */
+  .vface-inner { padding: 8px; gap: 4px; }
+  
+  /* Modal en Móvil */
+  .cab-modal-box { border-radius: 12px; }
+  .inside-header { padding: 1.2rem; flex-direction: column-reverse; align-items: flex-start; }
+  .inside-title-wrap { text-align: left; }
+  .btn-back-cabinet { margin-bottom: 10px; }
+  .shelf-board { padding: 1.2rem; }
+  
+  /* Vista Lista Móvil */
+  .shelf-list { grid-template-columns: 1fr; gap: 10px; }
+  
+  /* Vista Inspector (Reproductor) Móvil */
+  #player-view { flex-direction: column; gap: 20px; }
+  .player-record-wrap { width: 100%; margin-bottom: 10px; }
+  .hologram-container { width: 100%; height: 180px; }
+  .player-tracklist { padding-right: 0; border-right: none; border-top: 1px solid var(--surface-border); padding-top: 20px; }
+  .track-ul { max-height: none; overflow: visible; }
+}
 
 /* ── LOGIN MODAL ── */
 .mbackdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); align-items:center;justify-content:center;z-index:1000;}
@@ -386,6 +412,13 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
       <!-- VISTA 2: INSPECTOR (Detalle de Archivos) -->
       <div id="player-view" class="view-panel">
         
+        <div class="player-record-wrap">
+          <div class="hologram-container" id="pv-holo-box">
+            <div class="holo-num" id="pv-num">S00</div>
+            <div class="holo-text">Conexión Segura</div>
+          </div>
+        </div>
+
         <div class="player-tracklist">
           <span class="pv-sub" id="pv-week-num">NODO 01</span>
           <h4 id="pv-title">Cargando...</h4>
@@ -395,13 +428,6 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
           </ul>
           
           <button class="btn-manage-week" id="pv-manage-btn" onclick="">Acceder al Nodo</button>
-        </div>
-
-        <div class="player-record-wrap">
-          <div class="hologram-container" id="pv-holo-box">
-            <div class="holo-num" id="pv-num">S00</div>
-            <div class="holo-text">Conexión Segura</div>
-          </div>
         </div>
 
       </div>
@@ -475,7 +501,7 @@ window.loadDashboardData = async function() {
 };
 
 /* =========================================================================
-   ▶ CARRUSEL DE NODOS
+   ▶ CARRUSEL DE NODOS (AHORA RESPONSIVO DESDE JS)
 ========================================================================= */
 function buildScene(){
   try {
@@ -514,12 +540,24 @@ function renderCarousel(){
   try {
     const sc = document.getElementById('scene'); if(!sc) return;
     const W = sc.offsetWidth || 700, H = sc.offsetHeight || 280;
-    const cx = W/2, cy = H*0.55, RX = W*0.43, RY = H*0.3;
+    
+    // DETECCIÓN DE PANTALLA MÓVIL PARA EL CARRUSEL
+    const isMobile = window.innerWidth <= 768; 
+    
+    // Ajuste dinámico de los radios de giro según la pantalla
+    const cx = W/2, cy = H*(isMobile ? 0.5 : 0.55);
+    const RX = W*(isMobile ? 0.35 : 0.43), RY = H*(isMobile ? 0.25 : 0.3);
+    
     const items = document.querySelectorAll('#scene .vitem');
     
     items.forEach((el,i) => {
       const rad = (((i/TOTAL)*360+angle)%360)*Math.PI/180;
-      const front = (1+Math.cos(rad))/2, sz = 60+(130-60)*front; 
+      const front = (1+Math.cos(rad))/2;
+      
+      // En móvil, los nodos son más pequeños
+      const minSz = isMobile ? 40 : 60;
+      const maxSz = isMobile ? 90 : 130;
+      const sz = minSz + (maxSz - minSz) * front; 
       
       const vf = document.getElementById('vf'+i), lbl = document.getElementById('lbl'+i), wk = document.getElementById('wk'+i);
       
@@ -527,8 +565,18 @@ function renderCarousel(){
       el.style.transform = `translate(${cx+RX*Math.sin(rad)-sz/2}px,${cy-RY*Math.cos(rad)-sz/2}px)`;
       el.style.opacity = 0.1+0.9*front; el.style.zIndex = Math.round(front*100);
 
-      if(lbl){ lbl.style.fontSize=Math.max(.5,front*1.2)+'rem'; lbl.style.opacity=front>.3?1:'0.3'; }
-      if(wk){  wk.style.fontSize=Math.max(.3,front*.6)+'rem';  wk.style.opacity=front>.6?1:'0'; }
+      // Los textos también escalan si es móvil
+      if(lbl){ 
+        const fontSz = isMobile ? Math.max(0.4, front*0.9) : Math.max(0.5, front*1.2);
+        lbl.style.fontSize = fontSz + 'rem'; 
+        lbl.style.opacity = front>.3?1:'0.3'; 
+      }
+      if(wk){  
+        const fontWk = isMobile ? Math.max(0.25, front*0.5) : Math.max(0.3, front*0.6);
+        wk.style.fontSize = fontWk + 'rem';  
+        wk.style.opacity = front>.6?1:'0'; 
+      }
+      
       if(el.classList.contains('extracting')) el.style.zIndex=999;
     });
   } catch(e) { console.error("Error animando carrusel:", e); }
@@ -574,13 +622,13 @@ window.openCabinet = function(idx) {
   document.getElementById('ic-sub').style.color = `rgb(${cat.rgb})`;
   document.getElementById('ic-title').textContent = cat.name;
   
-  // Dar color al borde del modal para reflejar el clúster activo
+  // Dar color al borde del modal
   document.getElementById('modalBox').style.setProperty('--cluster-color', `rgb(${cat.rgb})`);
 
   // Restaurar estado visual a la Lista
   document.getElementById('player-view').classList.remove('active');
   document.getElementById('list-view').classList.add('active');
-  document.getElementById('btn-back-modal').textContent = 'Cerrar Panel';
+  document.getElementById('btn-back-modal').textContent = window.innerWidth <= 768 ? '← Cerrar' : 'Cerrar Panel';
 
   // Generar Nodos en lista
   const vinylsHtml = cat.weeks.map(w => {
@@ -615,7 +663,7 @@ window.closeCabinetLogic = function() {
   if(document.getElementById('player-view').classList.contains('active')) {
     document.getElementById('player-view').classList.remove('active');
     document.getElementById('list-view').classList.add('active');
-    document.getElementById('btn-back-modal').textContent = 'Cerrar Panel';
+    document.getElementById('btn-back-modal').textContent = window.innerWidth <= 768 ? '← Cerrar' : 'Cerrar Panel';
   } else {
     document.getElementById('cabModal').classList.remove('open'); 
   }
