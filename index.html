@@ -455,9 +455,6 @@ let angle = 0, isCarouselHovered = false, isAnimating = false;
    ▶ LÓGICA DE LA INTELIGENCIA ARTIFICIAL (GEMINI API)
 ========================================================================= */
 
-// El entorno inyecta la llave aquí. Para usarlo en Vercel, deberás reemplazar "" por tu API Key real de Google AI Studio.
-const GEMINI_API_KEY = "AIzaSyCev_pdItEU4AfWN3mmGKtTTMOI3pkEdoc"; 
-
 window.toggleAIChat = function() {
   document.getElementById('aiPanel').classList.toggle('open');
 };
@@ -481,10 +478,20 @@ window.sendAIMessage = async function() {
   typingInd.style.display = 'block';
 
   try {
-    // 2. Llamada a la API de Gemini 2.5 Flash
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+    // Configuración Inteligente: Detecta si estás en el Canvas o en Vercel
+    const IS_CANVAS = typeof window.__app_id !== 'undefined';
     
-    // Instrucciones de sistema para darle "personalidad"
+    // TU LLAVE ESTÁ AQUÍ (Asegurada para Vercel)
+    const MY_API_KEY = "AIzaSyCev_pdItEU4AfWN3mmGKtTTMOI3pkEdoc"; 
+    
+    const API_KEY = IS_CANVAS ? "" : MY_API_KEY;
+    // CORRECCIÓN: Usamos el nombre base y estándar del modelo que no genera errores 404
+    const MODEL_NAME = IS_CANVAS ? "gemini-2.5-flash-preview-09-2025" : "gemini-1.5-flash";
+
+    // 2. Llamada a la API de Gemini
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+    
+    // Instrucciones de sistema
     const systemPrompt = "Eres el asistente virtual de la plataforma 'Base de Datos II', creada por Jefferson. Responde siempre en español. Sé conciso, amable y tecnológico. Ayudas a estudiantes con temas de Bases de Datos, SQL, Arquitectura de software y navegación de la plataforma. Usa formato texto plano sin markdown complejo.";
 
     const payload = {
@@ -504,7 +511,8 @@ window.sendAIMessage = async function() {
     if (data.candidates && data.candidates[0].content.parts[0].text) {
       botReply = data.candidates[0].content.parts[0].text;
     } else if(data.error) {
-       botReply = "Error API: Verifica la conexión o la llave API en el código.";
+       // Si hay error, ahora te mostrará EXACTAMENTE cuál es el problema
+       botReply = `Error API [${data.error.code}]: ${data.error.message}`;
     }
 
     // 3. Mostrar respuesta del bot
@@ -514,7 +522,7 @@ window.sendAIMessage = async function() {
 
   } catch (error) {
     typingInd.style.display = 'none';
-    chatArea.innerHTML += `<div class="ai-msg bot" style="color: var(--neon-red);">[Falla de conexión] No se pudo conectar con el servidor cognitivo.</div>`;
+    chatArea.innerHTML += `<div class="ai-msg bot" style="color: var(--neon-red);">[Falla de conexión] Error: ${error.message}</div>`;
     console.error("Error AI:", error);
   }
 };
