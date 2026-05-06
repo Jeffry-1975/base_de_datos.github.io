@@ -4,7 +4,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Base de Datos II - Data Canvas</title>
-<!-- Fuentes modernas: Inter para legibilidad, JetBrains Mono para toques "Tech" -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -18,7 +17,6 @@
   --text-main: #f4f4f5;
   --text-muted: #a1a1aa;
   
-  /* Paleta Neón / Tech */
   --neon-cyan: #00f0ff;
   --neon-purple: #b537f2;
   --neon-amber: #ff9900;
@@ -26,17 +24,11 @@
 }
 
 body{
-  background-color: var(--bg-base);
-  font-family: 'Inter', sans-serif;
-  color: var(--text-main);
-  min-height: 100vh;
-  overflow-x: hidden;
-  /* Cuadrícula estilo "Miro" / Blueprint futurista */
+  background-color: var(--bg-base); font-family: 'Inter', sans-serif;
+  color: var(--text-main); min-height: 100vh; overflow-x: hidden;
   background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
   background-size: 30px 30px;
 }
-
-/* Efecto de luz difusa de fondo (Active Theory vibe) */
 body::before, body::after {
   content: ''; position: fixed; width: 600px; height: 600px; border-radius: 50%;
   filter: blur(120px); z-index: -1; pointer-events: none; opacity: 0.15;
@@ -55,7 +47,7 @@ body::after { bottom: -100px; right: -100px; background: var(--neon-cyan); }
 body.admin-mode .btn-edit-admin { display: flex; } 
 body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 
-/* ── TOPBAR (Glassmorphism) ── */
+/* ── TOPBAR ── */
 .topbar{
   background: rgba(10, 10, 12, 0.6); backdrop-filter: blur(12px); border-bottom: 1px solid var(--surface-border);
   padding:0 2rem; display:flex; align-items:center; justify-content:space-between;
@@ -93,66 +85,45 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 }
 .hero-sub{color:var(--text-muted);font-size:.8rem;letter-spacing:1px;font-family:'JetBrains Mono',monospace; margin-top: 10px;}
 
-/* =========================================================
-   LAYOUT 3 COLUMNAS ESTRICTAS
-   ========================================================= */
-.main-layout-3cols {
-  display: flex; flex-direction: row; justify-content: space-between; align-items: center; 
-  width: 100%; max-width: 1400px; margin: 0 auto; padding: 1rem 2rem 2rem; gap: 2rem;
-}
+/* ── LAYOUT 3 COLUMNAS ── */
+.main-layout-3cols { display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%; max-width: 1400px; margin: 0 auto; padding: 1rem 2rem 2rem; gap: 2rem; }
 .layout-left, .layout-right { display: flex; flex-direction: column; gap: 1.5rem; width: 120px; flex-shrink: 0; }
 .layout-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
 
-/* ── DISEÑO DE CLÚSTERES (EX-ESTANTERÍAS) ── */
 .vertical-cabinet {
-  background: var(--surface-1); backdrop-filter: blur(10px);
-  border: 1px solid var(--surface-border); border-radius: 16px; height: 220px; 
-  width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden;
+  background: var(--surface-1); backdrop-filter: blur(10px); border: 1px solid var(--surface-border); border-radius: 16px; height: 220px; 
+  width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden;
 }
-.vertical-cabinet::before { 
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; 
-  background: var(--cluster-color, var(--surface-border)); box-shadow: 0 0 10px var(--cluster-color);
-}
+.vertical-cabinet::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--cluster-color, var(--surface-border)); box-shadow: 0 0 10px var(--cluster-color); }
 .vertical-cabinet:hover { transform: translateY(-5px); background: var(--surface-2); border-color: rgba(255,255,255,0.2); }
 .vc-icon { font-size: 1.8rem; margin-bottom: 1.5rem; filter: drop-shadow(0 0 8px var(--cluster-color)); }
 .vc-text { writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-main); font-size: 0.8rem; letter-spacing: 3px; white-space: nowrap; }
 
-/* ── CAROUSEL DE NODOS (Centro) ── */
+@media (max-width: 1100px) {
+  .main-layout-3cols { flex-direction: column; padding: 1rem; gap: 1rem; }
+  .layout-left, .layout-right { flex-direction: row; width: 100%; justify-content: center; flex-wrap: wrap; }
+  .vertical-cabinet { width: 180px; height: 80px; flex-direction: row; padding: 0 1.5rem; justify-content: flex-start; }
+  .vc-icon { margin-bottom: 0; margin-right: 1rem; font-size: 1.5rem; }
+  .vc-text { writing-mode: horizontal-tb; transform: none; font-size: 0.8rem; }
+}
+
+/* ── CAROUSEL DE NODOS ── */
 .carousel-section{ width:100%; padding:0; display:flex; flex-direction:column; align-items:center; position:relative; overflow:hidden; }
 .carousel-section::before,.carousel-section::after{ content:'';position:absolute;top:0;bottom:0;width:150px;z-index:20;pointer-events:none; }
 .carousel-section::before{left:0;background:linear-gradient(90deg,var(--bg-base) 10%,transparent);}
 .carousel-section::after{right:0;background:linear-gradient(270deg,var(--bg-base) 10%,transparent);}
-
 .c-label{font-family:'JetBrains Mono',monospace;color:var(--text-muted);font-size:.65rem;letter-spacing:2px;margin-bottom:1rem;text-transform:uppercase;}
 .c-scene{position:relative;width:min(100%, 700px);height:300px;z-index:10;}
-
 .vitem{ position:absolute;left:0;top:0;cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .vitem.locked{cursor:default; opacity: 0.5;}
-
-/* La tarjeta del Nodo */
-.vface{
-  border-radius: 12px; position:absolute; inset:0; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-direction:column;
-  z-index:5; transition: transform 0.4s ease, opacity 0.4s ease; 
-  background: rgba(20,20,25,0.8); backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.1);
-}
+.vface{ border-radius: 12px; position:absolute; inset:0; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-direction:column; z-index:5; transition: transform 0.4s ease, opacity 0.4s ease; background: rgba(20,20,25,0.8); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); }
 .vface::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%); pointer-events: none;}
 .vface-inner{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px; padding: 15px;}
 .vface-label{font-family:'JetBrains Mono',monospace;font-weight:700; color:var(--text-main); text-align:center;}
 .vface-week{ font-family:'Inter',sans-serif; color:var(--text-muted); font-size: 0.8rem; text-align:center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-/* El anillo holográfico (Ex-disco) */
-.v-disc {
-  position: absolute; width: 110%; height: 110%; border-radius: 50%;
-  border: 1px dashed var(--node-color); opacity: 0.3;
-  z-index: 1; top: -5%; left: -5%; transition: all 0.6s ease;
-  display: flex; align-items: center; justify-content: center;
-}
+.v-disc { position: absolute; width: 110%; height: 110%; border-radius: 50%; border: 1px dashed var(--node-color); opacity: 0.3; z-index: 1; top: -5%; left: -5%; transition: all 0.6s ease; display: flex; align-items: center; justify-content: center; }
 .vitem:hover .v-disc { transform: rotate(90deg) scale(1.1); opacity: 0.8; border-style: solid; box-shadow: 0 0 20px var(--node-color); }
 .vitem:hover .vface { transform: translateY(-10px); border-color: var(--node-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-
-/* Animación de extracción */
 .vitem.extracting .v-disc { transform: scale(2) rotate(180deg); opacity: 0; transition: all 0.8s; z-index: 20; }
 .vitem.extracting .vface { transform: scale(1.1) translateY(20px); opacity: 0; transition: all 0.5s; }
 
@@ -168,145 +139,75 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 .profile-desc h4 { font-family: 'Inter', sans-serif; font-weight: 500; color: var(--text-main); font-size: 1.1rem; }
 .profile-desc span { font-family: 'JetBrains Mono', monospace; color: var(--neon-cyan); font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; }
 
-/* =========================================================
-   MODAL DE INSPECCIÓN (El panel futurista)
-   ========================================================= */
-.cab-modal {
-  position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center;
-  visibility: hidden; opacity: 0; transition: all 0.3s ease; padding: 1rem;
-}
+/* ── MODAL INSPECCIÓN (CLÚSTER) ── */
+.cab-modal { position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: all 0.3s ease; padding: 1rem; }
 .cab-modal.open { visibility: visible; opacity: 1; }
 .cab-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
-
-.cab-modal-box {
-  width: 95%; max-width: 1000px; min-height: 500px; max-height: 95vh; position: relative;
-  background: rgba(15,15,18,0.85); backdrop-filter: blur(20px);
-  border: 1px solid var(--surface-border); border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
-  transform: translateY(20px) scale(0.98); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  display: flex; flex-direction: column; overflow: hidden;
-}
+.cab-modal-box { width: 95%; max-width: 1000px; min-height: 500px; max-height: 95vh; position: relative; background: rgba(15,15,18,0.85); backdrop-filter: blur(20px); border: 1px solid var(--surface-border); border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); transform: translateY(20px) scale(0.98); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; overflow: hidden; }
 .cab-modal.open .cab-modal-box { transform: translateY(0) scale(1); }
-/* Brillo superior en el modal */
 .cab-modal-box::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, var(--cluster-color, var(--neon-cyan)), transparent); }
-
-/* Header del panel */
-.inside-header { 
-  display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--surface-border); background: rgba(0,0,0,0.2); flex-wrap: wrap; gap: 1rem;
-}
+.inside-header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem; border-bottom: 1px solid var(--surface-border); background: rgba(0,0,0,0.2); flex-wrap: wrap; gap: 1rem; }
 .btn-back-cabinet { background: rgba(255,255,255,0.05); border: 1px solid var(--surface-border); border-radius: 20px; color: var(--text-main); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 8px 16px; cursor: pointer; transition: all 0.2s; }
 .btn-back-cabinet:hover { background: rgba(255,255,255,0.1); }
 .inside-title-wrap { text-align: right; }
 .inside-subtitle { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--cluster-color, var(--neon-cyan)); letter-spacing: 2px; margin-bottom: 5px; }
 .inside-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-main); letter-spacing: -0.5px; }
-
-/* Cuerpo del panel */
 .shelf-board { padding: 2rem; flex: 1; display: flex; position: relative; overflow-y: auto;}
 
-/* VISTAS INTERNAS */
+/* Vistas internas del clúster */
 .view-panel { display: none; width: 100%; animation: fadeZoomIn 0.3s ease; }
 .view-panel.active { display: flex; }
 @keyframes fadeZoomIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-/* FASE 1: LISTA DE NODOS */
 .shelf-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; align-content: start;}
-.shelf-list-item {
-  display: flex; align-items: center; background: rgba(255,255,255,0.03);
-  border: 1px solid var(--surface-border); border-radius: 12px;
-  padding: 15px; cursor: pointer; transition: all 0.2s; gap: 15px; position: relative;
-}
+.shelf-list-item { display: flex; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid var(--surface-border); border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.2s; gap: 15px; position: relative; }
 .shelf-list-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); transform: translateY(-3px); }
 .shelf-list-item.locked { cursor: default; opacity: 0.5; filter: grayscale(1); }
-.shelf-list-item.locked:hover { transform: none; background: rgba(255,255,255,0.03); border-color: var(--surface-border); }
-
-/* Ícono del nodo en la lista */
-.sli-cover-wrap { 
-  width: 50px; height: 50px; border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.5); border: 1px solid var(--node-color); box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-}
+.sli-cover-wrap { width: 50px; height: 50px; border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); border: 1px solid var(--node-color); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
 .sli-num { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:1rem; color:var(--node-color); }
 .sli-dot { position:absolute; top: -3px; right: -3px; width:8px;height:8px;border-radius:50%; background: var(--text-muted); }
 .sli-dot.active { background: var(--neon-cyan); box-shadow: 0 0 8px var(--neon-cyan); }
-
 .sli-details { flex: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden;}
 .sli-week { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; }
 .sli-title { font-family: 'Inter', sans-serif; font-weight: 500; color: var(--text-main); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 
-/* FASE 2: INSPECTOR DE ARCHIVOS */
+/* Reproductor / Inspector */
 #player-view { flex-direction: row; align-items: stretch; justify-content: space-between; gap: 40px; }
-
-/* Lado Izquierdo: Archivos (Tracklist) */
 .player-tracklist { flex: 1; display: flex; flex-direction: column; }
 .pv-sub { font-family: 'JetBrains Mono', monospace; color: var(--node-color); font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 8px; display: block; }
 .player-tracklist h4 { font-family: 'Inter', sans-serif; font-weight: 800; color: var(--text-main); font-size: 1.8rem; margin-bottom: 20px; line-height: 1.1;}
-
 .track-ul { list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px;}
 .track-ul::-webkit-scrollbar { width: 4px; }
-.track-ul::-webkit-scrollbar-track { background: transparent; }
 .track-ul::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-
-.track-li { 
-  display: flex; align-items: center; padding: 12px 15px; background: rgba(255,255,255,0.03); 
-  border: 1px solid transparent; border-radius: 8px; cursor: pointer; transition: all 0.2s; 
-}
+.track-li { display: flex; align-items: center; padding: 12px 15px; background: rgba(255,255,255,0.03); border: 1px solid transparent; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
 .track-li:hover { background: rgba(255,255,255,0.08); border-color: var(--surface-border); transform: translateX(5px); }
 .track-li-icon { margin-right: 15px; font-size: 1.2rem; opacity: 0.8; }
 .track-li-title { font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text-main); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-
-.btn-manage-week { 
-  margin-top: 20px; padding: 12px 24px; background: var(--text-main); color: var(--bg-base); border: none;
-  border-radius: 24px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.8rem;
-  cursor: pointer; text-transform: uppercase; transition: all 0.2s; align-self: flex-start;
-}
+.btn-manage-week { margin-top: 20px; padding: 12px 24px; background: var(--text-main); color: var(--bg-base); border: none; border-radius: 24px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; transition: all 0.2s; align-self: flex-start; }
 .btn-manage-week:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
-
-/* Lado Derecho: Holograma del Nodo */
 .player-record-wrap { width: 250px; display: flex; align-items: center; justify-content: center; position: relative;}
-
-/* Animación de Escáner Holográfico */
-.hologram-container {
-  width: 200px; height: 280px; border: 1px solid var(--surface-border); border-radius: 12px;
-  background: rgba(0,0,0,0.5); position: relative; overflow: hidden;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-}
-.hologram-container::after {
-  content: ''; position: absolute; left: 0; right: 0; height: 2px; background: var(--node-color);
-  box-shadow: 0 0 10px var(--node-color); animation: scanline 3s linear infinite;
-}
+.hologram-container { width: 200px; height: 280px; border: 1px solid var(--surface-border); border-radius: 12px; background: rgba(0,0,0,0.5); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.hologram-container::after { content: ''; position: absolute; left: 0; right: 0; height: 2px; background: var(--node-color); box-shadow: 0 0 10px var(--node-color); animation: scanline 3s linear infinite; }
 @keyframes scanline { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
-
 .holo-num { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:3.5rem; color:transparent; -webkit-text-stroke: 1px var(--node-color); opacity: 0.5; }
 .holo-text { font-family:'Inter',sans-serif; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-top: 10px; letter-spacing: 2px;}
 
-/* ── RESPONSIVIDAD GENERAL Y MÓVIL (< 768px) ── */
 @media (max-width: 768px) {
-  /* Topbar en Móvil */
   .topbar { flex-wrap: wrap; padding: 10px 1rem; height: auto; }
   .topbar-nav { order: 3; width: 100%; margin-top: 10px; }
-  
-  /* Layout Principal (Clústeres) */
   .main-layout-3cols { padding: 1rem 1rem 2rem; gap: 1rem; }
   .layout-left, .layout-right { gap: 10px; }
   .vertical-cabinet { width: calc(50% - 5px); height: 70px; padding: 0 0.8rem; border-radius: 10px; }
   .vc-icon { font-size: 1.2rem; margin-right: 0.6rem; }
   .vc-text { font-size: 0.65rem; letter-spacing: 1px; }
-
-  /* Carrusel en Móvil */
   .carousel-section::before, .carousel-section::after { width: 50px; }
-  .c-scene { height: 220px; } /* Más pequeño para celulares */
+  .c-scene { height: 220px; } 
   .vface-inner { padding: 8px; gap: 4px; }
-  
-  /* Modal en Móvil */
   .cab-modal-box { border-radius: 12px; }
   .inside-header { padding: 1.2rem; flex-direction: column-reverse; align-items: flex-start; }
   .inside-title-wrap { text-align: left; }
   .btn-back-cabinet { margin-bottom: 10px; }
   .shelf-board { padding: 1.2rem; }
-  
-  /* Vista Lista Móvil */
   .shelf-list { grid-template-columns: 1fr; gap: 10px; }
-  
-  /* Vista Inspector (Reproductor) Móvil */
   #player-view { flex-direction: column; gap: 20px; }
   .player-record-wrap { width: 100%; margin-bottom: 10px; }
   .hologram-container { width: 100%; height: 180px; }
@@ -327,6 +228,56 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
 .skip{display:block;color:var(--text-muted);font-size:.8rem;cursor:pointer; transition: color 0.2s;}
 .skip:hover{color:var(--text-main);}
 .login-err{color:#ff4444;font-size:.8rem;margin-bottom:1rem;display:none;}
+
+
+/* =========================================================
+   ▶ NUEVO: WIDGET DE INTELIGENCIA ARTIFICIAL
+========================================================= */
+.ai-fab {
+  position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+  background: rgba(15,15,18,0.8); border: 2px solid var(--neon-cyan); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+  cursor: pointer; z-index: 1000; backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0,240,255,0.4); transition: all 0.3s ease;
+}
+.ai-fab:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(0,240,255,0.6); }
+
+.ai-panel {
+  position: fixed; bottom: 100px; right: 30px; width: 350px; max-width: calc(100vw - 40px); height: 500px; max-height: calc(100vh - 120px);
+  background: rgba(15,15,18,0.95); backdrop-filter: blur(20px);
+  border: 1px solid var(--surface-border); border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8); z-index: 999;
+  display: flex; flex-direction: column; opacity: 0; visibility: hidden;
+  transform: translateY(20px); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.ai-panel.open { opacity: 1; visibility: visible; transform: translateY(0); }
+.ai-panel::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent); }
+
+.ai-header { padding: 15px 20px; border-bottom: 1px solid var(--surface-border); display: flex; justify-content: space-between; align-items: center; }
+.ai-title { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--neon-cyan); font-weight: 700; display: flex; align-items: center; gap: 8px;}
+.ai-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; transition: color 0.2s; }
+.ai-close:hover { color: var(--neon-red); }
+
+.ai-chat-area { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.ai-chat-area::-webkit-scrollbar { width: 4px; }
+.ai-chat-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+.ai-msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; font-family: 'Inter', sans-serif;}
+.ai-msg.user { align-self: flex-end; background: rgba(255,255,255,0.1); color: var(--text-main); border-bottom-right-radius: 4px; }
+.ai-msg.bot { align-self: flex-start; background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.2); color: var(--neon-cyan); border-bottom-left-radius: 4px; }
+
+.ai-input-area { padding: 15px; border-top: 1px solid var(--surface-border); display: flex; gap: 10px; background: rgba(0,0,0,0.2); border-radius: 0 0 16px 16px; }
+.ai-input-area input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--surface-border); border-radius: 8px; padding: 10px 12px; color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 0.85rem; outline: none; }
+.ai-input-area input:focus { border-color: var(--neon-cyan); }
+.ai-send-btn { background: var(--neon-cyan); border: none; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; }
+.ai-send-btn:hover { transform: scale(1.05); }
+
+.ai-typing { color: var(--text-muted); font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; display: none; padding-left: 15px; margin-bottom: 10px;}
+
+@media (max-width: 768px) {
+  .ai-fab { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 1.2rem; }
+  .ai-panel { bottom: 80px; right: 10px; width: calc(100vw - 20px); height: 450px; }
+}
 </style>
 </head>
 <body>
@@ -412,13 +363,6 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
       <!-- VISTA 2: INSPECTOR (Detalle de Archivos) -->
       <div id="player-view" class="view-panel">
         
-        <div class="player-record-wrap">
-          <div class="hologram-container" id="pv-holo-box">
-            <div class="holo-num" id="pv-num">S00</div>
-            <div class="holo-text">Conexión Segura</div>
-          </div>
-        </div>
-
         <div class="player-tracklist">
           <span class="pv-sub" id="pv-week-num">NODO 01</span>
           <h4 id="pv-title">Cargando...</h4>
@@ -428,6 +372,13 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
           </ul>
           
           <button class="btn-manage-week" id="pv-manage-btn" onclick="">Acceder al Nodo</button>
+        </div>
+
+        <div class="player-record-wrap">
+          <div class="hologram-container" id="pv-holo-box">
+            <div class="holo-num" id="pv-num">S00</div>
+            <div class="holo-text">Conexión Segura</div>
+          </div>
         </div>
 
       </div>
@@ -449,6 +400,30 @@ body:not(.admin-mode) .btn-edit-admin { display: none !important; }
     <span class="skip" onclick="window.closeLogin()" style="opacity: 0.5;">Cancelar</span>
   </div>
 </div>
+
+
+<!-- =========================================================================
+   ▶ WIDGET DE ASISTENTE IA (GEMINI)
+========================================================================= -->
+<div class="ai-fab" onclick="toggleAIChat()">✨</div>
+
+<div class="ai-panel" id="aiPanel">
+  <div class="ai-header">
+    <div class="ai-title">✨ SYS_AI // Asistente</div>
+    <button class="ai-close" onclick="toggleAIChat()">✕</button>
+  </div>
+  <div class="ai-chat-area" id="aiChatArea">
+    <div class="ai-msg bot">¡Hola! Soy la Inteligencia Artificial del sistema Base de Datos II. ¿Tienes alguna duda sobre la materia, SQL o arquitectura?</div>
+  </div>
+  <div class="ai-typing" id="aiTyping">> Procesando consulta...</div>
+  <div class="ai-input-area">
+    <input type="text" id="aiInput" placeholder="Escribe tu duda aquí..." onkeypress="handleAIKeyPress(event)"/>
+    <button class="ai-send-btn" onclick="sendAIMessage()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </button>
+  </div>
+</div>
+
 
 <!-- SCRIPT TIPO MÓDULO -->
 <script type="module">
@@ -477,6 +452,74 @@ const TOTAL = 16, SPEED = 0.055;
 let angle = 0, isCarouselHovered = false, isAnimating = false;
 
 /* =========================================================================
+   ▶ LÓGICA DE LA INTELIGENCIA ARTIFICIAL (GEMINI API)
+========================================================================= */
+
+// El entorno inyecta la llave aquí. Para usarlo en Vercel, deberás reemplazar "" por tu API Key real de Google AI Studio.
+const GEMINI_API_KEY = "AIzaSyCev_pdItEU4AfWN3mmGKtTTMOI3pkEdoc"; 
+
+window.toggleAIChat = function() {
+  document.getElementById('aiPanel').classList.toggle('open');
+};
+
+window.handleAIKeyPress = function(e) {
+  if (e.key === 'Enter') window.sendAIMessage();
+};
+
+window.sendAIMessage = async function() {
+  const inputEl = document.getElementById('aiInput');
+  const chatArea = document.getElementById('aiChatArea');
+  const typingInd = document.getElementById('aiTyping');
+  const userText = inputEl.value.trim();
+  
+  if (!userText) return;
+
+  // 1. Mostrar mensaje del usuario
+  inputEl.value = '';
+  chatArea.innerHTML += `<div class="ai-msg user">${userText}</div>`;
+  chatArea.scrollTop = chatArea.scrollHeight;
+  typingInd.style.display = 'block';
+
+  try {
+    // 2. Llamada a la API de Gemini 2.5 Flash
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+    
+    // Instrucciones de sistema para darle "personalidad"
+    const systemPrompt = "Eres el asistente virtual de la plataforma 'Base de Datos II', creada por Jefferson. Responde siempre en español. Sé conciso, amable y tecnológico. Ayudas a estudiantes con temas de Bases de Datos, SQL, Arquitectura de software y navegación de la plataforma. Usa formato texto plano sin markdown complejo.";
+
+    const payload = {
+      contents: [{ parts: [{ text: userText }] }],
+      systemInstruction: { parts: [{ text: systemPrompt }] }
+    };
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    
+    let botReply = "Error procesando la señal neuronal.";
+    if (data.candidates && data.candidates[0].content.parts[0].text) {
+      botReply = data.candidates[0].content.parts[0].text;
+    } else if(data.error) {
+       botReply = "Error API: Verifica la conexión o la llave API en el código.";
+    }
+
+    // 3. Mostrar respuesta del bot
+    typingInd.style.display = 'none';
+    chatArea.innerHTML += `<div class="ai-msg bot">${botReply.replace(/\n/g, '<br>')}</div>`;
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+  } catch (error) {
+    typingInd.style.display = 'none';
+    chatArea.innerHTML += `<div class="ai-msg bot" style="color: var(--neon-red);">[Falla de conexión] No se pudo conectar con el servidor cognitivo.</div>`;
+    console.error("Error AI:", error);
+  }
+};
+
+/* =========================================================================
    ▶ CARGA DE DATOS DE SUPABASE
 ========================================================================= */
 window.loadDashboardData = async function() {
@@ -501,7 +544,7 @@ window.loadDashboardData = async function() {
 };
 
 /* =========================================================================
-   ▶ CARRUSEL DE NODOS (AHORA RESPONSIVO DESDE JS)
+   ▶ CARRUSEL DE NODOS (RESPONSIVO)
 ========================================================================= */
 function buildScene(){
   try {
@@ -540,11 +583,8 @@ function renderCarousel(){
   try {
     const sc = document.getElementById('scene'); if(!sc) return;
     const W = sc.offsetWidth || 700, H = sc.offsetHeight || 280;
-    
-    // DETECCIÓN DE PANTALLA MÓVIL PARA EL CARRUSEL
     const isMobile = window.innerWidth <= 768; 
     
-    // Ajuste dinámico de los radios de giro según la pantalla
     const cx = W/2, cy = H*(isMobile ? 0.5 : 0.55);
     const RX = W*(isMobile ? 0.35 : 0.43), RY = H*(isMobile ? 0.25 : 0.3);
     
@@ -554,18 +594,16 @@ function renderCarousel(){
       const rad = (((i/TOTAL)*360+angle)%360)*Math.PI/180;
       const front = (1+Math.cos(rad))/2;
       
-      // En móvil, los nodos son más pequeños
       const minSz = isMobile ? 40 : 60;
       const maxSz = isMobile ? 90 : 130;
       const sz = minSz + (maxSz - minSz) * front; 
       
-      const vf = document.getElementById('vf'+i), lbl = document.getElementById('lbl'+i), wk = document.getElementById('wk'+i);
+      const lbl = document.getElementById('lbl'+i), wk = document.getElementById('wk'+i);
       
       el.style.width = sz+'px'; el.style.height = sz+'px';
       el.style.transform = `translate(${cx+RX*Math.sin(rad)-sz/2}px,${cy-RY*Math.cos(rad)-sz/2}px)`;
       el.style.opacity = 0.1+0.9*front; el.style.zIndex = Math.round(front*100);
 
-      // Los textos también escalan si es móvil
       if(lbl){ 
         const fontSz = isMobile ? Math.max(0.4, front*0.9) : Math.max(0.5, front*1.2);
         lbl.style.fontSize = fontSz + 'rem'; 
@@ -576,7 +614,6 @@ function renderCarousel(){
         wk.style.fontSize = fontWk + 'rem';  
         wk.style.opacity = front>.6?1:'0'; 
       }
-      
       if(el.classList.contains('extracting')) el.style.zIndex=999;
     });
   } catch(e) { console.error("Error animando carrusel:", e); }
@@ -617,20 +654,15 @@ window.openCabinet = function(idx) {
   const cat = dbCabinets[idx];
   const numText = cat.id < 10 ? '0' + cat.id : cat.id;
   
-  // Títulos del Panel
   document.getElementById('ic-sub').textContent = `CLÚSTER ${numText} · ${cat.range}`;
   document.getElementById('ic-sub').style.color = `rgb(${cat.rgb})`;
   document.getElementById('ic-title').textContent = cat.name;
-  
-  // Dar color al borde del modal
   document.getElementById('modalBox').style.setProperty('--cluster-color', `rgb(${cat.rgb})`);
 
-  // Restaurar estado visual a la Lista
   document.getElementById('player-view').classList.remove('active');
   document.getElementById('list-view').classList.add('active');
   document.getElementById('btn-back-modal').textContent = window.innerWidth <= 768 ? '← Cerrar' : 'Cerrar Panel';
 
-  // Generar Nodos en lista
   const vinylsHtml = cat.weeks.map(w => {
     const wStr = w < 10 ? '0' + w : w;
     const st = getStatus(w);
@@ -640,23 +672,13 @@ window.openCabinet = function(idx) {
     return `
       <div class="shelf-list-item ${st==='pending'?'locked':''}" style="--node-color: rgb(${cat.rgb})" onclick='window.playRecord(${w}, "${wStr}", "${title.replace(/'/g,"\\'")}", "${cat.rgb}")'>
         <button class="btn-edit-admin" style="top:-8px; right:-8px;" onclick="event.stopPropagation(); window.editWeekTitle(${w}, '${title.replace(/'/g,"\\'")}')">✏️</button>
-        
-        <div class="sli-cover-wrap">
-          <span class="sli-num">N${wStr}</span>
-          <div class="sli-dot ${isAct}"></div>
-        </div>
-        
-        <div class="sli-details">
-          <div class="sli-week">NODO ${wStr}</div>
-          <div class="sli-title">${title}</div>
-        </div>
+        <div class="sli-cover-wrap"><span class="sli-num">N${wStr}</span><div class="sli-dot ${isAct}"></div></div>
+        <div class="sli-details"><div class="sli-week">NODO ${wStr}</div><div class="sli-title">${title}</div></div>
       </div>`;
   }).join('');
 
   document.getElementById('inside-vinyls').innerHTML = vinylsHtml;
-
-  const modal = document.getElementById('cabModal');
-  modal.classList.add('open');          
+  document.getElementById('cabModal').classList.add('open');          
 };
 
 window.closeCabinetLogic = function() {
@@ -677,19 +699,16 @@ window.playRecord = async function(w, wStr, title, rgbColor) {
   document.getElementById('player-view').classList.add('active');
   document.getElementById('btn-back-modal').textContent = '← Volver al Clúster';
 
-  // Configurar Holograma
   const holoBox = document.getElementById('pv-holo-box');
   holoBox.style.setProperty('--node-color', `rgb(${rgbColor})`);
   holoBox.style.borderColor = `rgba(${rgbColor}, 0.5)`;
   document.getElementById('pv-num').textContent = `N${wStr}`;
   
-  // Configurar textos
   document.getElementById('pv-week-num').textContent = `NODO ${wStr}`;
   document.getElementById('pv-week-num').style.color = `rgb(${rgbColor})`;
   document.getElementById('pv-title').textContent = title;
   document.getElementById('pv-manage-btn').onclick = () => window.open(`contenido.html?id=${w}`, '_blank');
 
-  // Buscar archivos
   const trackUl = document.getElementById('pv-tracks');
   trackUl.innerHTML = '<li class="track-li" style="justify-content:center; color: var(--text-muted);">Consultando BD...</li>';
 
@@ -704,15 +723,10 @@ window.playRecord = async function(w, wStr, title, rgbColor) {
         const ext = f.url_o_ruta.split('.').pop().split('?')[0].toLowerCase();
         let icon = '📁'; if(ext==='pdf') icon='📄'; else if(['jpg','png','jpeg'].includes(ext)) icon='🖼';
         
-        return `<li class="track-li" onclick="window.open('${f.url_o_ruta}', '_blank')">
-                  <span class="track-li-icon">${icon}</span>
-                  <span class="track-li-title">${f.titulo}</span>
-                </li>`;
+        return `<li class="track-li" onclick="window.open('${f.url_o_ruta}', '_blank')"><span class="track-li-icon">${icon}</span><span class="track-li-title">${f.titulo}</span></li>`;
       }).join('');
     }
-  } catch (e) {
-    trackUl.innerHTML = '<li class="track-li" style="color: #ff4444;">Error en la consulta.</li>';
-  }
+  } catch (e) { trackUl.innerHTML = '<li class="track-li" style="color: #ff4444;">Error en la consulta.</li>'; }
 };
 
 
